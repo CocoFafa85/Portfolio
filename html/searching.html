@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recherche de Corentin FANIC</title>
+  <link rel="stylesheet" href="../css/searching.css" />
+  <link rel="stylesheet" href="../css/tubes.css" />
+  <link rel="stylesheet" href="../css/neon.css" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://code.jquery.com; style-src 'self' 'unsafe-inline'; font-src 'self';">
+</head>
+<body>
+    <div class="container">
+        <div class="row row-titre align-items-center">
+            <div class="back-arrow">
+                <a class="button-back" href="../index.html">
+                    <img class="img-arrow" src="../textures/backArrow1.png">
+                    <span class="tooltip">Retour</span>
+                </a>
+            </div>
+            
+            <div class="title title-neon">
+                <h1><span>Te</span>chnol<span>og</span>y S<span>e</span>ar<span>ch</span>ing</h1>
+            </div>
+        </div>
+
+        <div class="led">
+            <div class="bloc-container">
+                <div class="row row-text">
+                    <div class="info-container">
+                        <div class="info-line">
+                            <h3>Qu'est-ce qu'une veille technologique</h3>
+                            <img id="blocMario" src="../textures/blocMario.png" class="bloc-button" />
+                        </div>
+                    </div>
+                </div>
+            
+                <div id="infoText" class="info-text hidden">
+                    <p>C'est un processus continu de surveillance, de collecte et d'analyse des informations pertinentes sur les nouvelles technologies, innovations et tendances d'un sujet plus ou moins précis.</br>
+                        Elle permet de rester informé des dernières avancées afin d'anticiper les évolutions futures et de les adapter si possible à son activité.</br>
+                        Cette veille peut inclure la surveillance de l'actualité des brevets, des publications scientifiques et des réseaux sociaux.</p>
+                </div>
+            
+                <div class="row row-text pills">
+                    <div class="pill-container">
+                        <img id="redPill" src="../textures/redPill.png" class="pill-button" />
+                        <span class="hover-label-red">Méthode Pull</span>
+                        <p id="pullText" class="hidden">Consiste en une recherche active et manuelle d'informations.</br>
+                            Gain de précision et de pertinence mais chronophage et risque de louper des informations.
+                        </p>
+                    </div>
+            
+                    <div class="pill-container">
+                        <img id="bluePill" src="../textures/bluePill.png" class="pill-button" />
+                        <span class="hover-label-blue">Méthode Push</span>
+                        <p id="pushText" class="hidden">Consiste à recevoir automatiquement des informations via des outils numériques.</br>
+                            Gain de temps à moindre effort mais nécessite la fiabilité des outils et des critères de recherche.
+                        </p>
+                    </div>
+                </div>
+            
+                <div class="row row-text">
+                    <div class="theme-container">
+                        <h3 id="themeButton">Mon thème : Green AI</h3>
+                        <p id="themeText" class="hidden">L'utilisation de l'IA pour optimiser la planification, la production et l'utilisation des énergies. <strong><a href="https://www.energy.gov/topics/artificial-intelligence-energy" target="_blank" rel="noopener noreferrer"
+                            style="text-decoration:none;color:#D85912;"
+                            onmouseover="this.style.color='#54214B';"
+                            onmouseout="this.style.color='#D85912';">Plus d'infos</a></strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="cyber-tubes">
+            <div class="line" style="--clr:#ffffff;"></div>
+            <div class="line" style="--clr:#00bfff;"></div>
+            <div class="line" style="--clr:#fffb23;"></div>
+        </div>
+        
+    </div>
+    <script src="../js/searching.js"></script>
+    <script src="../js/tubes.js"></script>
+    <script src="../js/appelLoading.js"></script>
+</body>
+</html>

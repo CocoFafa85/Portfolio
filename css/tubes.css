@@ -1,0 +1,51 @@
+
+  .cyber-tubes {
+    position: fixed;
+    top: 75vh;
+    left: -5vw;
+    width: 350px;
+    height: 20vh;
+    transform: rotate(30deg);
+  }
+
+  /* Style des lignes */
+  .cyber-tubes .line {
+    position: absolute;
+    left: 0;
+    width: 200%;
+    height: 8px;
+    background: var(--clr);
+    top: 50%;
+    transform: translateY(-50%);
+    border-radius: 4px;
+    opacity: 0.8;
+    filter: drop-shadow(0 0 8px var(--clr)) drop-shadow(0 0 20px var(--clr));
+  }
+
+
+/* Téléphones  */
+@media (max-width: 550px) {
+
+  .cyber-tubes {
+    top: 90vh;
+    left: -10vw;
+  }
+
+  .cyber-tubes .line {
+    width: 100%;
+  }
+
+}
+
+/* Tablettes */
+@media (min-width: 550px) and (max-width: 1365px) {
+
+  .cyber-tubes {
+    top: 80vh;
+  }
+
+  .cyber-tubes .line {
+    width: 150%;
+  }
+
+}

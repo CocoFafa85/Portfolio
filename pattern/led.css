@@ -1,0 +1,99 @@
+
+/* body{
+    min-height: 100vh;
+    background: linear-gradient(#4b1e43, #4b1e43, #561d4b, #631f57, #782268, #90257c, #a0248a, #D85912);
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    box-sizing: border-box;
+} */
+
+
+@property --rotate {
+    syntax: "<angle>";
+    initial-value: 360deg;
+    inherits: false;
+}
+
+:root {
+    --led-height: 62vh;
+    --led-width: 55vw;
+}
+
+.led{
+    background: linear-gradient(#FFFFF2, #dfdfd4);
+    width: var(--led-width);
+    height: var(--led-height);
+    padding:3px;
+    position: relative;
+    border-radius: 6px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    display: flex;
+    font-size: 1.5em;
+    color: rgb(88 199 250 / 0%);
+    font-family: cursive;
+}
+
+.led::before {
+    content: "";
+    width: 100.5%;
+    height: 101%;
+    border-radius: 8px;
+    background-image:
+        linear-gradient(var(--rotate),
+        #ff78d9,
+        #ff1c8e 43%,
+        #ff0055);
+        /* #f15724,
+        #e26014 43%,
+        #ce7100); */
+    position: absolute;
+    z-index: -1;
+    animation: spin 4s linear infinite;
+}
+
+.led::after {
+    position: absolute;
+    content: "";
+    top: 3%;
+    left: 0;
+    right: 0;
+    z-index: -1;
+    height: 100%;
+    width: 100%;
+    margin: 0 auto;
+    transform: scale (0.8);
+    filter: blur(calc(var(--led-height) /12));
+    background-image: 
+        linear-gradient(var(--rotate),
+        #ff90e0,
+        #ff369a 43%,
+        #f40b59);
+        /* #f15724,
+        #e26014 43%,
+        #ce7100); */
+    opacity: 1;
+    transition: opacity .5s;
+    animation: spin 4s linear infinite;
+}
+
+@keyframes spin {
+    0% {
+        --rotate: 0deg;
+    }
+    100% {
+        -rotate: 360deg;
+    }
+}
+
+/* p {
+    color: #4b1e43;
+    text-decoration: none;
+    font-family: sans-serif;
+    font-weight: bold;
+    margin-top: 2rem;
+} */
