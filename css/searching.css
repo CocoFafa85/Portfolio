@@ -1,0 +1,416 @@
+@font-face {
+  font-family: 'MedievalSharp';
+  src: url('../fonts/medievalsharp-v26-latin_latin-ext-regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Orbitron';
+  src: url('../fonts/orbitron-v31-latin-regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+    font-family: 'Orbitron';
+    src: url('../fonts/orbitron-v31-latin-900.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+  font-family: 'Montserrat Alternates';
+  src: url('../fonts/montserrat-alternates-v17-latin-regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+    background: linear-gradient(#4b1e43, #4b1e43, #561d4b, #631f57, #782268, #90257c, #a0248a, #D85912);
+    margin: 0; /* Supprime les marges par défaut du body */
+    padding: 0; /* Supprime les paddings par défaut du body */
+    box-sizing: border-box; /* Inclut les bordures et les paddings dans la taille totale des éléments */
+}
+
+.container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden; /* Empêche le débordement */
+}
+
+/* Centrage de la ligne du titre */
+.row-titre {
+    font-family: 'Orbitron', sans-serif;
+    display: flex;
+    margin-top: 5vh; /* Distance du haut de l’écran */
+    justify-content: center; /* Centre horizontalement le contenu */
+    align-items: center;
+    position: relative; /* positionner les éléments fixes */
+}
+
+.button-back {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #FFFFF2;
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(2px 2px 1px #000000);
+}
+
+.button-back:hover .tooltip {
+visibility: visible;
+opacity: 1;
+transform: translateX(-50%) translateY(0);
+}
+
+.back-arrow {
+  width: 60px; /* Largeur constante */
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  margin-left: -115%; /* Réduit l'espace avec le bord gauche */
+}
+
+.img-arrow{
+width: 1.5vw;
+}
+
+.tooltip {
+visibility: hidden;
+width: auto;
+background: linear-gradient(#FFFFF2, #dfdfd4);
+color: #4b1e43;
+text-align: center;
+padding: 5px 10px;
+border: solid 1px #ff0055;
+border-radius: 20px;
+position: absolute;
+left: 50%;
+transform: translateX(-50%) translateY(10px);
+opacity: 0;
+transition: opacity 0.3s ease, transform 0.3s ease;
+font-size: 12px;
+white-space: nowrap;
+box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1),
+0 1px 3px rgba(0, 0, 0, 0.08),0 8px 12px rgba(0, 0, 0, 0.2),
+0 4px 6px rgba(0, 0, 0, 0.15);
+z-index: 10;
+}
+
+/* Titre principal */
+.title {
+    margin: 0;
+    font-size: 1.5em;
+    text-align: center;
+    color: #ff379b;
+    /* color: #eb6a72; */
+}
+
+.bloc-container {
+    padding: 5px 40px;
+    font-family: 'Montserrat Alternates', sans-serif;
+    background: linear-gradient(#FFFFF2, #dfdfd4);
+    box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.3),
+                inset 0 -4px 6px rgba(0, 0, 0, 0.3);
+    width: 55vw;
+    height: 62vh;
+    border-radius: 2px;
+    color: #000000;
+    line-height: 1.4;
+    margin-top: 2vh;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: pageFadeIn 1s ease forwards;
+    z-index: 10;
+}
+
+@keyframes pageFadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+
+
+.row-text {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.info-line {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+
+.bloc-button {
+    width: 3%;
+    height: auto;
+    cursor: pointer;
+    animation: scaling 3s ease-in-out infinite;
+}
+
+.bloc-button:hover {
+  transform: scale(1.1);
+  animation: none;
+}
+
+@keyframes scaling {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+
+.bloc-button.no-animation {
+    animation: none !important;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+#infoText {
+    text-align: left;
+    width: 55vw;
+    margin: -3vh auto 0 auto; /* Centre le bloc horizontalement */
+    font-size: 1vw;
+}
+
+.pills {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: nowrap; /* empêche le retour à la ligne */
+}
+
+
+.pill-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    justify-content: flex-start;
+    width: 50vw;
+    margin-top: -2vh;
+}
+
+/* Ombre sous chaque pillule */
+.pill-container::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 40%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 10px;
+    background: rgba(0, 0, 0, 0.3);
+    filter: blur(6px);
+    border-radius: 50%;
+    z-index: -1;
+}
+
+.pill-button {
+    width: 60px;
+    height: 60px;
+    animation: float 3s ease-in-out infinite;
+    cursor: pointer;
+}
+
+.hover-label-red {
+    position: absolute;
+    font-family: 'Montserrat Alternates', sans-serif;
+    font-weight: bold;
+    top: 2vh;
+    right: 15%;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    font-size: 1vw;
+}
+
+
+#pullText{
+    text-align: center;
+    font-size: 1vw;
+}
+
+.hover-label-blue {
+    position: absolute;
+    font-family: 'Montserrat Alternates', sans-serif;
+    font-weight: bold;
+    top: 2vh;
+    left: 14%;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+    font-size: 1vw;
+}
+
+.pill-button:hover + .hover-label-red,
+.pill-button:hover + .hover-label-blue {
+    opacity: 1;
+}
+
+
+#pushText{
+    text-align: center;
+    font-size: 1vw;
+}
+
+.hidden {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    display: block;
+    visibility: hidden;
+}
+
+.visible {
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
+}
+
+.theme-container{
+    text-align: center; 
+}
+
+/* Green AI Bouton */
+#themeButton {
+    display: inline-block;
+    cursor: pointer;
+    color: #46143c;
+    text-align: center;
+}
+
+.pulse {
+    animation: pulse 1s ;
+}
+
+
+@keyframes pulse {
+    0%, 50%, 100% { transform: scale(1); }
+    25%, 75% { transform: scale(1.1); }
+}
+
+#themeButton:hover {
+    color: #D85912;
+}
+
+#themeText {
+    font-family: 'Montserrat Alternates', sans-serif;
+    font-size: 1vw;
+    margin-top: -2vh;
+}
+
+.glitch {
+    animation: glitch-effect 0.4s linear;
+}
+
+@keyframes glitch-effect {
+    0% { transform: translate(0, 0) skew(0deg); }
+    20% { transform: translate(-2px, 2px) skew(2deg); }
+    40% { transform: translate(2px, -2px) skew(-2deg); }
+    60% { transform: translate(-2px, 2px) skew(2deg); }
+    80% { transform: translate(2px, -2px) skew(-2deg); }
+    100% { transform: translate(0, 0) skew(0deg); }
+}
+
+
+/* === BASE: Variables pour LED === */
+@property --rotate {
+    syntax: "<angle>";
+    initial-value: 360deg;
+    inherits: false;
+  }
+  
+  :root {
+    --led-height: 62vh;
+    --led-width: 55vw;
+  }
+  
+/* === EFFETS LED / BLUR WRAPPER === */
+
+@property --rotate {
+    syntax: "<angle>";
+    initial-value: 360deg;
+    inherits: false;
+  }
+  
+  :root {
+    --led-height: 62vh;
+    --led-width: 55vw;
+  }
+  
+  .led {
+    position: relative;
+    /* Aucun centrage, padding ou background */
+    z-index: 0;
+  }
+  
+  /* Bordure animée */
+  .led::before {
+    content: "";
+    position: absolute;
+    width: 100.5%;
+    height: 98%;
+    left: -0.25%;
+    top: 6.5%;
+    border-radius: 2px;
+    background-image: linear-gradient(
+      var(--rotate),
+      #ff78d9,
+      #ff1c8e,
+      #ff0055
+    );
+    z-index: -2;
+    animation: spin 8s linear infinite;
+  }
+  
+  /* Effet flou animé */
+  .led::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transform: scale(0.9); 
+    border-radius: 2px;
+    filter: blur(calc(var(--led-height) / 6));
+    background-image: linear-gradient(
+      var(--rotate),
+      #ff90e0,
+      #ff369a,
+      #f40b59
+    );
+    opacity: 1;
+    transition: opacity 0.5s;
+    z-index: -3;
+    animation: spin 8s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% {
+      --rotate: 0deg;
+    }
+    100% {
+      --rotate: 360deg;
+    }
+  }
+
+
+
+  

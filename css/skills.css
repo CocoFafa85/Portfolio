@@ -1,0 +1,296 @@
+@font-face {
+  font-family: 'MedievalSharp';
+  src: url('../fonts/medievalsharp-v26-latin_latin-ext-regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Orbitron';
+  src: url('../fonts/orbitron-v31-latin-regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+    font-family: 'Orbitron';
+    src: url('../fonts/orbitron-v31-latin-900.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+  font-family: 'Montserrat Alternates';
+  src: url('../fonts/montserrat-alternates-v17-latin-regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+body {
+    background: linear-gradient(#4b1e43, #4b1e43, #561d4b, #631f57, #782268, #90257c, #a0248a, #D85912);
+    margin: 0; /* Supprime les marges par défaut du body */
+    padding: 0; /* Supprime les paddings par défaut du body */
+    box-sizing: border-box; /* Inclut les bordures et les paddings dans la taille totale des éléments */
+}
+
+.container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centre horizontalement le contenu */
+    overflow: hidden; /* Empêche le débordement */
+}
+
+/* Centrage de la ligne du titre */
+.row-titre {
+    font-family: 'Orbitron', sans-serif;
+    display: flex;
+    margin-top: 5vh; /* Distance du haut de l’écran */
+    justify-content: center; /* Centre horizontalement le contenu */
+    align-items: center;
+    position: relative; /* positionner les éléments fixes */
+}
+
+.button-back {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #FFFFF2;
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(2px 2px 1px #000000);
+}
+
+.button-back:hover .tooltip {
+visibility: visible;
+opacity: 1;
+transform: translateX(-50%) translateY(0);
+}
+
+.back-arrow {
+  width: 60px; /* Largeur constante */
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  margin-left: -160%; /* Réduit l'espace avec le bord gauche */
+}
+
+.img-arrow{
+width: 1.5vw;
+}
+
+.tooltip {
+visibility: hidden;
+width: auto;
+background: linear-gradient(#FFFFF2, #dfdfd4);
+color: #4b1e43;
+text-align: center;
+padding: 5px 10px;
+border: solid 1px #ff379b;
+border-radius: 20px;
+position: absolute;
+left: 50%;
+transform: translateX(-50%) translateY(10px);
+opacity: 0;
+transition: opacity 0.3s ease, transform 0.3s ease;
+font-size: 12px;
+white-space: nowrap;
+box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1),
+0 1px 3px rgba(0, 0, 0, 0.08),0 8px 12px rgba(0, 0, 0, 0.2),
+0 4px 6px rgba(0, 0, 0, 0.15);
+z-index: 10;
+}
+
+/* Titre principal */
+.title {
+    margin: 0;
+    font-size: 1.5em;
+    text-align: center;
+    color: #ff379b;
+    /* color: #eb6a72; */
+}
+
+.row-text {
+    font-family: 'Montserrat Alternates', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3vh;
+    position: relative; /* positionner les éléments fixes */
+    opacity: 0;
+    animation: pageFadeIn 1s ease forwards;
+  }
+
+
+p {
+    font-size:1vw;
+    padding: 20px 40px 5px 40px;
+    background: linear-gradient(#FFFFF2, #dfdfd4);
+    box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.3),
+                inset 0 -4px 6px rgba(0, 0, 0, 0.3);
+    border-radius: 2px;
+    color: #000000;
+    line-height: 1.4;
+    width: 55vw;
+    height: 60vh;
+}
+
+
+.hypertext {
+    text-decoration: none;
+    color: #D85912;
+}
+
+.hypertext:hover {
+    text-decoration: none;
+    color: #54214B;
+}
+
+
+
+/*anneau*/
+.ring-button {
+    position: fixed;
+    top: 50vh;
+    right: 2vw;
+    width: 240px;
+    height: 240px;
+    border-radius: 50%;
+    background: radial-gradient(circle at center, #8a6f1e, #e2bd34, #c69c15 80%, #8a6f1e);
+    box-shadow: inset 0 0 5px #000000aa;
+    cursor: pointer;
+    opacity: 0;
+    animation: pageFadeIn 1s ease forwards;
+  }
+
+  .ring-button:hover {
+    transform: scale(1.02);
+  }
+
+  .ring-button::before {
+    content: '';
+    position: absolute;
+    width: 130px;
+    height: 130px;
+    background: linear-gradient(#90257c, #a0248a);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+  }
+
+  .ring-text svg {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    transform: rotate(0deg);
+    animation: spinRing 60s linear infinite;
+    pointer-events: none;
+  }
+
+  .ring-text text {
+    font-family: 'MedievalSharp', cursive;
+    font-size: 14px;
+    fill: #111;
+    letter-spacing: 1.5px;
+    text-shadow: none;
+    transition: all 0.4s ease;
+  }
+
+  .ring-button:hover text {
+    fill: #ffd700;
+    text-shadow: 0 0 5px #ffd700, 0 0 10px #ff4500;
+  }
+
+  @keyframes spinRing {
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes pageFadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+/* === EFFETS LED / BLUR WRAPPER === */
+
+@property --rotate {
+  syntax: "<angle>";
+  initial-value: 360deg;
+  inherits: false;
+}
+
+:root {
+  --led-height: 62vh;
+  --led-width: 55vw;
+}
+
+.led {
+  position: relative;
+  /* Aucun centrage, padding ou background */
+  z-index: 0;
+}
+
+/* Bordure animée */
+.led::before {
+  content: "";
+  position: absolute;
+  width: 100.5%;
+  height: 95%;
+  left: -0.25%;
+  top: 2.5%;
+  border-radius: 2px;
+  background-image: linear-gradient(
+    var(--rotate),
+    #ff78d9,
+    #ff1c8e,
+    #ff0055
+  );
+  z-index: -2;
+  animation: spin 8s linear infinite;
+}
+
+/* Effet flou animé */
+.led::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transform: scale(0.9); 
+  border-radius: 2px;
+  filter: blur(calc(var(--led-height) / 6));
+  background-image: linear-gradient(
+    var(--rotate),
+    #ff90e0,
+    #ff369a,
+    #f40b59
+  );
+  opacity: 1;
+  transition: opacity 0.5s;
+  z-index: -3;
+  animation: spin 8s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    --rotate: 0deg;
+  }
+  100% {
+    --rotate: 360deg;
+  }
+}
+
+/* Autorise l’effet visuel à sortir */
+.row-text {
+  overflow: visible;
+}
+
+
+
+

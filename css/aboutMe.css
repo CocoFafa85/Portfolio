@@ -1,0 +1,352 @@
+
+@font-face {
+  font-family: 'MedievalSharp';
+  src: url('../fonts/medievalsharp-v26-latin_latin-ext-regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Orbitron';
+  src: url('../fonts/orbitron-v31-latin-regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+    font-family: 'Orbitron';
+    src: url('../fonts/orbitron-v31-latin-900.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+  font-family: 'Montserrat Alternates';
+  src: url('../fonts/montserrat-alternates-v17-latin-regular.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+  
+}body {
+    background: linear-gradient(#4b1e43, #4b1e43, #561d4b, #631f57, #782268, #90257c, #a0248a, #D85912);
+    margin: 0; /* Supprime les marges par défaut du body */
+    padding: 0; /* Supprime les paddings par défaut du body */
+    box-sizing: border-box; /* Inclut les bordures et les paddings dans la taille totale des éléments */
+}
+
+.container {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centre horizontalement le contenu */
+    overflow: hidden; /* Empêche le débordement */
+}
+
+/* Centrage de la ligne du titre */
+.row-titre {
+    font-family: 'Orbitron', sans-serif;
+    display: flex;
+    margin-top: 5vh; /* Distance du haut de l’écran */
+    justify-content: center; /* Centre horizontalement le contenu */
+    align-items: center;
+    position: relative; /* positionner les éléments fixes */
+}
+
+  
+.button-back {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #FFFFF2;
+    position: relative;
+    z-index: 1;
+    filter: drop-shadow(2px 2px 1px #000000);
+}
+
+.button-back:hover .tooltip {
+  visibility: visible;
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.back-arrow {
+    width: 60px; /* Largeur constante */
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    margin-left: -130%; /* Réduit l'espace avec le bord gauche */
+}
+
+.img-arrow{
+  width: 1.5vw;
+}
+
+.tooltip {
+  visibility: hidden;
+  width: auto;
+  background: linear-gradient(#FFFFF2, #dfdfd4);
+  color: #4b1e43;
+  text-align: center;
+  padding: 5px 10px;
+  border: solid 1px #ff0055;
+  border-radius: 20px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  opacity: 0;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  font-size: 12px;
+  white-space: nowrap;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1),
+  0 1px 3px rgba(0, 0, 0, 0.08),0 8px 12px rgba(0, 0, 0, 0.2),
+  0 4px 6px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+}
+
+
+/* Titre principal */
+.title {
+    margin: 0;
+    font-size: 1.5em;
+    text-align: center;
+    color: #ff379b;
+    /* color: #eb6a72; */
+}
+
+/* Bloc convecteur + texte */
+.row-text {
+    font-family: 'Montserrat Alternates', sans-serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative; /* positionner les éléments fixes */
+    margin-top: 5vh;
+}
+
+
+.convector {
+    display: flex;
+    justify-content: center;
+    position: absolute;
+    margin-left: -110%; /* Réduit l'espace avec le bord gauche */
+    margin-top: -35%; /* Réduit l'espace avec le bord gauche */
+    opacity: 0;
+    animation: pageFadeIn 1s ease forwards;
+    padding: 0;
+}
+
+@keyframes pageFadeIn {
+  to {
+      opacity: 1;
+  }
+}
+
+/* Bouton du convecteur */
+#convector-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-right: 30px; 
+    position: relative; 
+    animation: float 3s ease-in-out infinite;
+    transition: transform 0.3s ease;
+    padding: 0; /* Supprime le padding par défaut */
+    display: inline-block; /* Assure que le bouton s'adapte à la taille de l'image */
+
+}
+
+#convector-btn:hover {
+    transform: scale(1.1); /* Agrandit l'image au survol */
+    animation: none;
+}
+
+#convector-img {
+    width: 17%; 
+}
+
+@keyframes float {
+  0%   { transform: translateY(0); }
+  50%  { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+}
+
+
+
+
+.led {
+  position: relative;
+  width: var(--led-width);
+  height: var(--led-height);
+  z-index: 0;
+  overflow: visible;
+}
+
+/* Texte descriptif */
+#description {
+  width: 100%; /* Prend toute la largeur du conteneur parent */
+  height: 100%; /* Prend toute la hauteur du conteneur parent */
+  padding: 20px 40px;
+  background: linear-gradient(#FFFFF2, #dfdfd4);
+  box-shadow: inset 0 4px 6px rgba(0, 0, 0, 0.3),
+              inset 0 -4px 6px rgba(0, 0, 0, 0.3);
+  border-radius: 2px;
+  color: #000000;
+  line-height: 1.4;
+  box-sizing: border-box; /* Inclut le padding dans les dimensions totales */
+  overflow: auto; /* Ajoute une barre de défilement si le contenu dépasse les dimensions fixes */
+  position: relative; /* Assure que le texte reste au-dessus des pseudo-éléments */
+  z-index: 1; /* Assure que le texte reste au-dessus des pseudo-éléments */
+}
+
+  
+
+/* Conteneur des liens */
+.row-link {
+    display: flex;
+    justify-content: center; /* Centre tous les éléments */
+    align-items: center;
+    gap: 40px; /* Espace horizontal */
+    padding: 0 10vw; /* Espace intérieur gauche/droite */
+    box-sizing: border-box;
+    top: 84vh;
+    position: absolute;
+  }
+  
+  /* Liens des images */
+  .row-link a {
+    display: flex;
+    justify-content: center; /* Centre les images dans leur espace */
+    align-items: center;
+    flex-basis: 100px; /* Définissez une base flexible pour chaque élément */
+    flex-grow: 0; /* Empêche les éléments de grandir */
+    flex-shrink: 0; /* Empêche les éléments de rétrécir */
+  }
+  
+  /* Images des liens */
+  .row-link img {
+    cursor: pointer;
+    transition: transform 0.3s ease, opacity 0.3s ease; /* Ajoutez une transition pour l'opacité */
+    margin: 0; /* Assurez-vous qu'il n'y a pas de marges supplémentaires */
+    padding: 0; /* Assurez-vous qu'il n'y a pas de paddings supplémentaires */
+    max-width: 100%; /* Assurez-vous que les images ne dépassent pas leur conteneur */
+    max-height: 100%; /* Assurez-vous que les images ne dépassent pas leur conteneur */
+    animation: scaling 3s ease-in-out infinite;
+  }
+  
+  /* Animation au hover */
+  .row-link img:hover {
+    transform: scale(1.1);
+    animation: none;
+  }
+  
+  /* Images redimensionnées individuellement */
+  .img-rcs {
+    width: 90%; /* Ajuste selon proportions voulues */
+    height: auto; /* Conserve les proportions */
+  }
+  .img-linkedin {
+    width: 100%;
+    height: auto;
+  }
+  .img-logodev {
+    width: 90%;
+    height: auto;
+  }
+
+  @keyframes scaling {
+    0%   { transform: scale(1); }
+    50%  { transform: scale(1.1); }
+    100% { transform: scale(1); }
+  }
+  
+  
+  
+  /* Animation fade-in générique */
+.fade-in {
+    opacity: 0;
+    transition: opacity 0.3s ease-in;
+  }
+  
+  .fade-in.show {
+    opacity: 1;
+  }
+
+
+  /* === EFFETS LED / BLUR WRAPPER === */
+
+@property --rotate {
+  syntax: "<angle>";
+  initial-value: 360deg;
+  inherits: false;
+}
+
+:root {
+  --led-height: 55vh;
+  --led-width: 55vw;
+}
+
+.led {
+  position: relative;
+  /* Aucun centrage, padding ou background */
+  z-index: 0;
+}
+
+/* Bordure animée */
+.led::before {
+  content: "";
+  position: absolute;
+  width: 100.5%;
+  height: 101%;
+  left: -0.25%;
+  top: 3.5%;
+  border-radius: 2px;
+  background-image: linear-gradient(
+    var(--rotate),
+    #ff78d9,
+    #ff1c8e,
+    #ff0055
+  );
+  z-index: -2;
+  animation: spin 8s linear infinite;
+}
+
+/* Effet flou animé */
+.led::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  transform: scale(0.9); 
+  border-radius: 2px;
+  filter: blur(calc(var(--led-height) / 6));
+  background-image: linear-gradient(
+    var(--rotate),
+    #ff90e0,
+    #ff369a,
+    #f40b59
+  );
+  opacity: 1;
+  transition: opacity 0.5s;
+  z-index: -3;
+  animation: spin 8s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    --rotate: 0deg;
+  }
+  100% {
+    --rotate: 360deg;
+  }
+}
+
+/* Autorise l’effet visuel à sortir */
+.row-text {
+  overflow: visible;
+}
+
+
+
+
