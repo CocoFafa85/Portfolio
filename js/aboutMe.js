@@ -1,7 +1,7 @@
 const steps = [
     {
       img: "../textures/convecteurTemporel1.png",
-      text: "<span style='font-weight: bold; font-size:1em'>Qui j'étais</span></br></br><span style='font-size:1vw'>Né aux Sables d'Olonne, j'ai grandi à la campagne. J'ai toujours été attiré par les activités qui stimulent mon raisonnement et ma logique. Que ce soit les sciences, la cinématopgrahie, les échecs ou les jeux vidéo, ces passions ont façonné mon esprit analytique. Mon entourage familial et amical a été important pour moi et m'a aidé à garder les pieds sur terre.</br></br>Passionné par les sports, à l'âge de 12 ans j'ai commencé à pratiquer le rugby à XV au rugby club sablais (R.C.S). Cette expérience au niveau national m'a enseigné la discipline, la cohésion d'équipe et la persévérance, des valeurs qui m'accompagnent encore aujourd'hui.</br></br>Après avoir obtenu un baccalauréat général scientifique, j'ai exploré diverses voies professionnelles. J'ai entamé une fromation en école d'ergothérapie puis j'ai finalement travaillé comme serveur et barman dans l'hôtellerie-restauration puis j'ai mûri mon projet actuel.</span>",
+      text: "<span style='font-weight: bold; font-size:1em'>Qui j'étais</span></br></br><span style='font-size:1vw'>Né aux Sables d'Olonne, j'ai grandi à la campagne. J'ai toujours été attiré par les activités qui stimulent mon raisonnement et ma logique. Que ce soit les sciences, la cinématopgrahie, les échecs ou les jeux vidéo, ces passions ont façonné mon esprit analytique. Mon entourage familial et amical a été important pour moi et m'a aidé à garder les pieds sur terre.</br></br>Passionné par les sports, à l'âge de 12 ans j'ai commencé à pratiquer le rugby à XV au rugby club sablais (R.C.S). Cette expérience au niveau national m'a enseigné la discipline, la cohésion d'équipe et la persévérance, des valeurs qui m'accompagnent encore aujourd'hui.</br></br>Après avoir obtenu un baccalauréat général scientifique, j'ai exploré diverses voies professionnelles. J'ai entamé une formation en école d'ergothérapie puis j'ai finalement travaillé comme serveur et barman dans l'hôtellerie-restauration puis j'ai mûri mon projet actuel.</span>",
       show: ["link-rcs"],
       hide: ["link-linkedin", "logo-dev"]
     },
@@ -29,50 +29,56 @@ const steps = [
   
   let currentStep = 0;
   
+
+  //Logique des textes
   function updateView() {
-    console.log("updateView called"); // DEBUG
+  const nextStep = (currentStep + 1) % steps.length;
+
+  // MAJ image convecteur
+  convectorImg.src = steps[nextStep].img;
+
+  // Texte
+  description.classList.remove("show");
+  setTimeout(() => {
+    description.innerHTML = steps[nextStep].text;
+    description.classList.add("show");
+  }, 200);
+
+  // Liens à afficher
+  steps[nextStep].show.forEach(id => {
+    const el = links[id];
+    if (el) {
+      el.style.display = "inline-block";
+      el.style.visibility = "visible";
+      setTimeout(() => el.classList.add("show"), 50);
+    }
+  });
+
+  // Liens à cacher
+  steps[nextStep].hide.forEach(id => {
+    const el = links[id];
+    if (el) {
+      el.classList.remove("show");
+      setTimeout(() => {
+        el.style.display = "none";
+        el.style.visibility = "hidden";
+      }, 300);
+    }
+  });
+
+  // 👉 MAJ indicateur étape
+  updateStepIndicator(nextStep);
+
+  currentStep = nextStep;
+}
+
   
-    const nextStep = (currentStep + 1) % steps.length;
-  
-    // MAJ image convecteur
-    convectorImg.src = steps[nextStep].img;
-  
-    // FADE texte
-    description.classList.remove("show");
-  
-    setTimeout(() => {
-      description.innerHTML = steps[nextStep].text;
-      description.classList.add("show");
-    }, 200);
-  
-    // Affiche éléments show[]
-    steps[nextStep].show.forEach(id => {
-      const el = links[id];
-      if (el) {
-        el.style.display = "inline-block";
-        el.style.visibility = "visible";
-        setTimeout(() => el.classList.add("show"), 50);
-      }
-    });
-  
-    // Masque éléments hide[]
-    steps[nextStep].hide.forEach(id => {
-      const el = links[id];
-      if (el) {
-        el.classList.remove("show");
-        setTimeout(() => {
-          el.style.display = "none";
-          el.style.visibility = "hidden";
-        }, 300);
-      }
-    });
-  
-    currentStep = nextStep;
-  }
-  
+
+
   // Initialisation à chargement
   window.onload = () => {
     console.log("Page loaded"); 
+    updateStepIndicator(currentStep); // active "1" à l'ouverture
     description.classList.add("show");
     Object.values(links).forEach(el => {
       if (el && el.style.display !== "none") {
@@ -89,3 +95,14 @@ const steps = [
     }
   };
   
+
+  function updateStepIndicator(index) {
+  const allWindows = document.querySelectorAll(".window");
+  allWindows.forEach((win, i) => {
+    if (i === index) {
+      win.classList.add("active");
+    } else {
+      win.classList.remove("active");
+    }
+  });
+}
