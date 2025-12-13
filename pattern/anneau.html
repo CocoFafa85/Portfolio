@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Anneau Bouton</title>
+  <link href="https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap" rel="stylesheet">
+  <style>
+
+    body {
+      background-color: #111;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .ring-button {
+      position: relative;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: radial-gradient(circle at center, #f5d76e, #c69c15 60%, #8a6f1e);
+      box-shadow: inset 0 0 5px #000000aa;
+      cursor: pointer;
+    }
+
+    .ring-button:hover {
+      transform: scale(1.05);
+    }
+
+    .ring-button::before {
+      content: '';
+      position: absolute;
+      width: 130px;
+      height: 130px;
+      background-color: #111;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+    }
+
+    .ring-text svg {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+      transform: rotate(0deg);
+      animation: spin 60s linear infinite;
+      pointer-events: none;
+    }
+
+    .ring-text text {
+      font-family: 'MedievalSharp', cursive;
+      font-size: 14px;
+      fill: #111;
+      letter-spacing: 1.5px;
+      text-shadow: none;
+      transition: all 0.4s ease;
+    }
+
+    .ring-button:hover text {
+      fill: #ffd700;
+      text-shadow: 0 0 5px #ffd700, 0 0 10px #ff4500;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+<a href="https://drive.google.com/file/d/1aNhYK14j7SgVkJaIU9ofeeetqDTZding/view?usp=drive_link" class="ring-button">
+  <div class="ring-text">
+    <svg viewBox="0 0 260 260">
+      <defs>
+        <path id="circlePath" d="M130,130 m-100,0 a100,100 0 1,1 200,0 a100,100 0 1,1 -200,0" />
+      </defs>
+      <text>
+        <!-- startOffset controls position | textLength stretches the text -->
+        <textPath href="#circlePath" startOffset="0%" textLength="600">
+          Un curriculum vitae pour les convaincre tous
+        </textPath>
+      </text>
+    </svg>
+  </div>
+</a>
+
+</body>
+</html>
