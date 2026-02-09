@@ -1,0 +1,101 @@
+{
+  "architecture_design": {
+    "project_name": "Portfolio Corentin FANIC - Modernized",
+    "version": "2.0.0",
+    "philosophy": "Data-Driven, Strictly Typed, Component-Based",
+    "entities": [
+      {
+        "name": "UserProfile",
+        "description": "Global information about the owner (Name, Title, Social Links, Resume).",
+        "usage": "Used in Header, Footer, and Meta tags for SEO."
+      },
+      {
+        "name": "TimelineStep",
+        "description": "Represents a step in the 'About Me' section (Past, Present, Future).",
+        "mapping": "Corresponds to the 'convector' steps in the original `aboutMe.js`."
+      },
+      {
+        "name": "Project",
+        "description": "A portfolio project entry.",
+        "properties": [
+          "status (Completed/In Progress)",
+          "technologies",
+          "links (demo, repo)"
+        ]
+      },
+      {
+        "name": "Skill",
+        "description": "A specific technical skill categorized by domain.",
+        "usage": "Used to generate the skill cloud or list."
+      },
+      {
+        "name": "TechWatchEntry",
+        "description": "Content regarding technology watch (Green AI, methodologies).",
+        "mapping": "Corresponds to the `searching.html` content."
+      }
+    ],
+    "typescript_interfaces": [
+      {
+        "name": "IUserProfile",
+        "code": "export interface IUserProfile {\n  fullName: string;\n  jobTitle: string;\n  resumeUrl: string;\n  socials: {\n    linkedin?: string;\n    github?: string;\n    email?: string;\n  };\n  assets: {\n    avatar: string;\n    favicon: string;\n  };\n}"
+      },
+      {
+        "name": "ITimelineStep",
+        "code": "export interface ITimelineStep {\n  id: string;\n  title: string;\n  description: string; // Supports HTML or Markdown\n  imageUrl: string;\n  order: number;\n  activeLinks: string[]; // IDs of social links relevant to this step\n}"
+      },
+      {
+        "name": "IProject",
+        "code": "export type ProjectStatus = 'completed' | 'in-progress' | 'archived';\n\nexport interface IProject {\n  id: string;\n  title: string;\n  description?: string;\n  thumbnailUrl: string;\n  status: ProjectStatus;\n  projectUrl?: string;\n  repoUrl?: string;\n  techStack: string[]; // e.g., ['React', 'Node.js']\n}"
+      },
+      {
+        "name": "ISkill",
+        "code": "export type SkillCategory = 'frontend' | 'backend' | 'database' | 'devops' | 'tools';\n\nexport interface ISkill {\n  id: string;\n  name: string;\n  category: SkillCategory;\n  iconUrl?: string;\n  proficiency?: number; // 0-100\n}"
+      },
+      {
+        "name": "ITechWatch",
+        "code": "export interface ITechWatch {\n  topic: string;\n  summary: string;\n  detailsUrl?: string;\n  methodology: {\n    pull: string;\n    push: string;\n  };\n}"
+      }
+    ],
+    "services": [
+      {
+        "name": "DataService",
+        "description": "Responsible for fetching static content (JSON) or CMS data. Decouples content from components.",
+        "methods": [
+          "getProfile(): Promise<IUserProfile>",
+          "getProjects(filter?: ProjectStatus): Promise<IProject[]>",
+          "getTimeline(): Promise<ITimelineStep[]>",
+          "getSkills(): Promise<ISkill[]>"
+        ]
+      },
+      {
+        "name": "AnimationService",
+        "description": "Centralizes logic for Canvas animations and transitions (Orbit, Starfield, Grid) to avoid Global Scope pollution.",
+        "methods": [
+          "initializeGrid(canvas: HTMLCanvasElement): void",
+          "startOrbitAnimation(elements: HTMLElement[]): void",
+          "triggerWarpTransition(onComplete: () => void): void",
+          "cleanup(): void" // Crucial for SPA navigation to prevent memory leaks
+        ]
+      },
+      {
+        "name": "NavigationService",
+        "description": "Handles routing and 'Page Transitions' without iframes.",
+        "methods": [
+          "navigate(route: string): void",
+          "getCurrentRoute(): string"
+        ]
+      }
+    ],
+    "data_source_structure": {
+      "format": "JSON",
+      "location": "/public/data/",
+      "files": [
+        "profile.json",
+        "timeline.json",
+        "projects.json",
+        "skills.json",
+        "tech-watch.json"
+      ]
+    }
+  }
+}

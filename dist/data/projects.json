@@ -1,0 +1,50 @@
+[
+    {
+        "id": "ifto",
+        "title": "Site IFTO",
+        "description": "Site réalisé pour l'IFTO.",
+        "thumbnailUrl": "/assets/textures/carteSiteIfto.png",
+        "status": "completed",
+        "projectUrl": "https://www.ifto.fr/",
+        "techStack": [
+            "Web",
+            "Design"
+        ]
+    },
+    {
+        "id": "memory",
+        "title": "Memory Game",
+        "description": "Jeu de mémoire développé en Angular.",
+        "thumbnailUrl": "/assets/textures/carteMemoryGame.png",
+        "status": "completed",
+        "projectUrl": "https://cocofafa85.github.io/ANG/Memory.html",
+        "repoUrl": "https://github.com/cocofafa85/ANG",
+        "techStack": [
+            "Angular",
+            "TypeScript"
+        ]
+    },
+    {
+        "id": "solar-system",
+        "title": "Système Solaire",
+        "description": "Simulation du système solaire.",
+        "thumbnailUrl": "/assets/textures/carteSystemeSolaire.png",
+        "status": "completed",
+        "projectUrl": "https://cocofafa85.github.io/SolarSystem/index.html",
+        "techStack": [
+            "Three.js",
+            "JavaScript"
+        ]
+    },
+    {
+        "id": "demineur",
+        "title": "Démineur 2.0",
+        "description": "Jeu du démineur revisité.",
+        "thumbnailUrl": "/assets/textures/carteDemineur2.0.png",
+        "status": "in-progress",
+        "techStack": [
+            "React",
+            "TypeScript"
+        ]
+    }
+]

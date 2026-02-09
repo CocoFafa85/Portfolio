@@ -1,0 +1,14 @@
+{
+    "fullName": "Corentin FANIC",
+    "jobTitle": "Développeur Full Stack & Designer UX/UI",
+    "resumeUrl": "/resume.pdf",
+    "socials": {
+        "linkedin": "https://www.linkedin.com/in/corentin-fanic",
+        "github": "https://github.com/cocofafa85",
+        "email": "corentin.fanic@example.com"
+    },
+    "assets": {
+        "avatar": "/assets/textures/avatar.png",
+        "favicon": "/assets/textures/favicone.png"
+    }
+}
