@@ -30,7 +30,7 @@ const router = createBrowserRouter([
         ],
     },
 ], {
-    basename: "/PortfolioV2" // <--- AJOUTE CE BLOC ICI (après le tableau des routes)
+    basename: "/Portfolio" // <--- AJOUTE CE BLOC ICI (après le tableau des routes)
 });
 
 const App: React.FC = () => {
