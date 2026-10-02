@@ -4,7 +4,7 @@ import react from '@vitejs/plugin-react'
 // https://vitejs.dev/config/
 export default defineConfig({
     plugins: [react()],
-    base: '/Portfolio/', // Indispensable pour GitHub Pages
+    base: '/', // Site servi à la racine du domaine personnalisé corentinfanic.dev
     resolve: {
         alias: {
             '@': '/src',

@@ -2,7 +2,7 @@ import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import styles from './HoloCard.module.scss';
 
-const CV_URL = '/cv_resume.pdf';
+const CV_URL = `${import.meta.env.BASE_URL}cv_resume.pdf`;
 const CV_DRIVE_URL = 'https://drive.google.com/file/d/1DmMs3MerkEATmfSbVSKeU3yTCGiKyutW/view?usp=sharing';
 
 const GLITCH_CHARS = '!@#$%^&*()_+-=[]{}|;:,.<>?/\\~`0123456789ABCDEF';

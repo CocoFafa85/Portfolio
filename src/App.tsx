@@ -30,7 +30,7 @@ const router = createBrowserRouter([
         ],
     },
 ], {
-    basename: "/Portfolio" // <--- AJOUTE CE BLOC ICI (après le tableau des routes)
+    basename: import.meta.env.BASE_URL // Suit automatiquement le `base` de vite.config.ts
 });
 
 const App: React.FC = () => {
