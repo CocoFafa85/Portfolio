@@ -104,7 +104,7 @@ Mon approche est résolument DevOps et Agile. Au-delà du simple versioning avec
                 title: "First Portfolio",
                 description: "Mon premier portfolio homemade. Une archive sentimentale.",
                 demoLink: "https://cocofafa85.github.io/PortfolioFirst/index.html",
-                repoLink: "https://github.com/CocoFafa85/Portfolio",
+                repoLink: "https://github.com/CocoFafa85/PortfolioFirst",
                 tags: ["CSS", "JavaScript", "Legacy"],
                 color: "#2962ff"
             },
