@@ -1,0 +1,128 @@
+@use 'sass:color';
+@use '../../../styles/variables' as *;
+
+$star-light: color.mix(#fff, $neon-cyan, 75%);
+$electric-light: color.mix(#fff, $neon-cyan, 60%);
+
+// ═══════════════════════════════════════════════
+// TRIP OVERLAY — above the page, under the navigation bar (cockpit view).
+// Timeline (--travel-ms): the cover rises over 42 % of the trip and holds
+// until the new page is mounted (.arrived, at ~50 % on time), then clears
+// over 42 %: a slow device lengthens the darkness, never shows the swap.
+// Transform and opacity only.
+// ═══════════════════════════════════════════════
+.overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    overflow: hidden;
+    pointer-events: none;
+    contain: strict;
+}
+
+.cover {
+    position: absolute;
+    inset: 0;
+    background: $bg-deep;
+    opacity: 0;
+    animation: travel-cover-in calc(var(--travel-ms) * 0.42) ease-in forwards;
+}
+
+.arrived .cover {
+    opacity: 1;
+    animation: travel-cover-out calc(var(--travel-ms) * 0.42) ease-out forwards;
+}
+
+.flash {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    animation: travel-flash var(--travel-ms) ease-out forwards;
+}
+
+// ─── Hyperspace: star lines shot from the centre ───
+.hyperspace .flash {
+    background: #fff;
+}
+
+.radial {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: var(--length);
+    height: 2px;
+    margin-top: -1px;
+    transform-origin: 0 50%;
+    background: linear-gradient(90deg, transparent, $star-light);
+    opacity: 0;
+    animation: travel-radial calc(var(--travel-ms) * 0.85) cubic-bezier(0.5, 0, 0.9, 0.6) var(--delay) forwards;
+}
+
+// ─── 88 mph: light streaks rushing past, electric flash, fire trails ───
+.timeTravel .flash {
+    background: $electric-light;
+}
+
+.speed {
+    position: absolute;
+    top: var(--top);
+    left: 0;
+    width: var(--width);
+    height: 1px;
+    background: $electric-light;
+    opacity: 0.8;
+    transform: translateX(110vw);
+    animation: travel-speed var(--duration) linear var(--delay) forwards;
+}
+
+.fire {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, $fire-orange 40%, $neon-pink);
+    transform: scaleX(0);
+    transform-origin: 100% 50%;
+    animation: travel-fire calc(var(--travel-ms) * 0.6) ease-out calc(var(--travel-ms) * 0.5) forwards;
+}
+
+.fireHigh {
+    top: 78%;
+}
+
+.fireLow {
+    top: 88%;
+}
+
+@keyframes travel-cover-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes travel-cover-out {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes travel-flash {
+    0%, 40% { opacity: 0; }
+    50% { opacity: 0.85; }
+    64%, 100% { opacity: 0; }
+}
+
+@keyframes travel-radial {
+    0% { transform: rotate(var(--angle)) translateX(var(--start)) scaleX(0.1); opacity: 0; }
+    30% { opacity: 1; }
+    100% { transform: rotate(var(--angle)) translateX(calc(var(--start) + 75vmax)) scaleX(1.8); opacity: 0; }
+}
+
+@keyframes travel-speed {
+    from { transform: translateX(110vw); }
+    to { transform: translateX(calc(-1 * var(--width) - 20px)); }
+}
+
+@keyframes travel-fire {
+    0% { transform: scaleX(0); opacity: 1; }
+    40% { transform: scaleX(1); opacity: 1; }
+    100% { transform: scaleX(1); opacity: 0; }
+}

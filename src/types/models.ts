@@ -65,17 +65,32 @@ export interface Project {
 }
 
 export interface UiLabels {
-    /** Accessible name of the home orbital navigation */
+    /** Accessible name of the site navigation bar */
     mainNavLabel: string;
+    /** Accessible name of the home orbital navigation (distinct from the bar's) */
+    orbitNavLabel: string;
+    /** Monogram of the navigation bar home badge */
+    monogram: string;
+    /** Home link of the navigation bar (visible on desktop, accessible name everywhere) */
+    homeLabel: string;
     /** Accessible name of the HoloCard download action */
     cvDownloadLabel: string;
-    /** Back-to-home button of the inner pages */
-    backLabel: string;
+}
+
+/** Silkscreen reference prefixes of the circuit background (U1, R12, C4...) */
+export interface CircuitDesignators {
+    chip: string;
+    resistor: string;
+    capacitor: string;
 }
 
 export interface PortfolioContent {
     ui: UiLabels;
     nav: NavItem[];
+    /** Decorative texts drawn by the backgrounds */
+    decor: {
+        circuit: CircuitDesignators;
+    };
     cv: CvFile;
     home: {
         title: string;

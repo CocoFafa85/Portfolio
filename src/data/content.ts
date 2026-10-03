@@ -3,8 +3,13 @@ import { PortfolioContent } from '../types/models';
 export const content: PortfolioContent = {
     ui: {
         mainNavLabel: "Navigation principale",
-        cvDownloadLabel: "Télécharger le CV de Corentin FANIC (PDF)",
-        backLabel: "< Retour"
+        orbitNavLabel: "Menu orbital",
+        monogram: "CF",
+        homeLabel: "Accueil",
+        cvDownloadLabel: "Télécharger le CV de Corentin FANIC (PDF)"
+    },
+    decor: {
+        circuit: { chip: "U", resistor: "R", capacitor: "C" }
     },
     nav: [
         { id: "about", label: "About", path: "/about" },
