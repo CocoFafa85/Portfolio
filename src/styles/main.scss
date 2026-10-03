@@ -29,9 +29,16 @@
   --text-primary: #ffffff;
   --text-secondary: #c0c0d0;
   --text-accent: #ffa9d4;
+  --text-dim: #{$text-dim};
 
   --font-orbitron: 'Orbitron', sans-serif;
   --font-montserrat: 'Montserrat Alternates', sans-serif;
+
+  --hud-height: #{$hud-height};
+
+  @include mobile {
+    --hud-height: #{$hud-height-mobile};
+  }
 }
 
 body {

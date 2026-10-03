@@ -67,6 +67,10 @@ export interface Project {
 export interface UiLabels {
     /** Accessible name of the home orbital navigation */
     mainNavLabel: string;
+    /** Monogram of the navigation bar home badge */
+    monogram: string;
+    /** Home link of the navigation bar (visible on desktop, accessible name everywhere) */
+    homeLabel: string;
     /** Accessible name of the HoloCard download action */
     cvDownloadLabel: string;
     /** Back-to-home button of the inner pages */
