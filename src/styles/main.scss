@@ -110,15 +110,6 @@ a {
   outline-offset: 3px;
 }
 
-// Utility Classes
-.neon-text-pink {
-  @include neon-text($neon-pink);
-}
-
-.glass-panel {
-  @include glass-panel;
-}
-
 // GLOBAL GLITCH TITLE
 .glitch-title {
   font-family: $font-orbitron;

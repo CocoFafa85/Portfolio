@@ -64,12 +64,6 @@ export interface Project {
     color?: string;
 }
 
-export interface ReferenceLink {
-    label: string;
-    url: string;
-    context: string;
-}
-
 export interface UiLabels {
     /** Accessible name of the home orbital navigation */
     mainNavLabel: string;
@@ -108,5 +102,4 @@ export interface PortfolioContent {
         message: string;
         cta: string;
     };
-    links: ReferenceLink[];
 }

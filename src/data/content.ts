@@ -161,12 +161,5 @@ Mon approche est résolument DevOps et Agile. Au-delà du simple versioning avec
         title: "Signal perdu",
         message: "Cette adresse ne mène nulle part : la transmission s'est perdue dans le réseau.",
         cta: "Retour à l'accueil"
-    },
-    links: [
-        { label: "RCS (Rugby)", url: "https://rc-sablais.ffr.fr/", context: "About Me — étape 1" },
-        { label: "LinkedIn", url: "http://www.linkedin.com/in/corentin-fanic-832630293", context: "About Me — étape 2" },
-        { label: "Logo Dev", url: "https://www.opiiec.fr/metiers/139882-specialiste-devops#:~:text=Finalit%C3%A9%20du%20m%C3%A9tier,monitoring%20des%20performances%20des%20applications", context: "About Me — étape 3" },
-        { label: "CV (Drive)", url: "https://drive.google.com/file/d/1sC28J9-BasZtjzfEgMwkhs4ufT7h4SIa/view?usp=sharing", context: "Skills — anneau rotatif" },
-        { label: "Compétences (Sheets)", url: "https://docs.google.com/spreadsheets/d/1Ii-8VC9w8osA8PfR65HRA1Mz1Ori7YOQ/edit?...", context: "Skills — texte" }
-    ]
+    }
 };
