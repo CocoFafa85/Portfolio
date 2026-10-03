@@ -2,6 +2,7 @@ import React from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { AnimatePresence, motion } from 'motion/react';
 import CyberpunkBackground from '../atoms/CyberpunkBackground/CyberpunkBackground';
+import HudNav from '../organisms/HudNav/HudNav';
 import { useMousePosition } from '../../hooks/useMousePosition';
 import { content } from '../../data/content';
 import styles from './MainLayout.module.scss';
@@ -27,6 +28,8 @@ const MainLayout: React.FC = () => {
                     </button>
                 </header>
             )}
+
+            <HudNav />
 
             <main className={`${styles.content} ${isHome ? styles.noScroll : ''}`}>
                 <AnimatePresence mode="wait">

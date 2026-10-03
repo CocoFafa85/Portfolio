@@ -25,7 +25,7 @@ const OrbitMenu: React.FC = () => {
     };
 
     return (
-        <nav className={styles.orbitContainer} aria-label={content.ui.mainNavLabel}>
+        <nav className={styles.orbitContainer} aria-label={content.ui.orbitNavLabel}>
             <div className={styles.stargateRing} />
             {navItems.map((item, index) => {
                 const { x, y } = getPosition(index, navItems.length, 200); // 200px radius

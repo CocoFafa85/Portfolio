@@ -1,8 +1,8 @@
 @import "../../styles/variables";
 
 .skillsPage {
-    padding: 120px 2rem 5rem;
-    min-height: 100vh;
+    padding: 3rem 2rem 5rem;
+    min-height: 100%;
     // background: linear-gradient(135deg, $bg-deep, $bg-primary); // Removed for CyberpunkBackground visibility
     background: transparent;
     color: #fff;
@@ -78,7 +78,7 @@
 // ═══════════════════════════════════════════════
 @media (max-width: 500px) {
     .skillsPage {
-        padding: 100px 1rem 3rem;
+        padding: 2rem 1rem 3rem;
     }
 
     .intro {

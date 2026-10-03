@@ -2,8 +2,8 @@
 @use '../../styles/mixins' as *;
 
 .notFoundPage {
-    min-height: 100vh;
-    padding: 120px 1.5rem 4rem;
+    min-height: 100%;
+    padding: 3rem 1.5rem 4rem;
     @include flex-center;
 }
 

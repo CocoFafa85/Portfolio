@@ -65,8 +65,10 @@ export interface Project {
 }
 
 export interface UiLabels {
-    /** Accessible name of the home orbital navigation */
+    /** Accessible name of the site navigation bar */
     mainNavLabel: string;
+    /** Accessible name of the home orbital navigation (distinct from the bar's) */
+    orbitNavLabel: string;
     /** Monogram of the navigation bar home badge */
     monogram: string;
     /** Home link of the navigation bar (visible on desktop, accessible name everywhere) */
