@@ -1,5 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { content } from '../data/content';
 import { getTravelStyle, type TravelStyle } from '../utils/travel';
+
+/** Inner pages in navigation bar order: decides forward or back 88 mph trips */
+const NAV_ORDER = content.nav.map((item) => item.path);
 
 export interface Travel {
     /** Effect of the latest trip ('none' before the first navigation) */
@@ -21,7 +25,7 @@ export function useTravel(pathname: string): Travel {
     const [trip, setTrip] = useState({ path: pathname, style: 'none' as TravelStyle, id: 0 });
     // Derived from the URL during render (React's recommended pattern, no extra commit)
     if (trip.path !== pathname) {
-        setTrip({ path: pathname, style: getTravelStyle(trip.path, pathname), id: trip.id + 1 });
+        setTrip({ path: pathname, style: getTravelStyle(trip.path, pathname, NAV_ORDER), id: trip.id + 1 });
     }
 
     const [shownPath, setShownPath] = useState(pathname);
