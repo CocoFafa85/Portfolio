@@ -248,10 +248,22 @@ const CyberpunkBackground: React.FC = () => {
         const ctx = canvas.getContext('2d');
         if (!ctx) return;
 
+        // Reduced motion: a single static frame, the loop resumes if the setting changes.
+        const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
         const resize = () => {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             initLayers(canvas.width, canvas.height, window.innerWidth < 769);
+            if (reducedMotion.matches) {
+                cancelAnimationFrame(rafRef.current);
+                rafRef.current = requestAnimationFrame(animate);
+            }
+        };
+
+        const handleReducedMotionChange = () => {
+            cancelAnimationFrame(rafRef.current);
+            rafRef.current = requestAnimationFrame(animate);
         };
 
         const handleMouseMove = (e: MouseEvent) => {
@@ -483,19 +495,23 @@ const CyberpunkBackground: React.FC = () => {
                 }
             }
 
-            rafRef.current = requestAnimationFrame(animate);
+            if (!reducedMotion.matches) {
+                rafRef.current = requestAnimationFrame(animate);
+            }
         };
 
         resize();
         window.addEventListener('resize', resize);
         window.addEventListener('mousemove', handleMouseMove);
         document.addEventListener('mouseleave', handleMouseLeave);
+        reducedMotion.addEventListener('change', handleReducedMotionChange);
         rafRef.current = requestAnimationFrame(animate);
 
         return () => {
             window.removeEventListener('resize', resize);
             window.removeEventListener('mousemove', handleMouseMove);
             document.removeEventListener('mouseleave', handleMouseLeave);
+            reducedMotion.removeEventListener('change', handleReducedMotionChange);
             cancelAnimationFrame(rafRef.current);
         };
     }, [isMobile, initLayers]);

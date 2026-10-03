@@ -87,6 +87,22 @@ a {
   }
 }
 
+// ═══════════════════════════════════════════════
+// ACCESSIBILITY — honor the OS "reduce motion" setting for every CSS
+// animation and transition (Motion animations: <MotionConfig> in App.tsx,
+// canvas backgrounds: static frame).
+// ═══════════════════════════════════════════════
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 // Utility Classes
 .neon-text-pink {
   @include neon-text($neon-pink);

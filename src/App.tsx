@@ -1,5 +1,6 @@
 import React from 'react';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { MotionConfig } from 'motion/react';
 import MainLayout from './components/templates/MainLayout';
 import Home from './pages/Home/Home';
 import About from './pages/About/About';
@@ -34,7 +35,12 @@ const router = createBrowserRouter([
 });
 
 const App: React.FC = () => {
-    return <RouterProvider router={router} />;
+    return (
+        // "user": transform/layout animations are skipped when the OS asks for reduced motion
+        <MotionConfig reducedMotion="user">
+            <RouterProvider router={router} />
+        </MotionConfig>
+    );
 };
 
 export default App;
