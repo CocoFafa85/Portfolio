@@ -31,6 +31,16 @@
   --text-accent: #ffa9d4;
   --text-dim: #{$text-dim};
 
+  // Read by the circuit canvas (CircuitBackground/palette.ts)
+  --pcb-mask: #{$pcb-mask};
+  --pcb-copper: #{$pcb-copper};
+  --pcb-copper-light: #{$pcb-copper-light};
+  --pcb-gold: #{$pcb-gold};
+  --pcb-silk: #{$pcb-silk};
+  --pcb-chip: #{$pcb-chip};
+  --pcb-chip-edge: #{$pcb-chip-edge};
+  --pcb-pin: #{$pcb-pin};
+
   --font-orbitron: 'Orbitron', sans-serif;
   --font-montserrat: 'Montserrat Alternates', sans-serif;
 

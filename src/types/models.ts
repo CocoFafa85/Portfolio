@@ -77,9 +77,20 @@ export interface UiLabels {
     cvDownloadLabel: string;
 }
 
+/** Silkscreen reference prefixes of the circuit background (U1, R12, C4...) */
+export interface CircuitDesignators {
+    chip: string;
+    resistor: string;
+    capacitor: string;
+}
+
 export interface PortfolioContent {
     ui: UiLabels;
     nav: NavItem[];
+    /** Decorative texts drawn by the backgrounds */
+    decor: {
+        circuit: CircuitDesignators;
+    };
     cv: CvFile;
     home: {
         title: string;

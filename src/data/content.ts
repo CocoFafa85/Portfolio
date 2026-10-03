@@ -8,6 +8,9 @@ export const content: PortfolioContent = {
         homeLabel: "Accueil",
         cvDownloadLabel: "Télécharger le CV de Corentin FANIC (PDF)"
     },
+    decor: {
+        circuit: { chip: "U", resistor: "R", capacitor: "C" }
+    },
     nav: [
         { id: "about", label: "About", path: "/about" },
         { id: "skills", label: "Skills", path: "/skills" },

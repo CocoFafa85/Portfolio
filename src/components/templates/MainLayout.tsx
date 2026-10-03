@@ -1,7 +1,7 @@
 import React from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { AnimatePresence, motion } from 'motion/react';
-import CyberpunkBackground from '../atoms/CyberpunkBackground/CyberpunkBackground';
+import CircuitBackground from '../atoms/CircuitBackground/CircuitBackground';
 import HudNav from '../organisms/HudNav/HudNav';
 import { useMousePosition } from '../../hooks/useMousePosition';
 import styles from './MainLayout.module.scss';
@@ -17,7 +17,7 @@ const MainLayout: React.FC = () => {
             {/* Perspective Grid removed */}
             <div className={styles.particlesBackground} />
 
-            {!isHome && <CyberpunkBackground />}
+            {!isHome && <CircuitBackground />}
 
             <HudNav />
 

@@ -17,6 +17,17 @@ $bg-deep: #060610;
 // Muted UI text (inactive navigation links): 5.9:1 on $bg-deep, WCAG AA
 $text-dim: #8b8ba0;
 
+// Printed circuit board (inner pages background): matte black solder mask,
+// copper seen through the mask, ENIG gold pads and vias, white silkscreen
+$pcb-mask: #08090c;
+$pcb-copper: #966c34;
+$pcb-copper-light: #dcaa60;
+$pcb-gold: #c9a24e;
+$pcb-silk: #e8e8e0;
+$pcb-chip: #101015;
+$pcb-chip-edge: #26262e;
+$pcb-pin: #9a9aa4;
+
 // Navigation bar height, the <main> area starts right below it
 $hud-height: 56px;
 $hud-height-mobile: 52px;
