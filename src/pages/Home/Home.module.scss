@@ -23,7 +23,7 @@
     height: 100%;
 
     // Parallax Effect
-    // --mouse-x/y are set in Home.tsx (-0.5 to 0.5)
+    // --mouse-x/y are set by useMousePosition in MainLayout (-0.5 to 0.5)
     // We move slightly opposite to mouse
     transform-style: preserve-3d;
     transition: transform 0.1s linear; // Smooth out JS updates slightly if needed, but RAF is fast.
