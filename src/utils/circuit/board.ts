@@ -1,10 +1,8 @@
 import type { CircuitDesignators } from '../../types/models';
-import type { Random } from '../random';
+import type { Random, Range } from '../random';
 import { addChip, addEdgeBus, addPart, type Builder } from './components';
 import type { CalmBand } from './density';
 import { polylineLength } from './geometry';
-
-export type Range = readonly [number, number];
 
 /** Generation settings of a printed circuit board (values in CSS pixels). */
 export interface BoardConfig {

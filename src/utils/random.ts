@@ -1,6 +1,9 @@
 /** Pseudo-random source returning numbers in [0, 1). */
 export type Random = () => number;
 
+/** [min, max) bounds of a random value */
+export type Range = readonly [number, number];
+
 /**
  * Seeded generator (mulberry32): the same seed always yields the same
  * sequence, so a generated board is reproducible and testable.
@@ -22,6 +25,6 @@ export function between(random: Random, min: number, max: number): number {
 }
 
 /** Uniform number in a [min, max) range given as a pair. */
-export function inRange(random: Random, range: readonly [number, number]): number {
+export function inRange(random: Random, range: Range): number {
     return between(random, range[0], range[1]);
 }

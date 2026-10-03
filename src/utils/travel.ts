@@ -1,0 +1,31 @@
+/** Travel effect played when moving from one page to another (LOT 1, C2). */
+export type TravelStyle = 'none' | 'hyperspace' | 'timeTravel';
+
+const HOME_PATH = '/';
+const STYLES: readonly TravelStyle[] = ['none', 'hyperspace', 'timeTravel'];
+
+/** Path without trailing slashes ("/about/" → "/about"); the home stays "/". */
+export function normalizePath(path: string): string {
+    const trimmed = path.replace(/\/+$/, '');
+    return trimmed === '' ? HOME_PATH : trimmed;
+}
+
+export function isHomePath(path: string): boolean {
+    return normalizePath(path) === HOME_PATH;
+}
+
+/**
+ * Effect of a trip (decision of 2026-10-03): hyperspace between the home page
+ * and an inner page, both ways; 88 mph ("timeTravel") between inner pages.
+ */
+export function getTravelStyle(from: string, to: string): TravelStyle {
+    const origin = normalizePath(from);
+    const destination = normalizePath(to);
+    if (origin === destination) return 'none';
+    return isHomePath(origin) || isHomePath(destination) ? 'hyperspace' : 'timeTravel';
+}
+
+/** Narrows an untyped value (e.g. presence data) to a travel style. */
+export function isTravelStyle(value: unknown): value is TravelStyle {
+    return typeof value === 'string' && (STYLES as readonly string[]).includes(value);
+}

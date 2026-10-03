@@ -2,6 +2,7 @@ import type { Transition } from 'motion/react';
 import type { PixelRatioCaps } from '../utils/canvas';
 import type { BoardConfig } from '../utils/circuit/board';
 import type { HoverSettings } from '../utils/circuit/hover';
+import type { RadialSettings, SpeedSettings } from '../utils/travelFx';
 
 /**
  * Tuning constants of the visual effects (durations, springs, densities).
@@ -79,4 +80,20 @@ export const circuitEffects = {
     glow: { width: 2.4, alpha: 0.55 },
     pixelRatio: { fine: 2, coarse: 1.5, maxPixels: 8_000_000 } satisfies PixelRatioCaps,
     resizeDebounceMs: 150,
+} as const;
+
+/** "Voyage" transitions between pages (LOT 1, C2) */
+export const travelEffects = {
+    /** Whole trip; the pages swap at half time, under the full cover */
+    durationMs: 720,
+    /** Reduced motion: a plain cross-fade, no overlay */
+    reducedFadeMs: 150,
+    seed: 88,
+    /** Star lines shot from the centre (home ↔ inner page) */
+    hyperspace: { count: 56, start: [8, 70], length: [40, 170], delayMs: [0, 140] } satisfies RadialSettings,
+    /** Light streaks rushing past, then fire trails (between inner pages) */
+    timeTravel: { count: 26, top: [2, 98], width: [80, 260], delayMs: [60, 380], durationMs: [240, 460] } satisfies SpeedSettings,
+    /** Page movement while it leaves and arrives */
+    page: { zoomOut: 1.25, zoomIn: 0.92, shift: 25, skew: -10 },
+    ease: { leave: [0.6, 0, 0.8, 0.4], arrive: [0.2, 0.7, 0.3, 1] },
 } as const;
