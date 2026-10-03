@@ -62,10 +62,10 @@ export const circuitEffects = {
         grainSize: 96,
         grainAlpha: 0.08,
     },
-    /** Rare data pulses (the only animated part) */
+    /** Data pulses (the only animated part): frequency ×4 after review (was 1.4–3.4 s, 3 max) */
     pulse: {
-        max: 3,
-        intervalMs: [1400, 3400],
+        max: 8,
+        intervalMs: [350, 850],
         speed: 150,
         trail: 42,
         minTraceLength: 60,
