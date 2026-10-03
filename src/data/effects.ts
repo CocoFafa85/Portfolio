@@ -13,6 +13,8 @@ import type { RadialSettings, SpeedSettings } from '../utils/travelFx';
 export const navEffects = {
     /** Glide of the active-page indicator along the luminous line */
     indicator: { type: 'spring', visualDuration: 0.4, bounce: 0.15 } satisfies Transition,
+    /** Fade of the whole bar when it appears or leaves (it is hidden on the home page) */
+    appear: { duration: 0.3, ease: 'easeOut' } satisfies Transition,
 };
 
 /** Printed-circuit background of the inner pages (LOT 1, C3) */

@@ -60,11 +60,8 @@
     }
 }
 
-.noScroll {
-    overflow: hidden !important;
-
-    @media (max-width: 768px) {
-        // Force hidden on mobile home too if desired, or allow specific behavior
-        overflow: hidden !important;
-    }
+// Home page: no navigation bar above it, a full-screen composition that never scrolls
+.homeContent {
+    top: 0;
+    overflow: hidden;
 }
