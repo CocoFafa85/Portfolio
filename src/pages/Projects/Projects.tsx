@@ -3,8 +3,10 @@ import styles from './Projects.module.scss';
 import { content } from '../../data/content';
 import ProjectCard from '../../components/molecules/ProjectCard/ProjectCard';
 import { motion, useInView } from 'motion/react';
+import { usePageMeta } from '../../hooks/usePageMeta';
 
 const Projects: React.FC = () => {
+    usePageMeta('projects');
     const ref = useRef(null);
     const isInView = useInView(ref, { once: true });
 

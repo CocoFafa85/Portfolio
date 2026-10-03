@@ -5,8 +5,10 @@ import OrbitMenu from '../../components/molecules/OrbitMenu/OrbitMenu';
 import QuantumField from '../../components/atoms/QuantumField/QuantumField';
 import { content } from '../../data/content';
 import { motion } from 'motion/react';
+import { usePageMeta } from '../../hooks/usePageMeta';
 
 const Home: React.FC = () => {
+    usePageMeta('home');
     const [scale, setScale] = React.useState(1);
 
     React.useEffect(() => {

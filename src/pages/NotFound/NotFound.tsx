@@ -2,10 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { content } from '../../data/content';
 import styles from './NotFound.module.scss';
+import { usePageMeta } from '../../hooks/usePageMeta';
 
 const labels = content.notFound;
 
 const NotFound: React.FC = () => {
+    usePageMeta('notFound');
     return (
         <section className={styles.notFoundPage}>
             <div className={styles.panel}>

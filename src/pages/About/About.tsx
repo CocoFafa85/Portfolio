@@ -3,8 +3,10 @@ import TimeConvector from '../../components/organisms/TimeConvector/TimeConvecto
 import { content } from '../../data/content';
 import { motion } from 'motion/react';
 import styles from './About.module.scss';
+import { usePageMeta } from '../../hooks/usePageMeta';
 
 const About: React.FC = () => {
+    usePageMeta('about');
     return (
         <motion.div
             className={styles.aboutPage}
