@@ -159,7 +159,7 @@ Mon approche est résolument DevOps et Agile. Au-delà du simple versioning avec
     notFound: {
         code: "ERREUR 404",
         title: "Signal perdu",
-        message: "Cette adresse ne mène nulle part : la transmission s'est perdue dans le réseau.",
+        message: "Cette adresse ne mène nulle part : la transmission s'est perdue dans la matrice.",
         cta: "Retour à l'accueil"
     }
 };
