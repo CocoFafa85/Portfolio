@@ -3,16 +3,29 @@ import { PortfolioContent } from '../types/models';
 export const content: PortfolioContent = {
     ui: {
         mainNavLabel: "Navigation principale",
-        cvDownloadLabel: "Télécharger le CV de Corentin FANIC (PDF)"
+        cvDownloadLabel: "Télécharger le CV de Corentin FANIC (PDF)",
+        backLabel: "< Retour"
+    },
+    nav: [
+        { id: "about", label: "About", path: "/about" },
+        { id: "skills", label: "Skills", path: "/skills" },
+        { id: "projects", label: "Projects", path: "/projects" }
+    ],
+    cv: {
+        file: "cv_resume.pdf",
+        downloadName: "Corentin_FANIC_CV.pdf"
     },
     home: {
         title: "Corentin FANIC",
         subtitle: "Développeur full stack"
     },
     about: {
+        title: "Evolution",
         timeline: [
             {
                 id: "past",
+                label: "Passé",
+                accent: "var(--neon-green)",
                 title: "Qui j'étais",
                 content: `Né aux Sables d'Olonne, j'ai grandi à la campagne. J'ai toujours été attiré par les activités qui stimulent mon raisonnement et ma logique. Que ce soient les sciences, la cinématographie, les échecs ou les jeux vidéo, ces passions ont façonné mon esprit analytique. Mon entourage familial et amical a été important pour moi et m'a aidé à garder les pieds sur terre.
 Passionné par les sports, à l'âge de 12 ans j'ai commencé à pratiquer le rugby à XV au [Rugby Club Sablais (R.C.S)](https://rc-sablais.ffr.fr/). Cette expérience au niveau national m'a enseigné la discipline, la cohésion d'équipe et la persévérance, des valeurs qui m'accompagnent encore aujourd'hui.
@@ -20,11 +33,15 @@ Après avoir obtenu un baccalauréat général scientifique, j'ai exploré diver
             },
             {
                 id: "present",
+                label: "Présent",
+                accent: "var(--neon-violet)",
                 title: "Qui je suis",
                 content: `Actuellement, je suis détenteur d'un BTS SIO et je poursuis ma voie en troisième année de bachelor en alternance. Je consacre la majeure partie de mon temps à travailler et à acquérir un maximum de compétences dans ce domaine. Je partage ma vie avec ma compagne qui me soutient énormément dans mes projets. Retrouvez mon parcours sur [LinkedIn](http://www.linkedin.com/in/corentin-fanic-832630293).`
             },
             {
                 id: "future",
+                label: "Futur",
+                accent: "var(--neon-fuchsia)",
                 title: "Qui je serai",
                 content: `Une fois mon cursus terminé et mon niveau de connaissances au top, j'aimerais faire une carrière de [DevSecOps](https://www.opiiec.fr/metiers/139882-specialiste-devops#:~:text=Finalit%C3%A9%20du%20m%C3%A9tier,monitoring%20des%20performances%20des%20applications). Ce domaine me permet de m'éclater ce qui me donne la détermination nécessaire pour atteindre mon objectif. Bien que mon niveau d'étude restera à BAC+3, je compte accumuler de l'expérience et maîtriser les subtilités du monde du travail pour gravir les échelons autant que possible.
 Mon objectif à long terme est d'avoir une fonction de responsable d'équipe ou de stratégie`
@@ -32,6 +49,16 @@ Mon objectif à long terme est d'avoir une fonction de responsable d'équipe ou 
         ]
     },
     skills: {
+        title: "Compétences",
+        holoCard: {
+            status: "CLEARANCE: LEVEL 5",
+            initials: "CF",
+            name: "CORENTIN FANIC",
+            role: "FULLSTACK DEVELOPER",
+            serial: "ID-CF-2026-FSK",
+            uploading: "UPLOADING TO NEURAL LINK...",
+            cta: "[ CLICK TO DOWNLOAD CV ]"
+        },
         intro: `Au cours de ma formation et de mes projets récents, j'ai forgé une base technique solide en alliant théorie et mise en pratique intensive.
 Côté Frontend, j'ai évolué vers une expertise moderne centrée sur l'architecture de composants (React.js) et le typage strict (TypeScript). Je maîtrise l'écosystème de build actuel (Vite, npm) et la création d'interfaces réactives et animées (SCSS Modules, Framer Motion, Bootstrap).
 Sur le Backend, je concois des architectures robustes et sécurisées (MVC, API RESTful) en utilisant PHP/Symfony et Java. J'assure la persistance et l'intégrité des données via des SGBD relationnels (MySQL, SQL Server) et NoSQL (MongoDB), en m'appuyant sur des ORM comme Doctrine.
@@ -75,6 +102,13 @@ Mon approche est résolument DevOps et Agile. Au-delà du simple versioning avec
     },
 
     projects: {
+        title: "Projets",
+        labels: {
+            demo: "Demo",
+            code: "Code",
+            wipRibbon: "EN TRAVAUX",
+            wipBadge: "🚧 WIP"
+        },
         list: [
             {
                 id: "ifto",

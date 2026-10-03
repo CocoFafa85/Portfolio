@@ -1,6 +1,9 @@
 import React from 'react';
 import styles from './ProjectCard.module.scss';
+import { content } from '../../../data/content';
 import { Project } from '../../../types/models';
+
+const labels = content.projects.labels;
 
 interface ProjectCardProps {
     project: Project;
@@ -12,7 +15,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
     return (
         <div
             className={`${styles.card} ${project.featured ? styles.featured : ''} ${project.id === 'demineur' ? styles.workInProgress : ''}`}
-            style={{ '--card-color': project.color || '#00f3ff' } as React.CSSProperties}
+            style={{ '--card-color': project.color || 'var(--neon-cyan)' } as React.CSSProperties}
+            // Read by the CSS ribbon and badge (content: attr(...))
+            data-ribbon={labels.wipRibbon}
+            data-badge={labels.wipBadge}
         >
             {/* Background layer: image or cyberpunk placeholder */}
             <div className={styles.cardBackground}>
@@ -44,7 +50,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                             rel="noopener noreferrer"
                             className={`${styles.linkButton} ${styles.demo}`}
                         >
-                            Demo
+                            {labels.demo}
                         </a>
                     )}
                     {project.repoLink && (
@@ -54,7 +60,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
                             rel="noopener noreferrer"
                             className={`${styles.linkButton} ${styles.repo}`}
                         >
-                            Code
+                            {labels.code}
                         </a>
                     )}
                 </div>

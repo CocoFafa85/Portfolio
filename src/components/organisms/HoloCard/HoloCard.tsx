@@ -3,8 +3,10 @@ import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
 import { content } from '../../../data/content';
 import styles from './HoloCard.module.scss';
 
-const CV_URL = `${import.meta.env.BASE_URL}cv_resume.pdf`;
+const CV_URL = `${import.meta.env.BASE_URL}${content.cv.file}`;
 const CV_DRIVE_URL = 'https://drive.google.com/file/d/1DmMs3MerkEATmfSbVSKeU3yTCGiKyutW/view?usp=sharing';
+
+const labels = content.skills.holoCard;
 
 const GLITCH_CHARS = '!@#$%^&*()_+-=[]{}|;:,.<>?/\\~`0123456789ABCDEF';
 const BARCODE_PATTERN = [2, 1, 3, 1, 2, 3, 1, 2, 1, 3, 2, 1, 1, 3, 2, 1, 2, 3, 1, 2, 1, 1, 3, 2];
@@ -115,7 +117,7 @@ const HoloCard: React.FC = () => {
                     // Try local PDF first, fallback to Drive
                     const link = document.createElement('a');
                     link.href = CV_URL;
-                    link.download = 'Corentin_FANIC_CV.pdf';
+                    link.download = content.cv.downloadName;
                     link.target = '_blank';
                     document.body.appendChild(link);
                     link.click();
@@ -185,14 +187,14 @@ const HoloCard: React.FC = () => {
                 {/* Status indicator */}
                 <div className={styles.statusBar}>
                     <span className={styles.statusDot} />
-                    <span className={styles.statusText}>CLEARANCE: LEVEL 5</span>
+                    <span className={styles.statusText}>{labels.status}</span>
                 </div>
 
                 {/* Avatar */}
                 <div className={styles.avatarContainer}>
                     <div className={styles.avatarRing}>
                         <div className={styles.avatarInner}>
-                            <span className={styles.avatarInitials}>CF</span>
+                            <span className={styles.avatarInitials}>{labels.initials}</span>
                         </div>
                     </div>
                 </div>
@@ -200,10 +202,10 @@ const HoloCard: React.FC = () => {
                 {/* Identity info */}
                 <div className={styles.identityBlock}>
                     <p className={styles.name}>
-                        <GlitchText text="CORENTIN FANIC" isHovered={isHovered} />
+                        <GlitchText text={labels.name} isHovered={isHovered} />
                     </p>
                     <p className={styles.role}>
-                        <GlitchText text="FULLSTACK DEVELOPER" isHovered={isHovered} />
+                        <GlitchText text={labels.role} isHovered={isHovered} />
                     </p>
                 </div>
 
@@ -217,7 +219,7 @@ const HoloCard: React.FC = () => {
                         />
                     ))}
                 </div>
-                <span className={styles.barcodeLabel}>ID-CF-2026-FSK</span>
+                <span className={styles.barcodeLabel}>{labels.serial}</span>
 
                 {/* Download sequence */}
                 {isDownloading ? (
@@ -231,13 +233,13 @@ const HoloCard: React.FC = () => {
                             />
                         </div>
                         <span className={styles.downloadLabel}>
-                            UPLOADING TO NEURAL LINK... {downloadProgress}%
+                            {labels.uploading} {downloadProgress}%
                         </span>
                     </div>
                 ) : (
                     <div className={styles.ctaBlock}>
                         <span className={styles.ctaText}>
-                            {'[ CLICK TO DOWNLOAD CV ]'}
+                            {labels.cta}
                         </span>
                     </div>
                 )}

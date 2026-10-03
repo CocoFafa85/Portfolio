@@ -257,7 +257,7 @@
 
     // Diagonal hazard stripe ribbon
     &::after {
-        content: 'EN TRAVAUX';
+        content: attr(data-ribbon);
         position: absolute;
         top: 22px;
         right: -35px;
@@ -282,7 +282,7 @@
 
     // Blinking WIP badge
     &::before {
-        content: '🚧 WIP';
+        content: attr(data-badge);
         position: absolute;
         bottom: 12px;
         right: 12px;

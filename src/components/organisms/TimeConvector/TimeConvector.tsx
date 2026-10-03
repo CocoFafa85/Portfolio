@@ -1,12 +1,8 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { content } from '../../../data/content';
+import { TimeState } from '../../../types/models';
 import styles from './TimeConvector.module.scss';
-
-// Assuming AboutContent interface is accessible via content.ts types, 
-// but we just need to access content.about.timeline.
-
-type TimeState = 'past' | 'present' | 'future';
 
 const TimeConvector: React.FC = () => {
     const [activeState, setActiveState] = useState<TimeState>('present');
@@ -50,7 +46,6 @@ const TimeConvector: React.FC = () => {
                         href={match[2]}
                         target="_blank"
                         rel="noopener noreferrer"
-                        style={{ color: '#00f3ff', textDecoration: 'underline' }}
                     >
                         {match[1]}
                     </a>
@@ -60,36 +55,23 @@ const TimeConvector: React.FC = () => {
         });
     };
 
-    const titleColorMap: Record<TimeState, string> = {
-        past: '#39ff14',    // Lime Green
-        present: '#bc13fe', // Violet
-        future: '#ff00ff',  // Neon Pink
-    };
-
     return (
         <div className={styles.convectorContainer}>
             <nav className={styles.timelineNav}>
-                {(['past', 'present', 'future'] as TimeState[]).map((state) => {
-                    const labels: Record<TimeState, string> = {
-                        past: 'passé',
-                        present: 'présent',
-                        future: 'futur',
-                    };
-                    return (
-                        <button
-                            key={state}
-                            className={`${styles.navButton} ${activeState === state ? styles.active : ''}`}
-                            onClick={() => handleSwitch(state)}
-                        >
-                            {labels[state].toUpperCase()}
-                        </button>
-                    );
-                })}
+                {content.about.timeline.map((step) => (
+                    <button
+                        key={step.id}
+                        className={`${styles.navButton} ${activeState === step.id ? styles.active : ''}`}
+                        onClick={() => handleSwitch(step.id)}
+                    >
+                        {step.label.toUpperCase()}
+                    </button>
+                ))}
             </nav>
 
             <div
                 className={styles.contentDisplay}
-                style={{ '--title-color': titleColorMap[activeState] } as React.CSSProperties}
+                style={{ '--title-color': currentData?.accent } as React.CSSProperties}
             >
                 <AnimatePresence mode="wait">
                     <motion.div

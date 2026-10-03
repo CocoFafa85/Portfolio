@@ -15,7 +15,7 @@ const Skills: React.FC = () => {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ duration: 0.8 }}
                 >
-                    <h1 className="glitch-title" data-text="Compétences">Compétences</h1>
+                    <h1 className="glitch-title" data-text={content.skills.title}>{content.skills.title}</h1>
                     {content.skills.intro.split('\n').map((line, i) => (
                         <p key={i}>{line}</p>
                     ))}
