@@ -6,8 +6,7 @@ export const content: PortfolioContent = {
         orbitNavLabel: "Menu orbital",
         monogram: "CF",
         homeLabel: "Accueil",
-        cvDownloadLabel: "Télécharger le CV de Corentin FANIC (PDF)",
-        backLabel: "< Retour"
+        cvDownloadLabel: "Télécharger le CV de Corentin FANIC (PDF)"
     },
     nav: [
         { id: "about", label: "About", path: "/about" },

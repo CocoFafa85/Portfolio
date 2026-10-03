@@ -75,8 +75,6 @@ export interface UiLabels {
     homeLabel: string;
     /** Accessible name of the HoloCard download action */
     cvDownloadLabel: string;
-    /** Back-to-home button of the inner pages */
-    backLabel: string;
 }
 
 export interface PortfolioContent {
