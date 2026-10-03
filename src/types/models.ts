@@ -34,7 +34,15 @@ export interface ReferenceLink {
     context: string;
 }
 
+export interface UiLabels {
+    /** Accessible name of the home orbital navigation */
+    mainNavLabel: string;
+    /** Accessible name of the HoloCard download action */
+    cvDownloadLabel: string;
+}
+
 export interface PortfolioContent {
+    ui: UiLabels;
     home: {
         title: string;
         subtitle: string;

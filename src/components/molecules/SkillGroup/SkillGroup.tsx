@@ -27,7 +27,7 @@ const SkillGroup: React.FC<SkillGroupProps> = ({ category, delay = 0, index }) =
                 boxShadow: { duration: 2, repeat: Infinity, delay: index * 0.5 }
             }}
         >
-            <h3 className={styles.categoryTitle}>{category.title}</h3>
+            <h2 className={styles.categoryTitle}>{category.title}</h2>
             <div className={styles.skillList}>
                 {category.skills.map((skill, index) => (
                     <div key={skill.name} className={styles.skillItem}>

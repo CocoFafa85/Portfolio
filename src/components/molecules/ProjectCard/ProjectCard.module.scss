@@ -171,6 +171,15 @@
     transform: translateY(0);
 }
 
+// Keyboard: reveal the Demo / Code actions as soon as one of them has focus
+.card:focus-within .overlay {
+    opacity: 1;
+}
+
+.card:focus-within .links {
+    transform: translateY(0);
+}
+
 .linkButton {
     padding: 0.7rem 1.5rem;
     border-radius: 6px;

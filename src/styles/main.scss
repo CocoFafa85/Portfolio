@@ -103,6 +103,12 @@ a {
   }
 }
 
+// Visible keyboard focus on every interactive element (mouse clicks keep no ring)
+:focus-visible {
+  outline: 2px solid var(--neon-cyan);
+  outline-offset: 3px;
+}
+
 // Utility Classes
 .neon-text-pink {
   @include neon-text($neon-pink);

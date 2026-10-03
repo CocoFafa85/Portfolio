@@ -20,14 +20,14 @@ const MainLayout: React.FC = () => {
             {!isHome && <CyberpunkBackground />}
 
             {!isHome && (
-                <div className={styles.backButton}>
+                <header className={styles.backButton}>
                     <button onClick={() => navigate('/')}>
                         &lt; Retour
                     </button>
-                </div>
+                </header>
             )}
 
-            <div className={`${styles.content} ${isHome ? styles.noScroll : ''}`}>
+            <main className={`${styles.content} ${isHome ? styles.noScroll : ''}`}>
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={location.pathname}
@@ -40,7 +40,7 @@ const MainLayout: React.FC = () => {
                         <Outlet />
                     </motion.div>
                 </AnimatePresence>
-            </div>
+            </main>
         </div>
     );
 };

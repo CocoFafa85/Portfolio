@@ -2,6 +2,7 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { User, Code, Briefcase } from 'lucide-react';
 import { motion } from 'motion/react';
+import { content } from '../../../data/content';
 import styles from './OrbitMenu.module.scss';
 
 interface NavItem {
@@ -26,7 +27,7 @@ const OrbitMenu: React.FC = () => {
     };
 
     return (
-        <div className={styles.orbitContainer}>
+        <nav className={styles.orbitContainer} aria-label={content.ui.mainNavLabel}>
             <div className={styles.stargateRing} />
             {navItems.map((item, index) => {
                 const { x, y } = getPosition(index, navItems.length, 200); // 200px radius
@@ -54,7 +55,7 @@ const OrbitMenu: React.FC = () => {
                     </div>
                 );
             })}
-        </div>
+        </nav>
     );
 };
 

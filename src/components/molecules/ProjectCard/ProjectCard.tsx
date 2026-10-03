@@ -25,7 +25,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
 
             {/* Always-visible content */}
             <div className={styles.cardContent}>
-                <h3 className={styles.title}>{project.title}</h3>
+                <h2 className={styles.title}>{project.title}</h2>
                 <p className={styles.description}>{project.description}</p>
                 <div className={styles.tags}>
                     {project.tags.map(tag => (

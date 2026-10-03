@@ -1,6 +1,10 @@
 import { PortfolioContent } from '../types/models';
 
 export const content: PortfolioContent = {
+    ui: {
+        mainNavLabel: "Navigation principale",
+        cvDownloadLabel: "Télécharger le CV de Corentin FANIC (PDF)"
+    },
     home: {
         title: "Corentin FANIC",
         subtitle: "Développeur full stack"

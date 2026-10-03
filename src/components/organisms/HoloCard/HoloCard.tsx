@@ -1,5 +1,6 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
+import { content } from '../../../data/content';
 import styles from './HoloCard.module.scss';
 
 const CV_URL = `${import.meta.env.BASE_URL}cv_resume.pdf`;
@@ -132,6 +133,16 @@ const HoloCard: React.FC = () => {
         }, stepDuration);
     }, [isDownloading]);
 
+    const handleKeyDown = useCallback(
+        (e: React.KeyboardEvent<HTMLDivElement>) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleDownload();
+            }
+        },
+        [handleDownload]
+    );
+
     return (
         <motion.div
             ref={cardRef}
@@ -141,6 +152,14 @@ const HoloCard: React.FC = () => {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={handleMouseLeave}
             onClick={handleDownload}
+            // Keyboard access: same action and same glitch feedback as the mouse
+            role="button"
+            tabIndex={0}
+            aria-label={content.ui.cvDownloadLabel}
+            aria-busy={isDownloading}
+            onKeyDown={handleKeyDown}
+            onFocus={() => setIsHovered(true)}
+            onBlur={handleMouseLeave}
             whileTap={{ scale: 0.98 }}
         >
             {/* Animated border */}
@@ -180,9 +199,9 @@ const HoloCard: React.FC = () => {
 
                 {/* Identity info */}
                 <div className={styles.identityBlock}>
-                    <h3 className={styles.name}>
+                    <p className={styles.name}>
                         <GlitchText text="CORENTIN FANIC" isHovered={isHovered} />
-                    </h3>
+                    </p>
                     <p className={styles.role}>
                         <GlitchText text="FULLSTACK DEVELOPER" isHovered={isHovered} />
                     </p>
