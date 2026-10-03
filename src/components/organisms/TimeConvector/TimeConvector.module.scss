@@ -69,6 +69,11 @@
         text-align: justify;
     }
 
+    a {
+        color: $neon-cyan;
+        text-decoration: underline;
+    }
+
     // Glitch effect overlay
     &::before {
         content: '';

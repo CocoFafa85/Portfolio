@@ -21,6 +21,9 @@ desktop.ini
 specs/
 ARCHITECTURE.md
 TECH_RULES.md
+PLAN.md
+PROJECT.md
+LOT*_SPRINT_CHECK.md
 .claude/launch.json
 
 # Build

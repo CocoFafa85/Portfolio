@@ -1,9 +1,11 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
+import { content } from '../../../data/content';
 import styles from './HoloCard.module.scss';
 
-const CV_URL = `${import.meta.env.BASE_URL}cv_resume.pdf`;
-const CV_DRIVE_URL = 'https://drive.google.com/file/d/1DmMs3MerkEATmfSbVSKeU3yTCGiKyutW/view?usp=sharing';
+const CV_URL = `${import.meta.env.BASE_URL}${content.cv.file}`;
+
+const labels = content.skills.holoCard;
 
 const GLITCH_CHARS = '!@#$%^&*()_+-=[]{}|;:,.<>?/\\~`0123456789ABCDEF';
 const BARCODE_PATTERN = [2, 1, 3, 1, 2, 3, 1, 2, 1, 3, 2, 1, 1, 3, 2, 1, 2, 3, 1, 2, 1, 1, 3, 2];
@@ -15,53 +17,44 @@ interface GlitchTextProps {
 
 const GlitchText: React.FC<GlitchTextProps> = ({ text, isHovered }) => {
     const [display, setDisplay] = useState(text);
-    const [cycle, setCycle] = useState(0);
-    const isHoveredRef = useRef(isHovered);
 
-    // Keep ref in sync with prop
+    // Decode cycles run only while hovered; each cycle restarts after a pause.
     useEffect(() => {
-        isHoveredRef.current = isHovered;
-        if (isHovered) {
-            // Start a new cycle when hover begins
-            setCycle(c => c + 1);
-        } else {
-            setDisplay(text);
-        }
+        if (!isHovered) return;
+
+        let interval: ReturnType<typeof setInterval> | undefined;
+        let pause: ReturnType<typeof setTimeout> | undefined;
+
+        const runCycle = () => {
+            let iteration = 0;
+            interval = setInterval(() => {
+                setDisplay(
+                    text
+                        .split('')
+                        .map((char, i) => {
+                            if (char === ' ') return ' ';
+                            if (i < iteration) return text[i];
+                            return GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)];
+                        })
+                        .join('')
+                );
+                iteration += 1 / 2;
+                if (iteration >= text.length) {
+                    clearInterval(interval);
+                    setDisplay(text);
+                    pause = setTimeout(runCycle, 1500);
+                }
+            }, 40);
+        };
+
+        runCycle();
+        return () => {
+            clearInterval(interval);
+            clearTimeout(pause);
+        };
     }, [isHovered, text]);
 
-    useEffect(() => {
-        if (!isHoveredRef.current || cycle === 0) return;
-
-        let iteration = 0;
-        const interval = setInterval(() => {
-            setDisplay(
-                text
-                    .split('')
-                    .map((char, i) => {
-                        if (char === ' ') return ' ';
-                        if (i < iteration) return text[i];
-                        return GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)];
-                    })
-                    .join('')
-            );
-            iteration += 1 / 2;
-            if (iteration >= text.length) {
-                clearInterval(interval);
-                setDisplay(text);
-                // Restart loop after a pause if still hovered
-                const timeout = setTimeout(() => {
-                    if (isHoveredRef.current) {
-                        setCycle(c => c + 1);
-                    }
-                }, 1500);
-                return () => clearTimeout(timeout);
-            }
-        }, 40);
-
-        return () => clearInterval(interval);
-    }, [cycle, text]);
-
-    return <span className={styles.glitchText}>{display}</span>;
+    return <span className={styles.glitchText}>{isHovered ? display : text}</span>;
 };
 
 const HoloCard: React.FC = () => {
@@ -120,17 +113,13 @@ const HoloCard: React.FC = () => {
 
                 // Trigger actual download after animation completes
                 setTimeout(() => {
-                    // Try local PDF first, fallback to Drive
+                    // The CV ships with the site (public/), a single download action
                     const link = document.createElement('a');
                     link.href = CV_URL;
-                    link.download = 'Corentin_FANIC_CV.pdf';
-                    link.target = '_blank';
+                    link.download = content.cv.downloadName;
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
-
-                    // Also open Drive link as fallback
-                    window.open(CV_DRIVE_URL, '_blank');
 
                     setTimeout(() => {
                         setIsDownloading(false);
@@ -141,6 +130,16 @@ const HoloCard: React.FC = () => {
         }, stepDuration);
     }, [isDownloading]);
 
+    const handleKeyDown = useCallback(
+        (e: React.KeyboardEvent<HTMLDivElement>) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                handleDownload();
+            }
+        },
+        [handleDownload]
+    );
+
     return (
         <motion.div
             ref={cardRef}
@@ -150,6 +149,14 @@ const HoloCard: React.FC = () => {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={handleMouseLeave}
             onClick={handleDownload}
+            // Keyboard access: same action and same glitch feedback as the mouse
+            role="button"
+            tabIndex={0}
+            aria-label={content.ui.cvDownloadLabel}
+            aria-busy={isDownloading}
+            onKeyDown={handleKeyDown}
+            onFocus={() => setIsHovered(true)}
+            onBlur={handleMouseLeave}
             whileTap={{ scale: 0.98 }}
         >
             {/* Animated border */}
@@ -175,25 +182,25 @@ const HoloCard: React.FC = () => {
                 {/* Status indicator */}
                 <div className={styles.statusBar}>
                     <span className={styles.statusDot} />
-                    <span className={styles.statusText}>CLEARANCE: LEVEL 5</span>
+                    <span className={styles.statusText}>{labels.status}</span>
                 </div>
 
                 {/* Avatar */}
                 <div className={styles.avatarContainer}>
                     <div className={styles.avatarRing}>
                         <div className={styles.avatarInner}>
-                            <span className={styles.avatarInitials}>CF</span>
+                            <span className={styles.avatarInitials}>{labels.initials}</span>
                         </div>
                     </div>
                 </div>
 
                 {/* Identity info */}
                 <div className={styles.identityBlock}>
-                    <h3 className={styles.name}>
-                        <GlitchText text="CORENTIN FANIC" isHovered={isHovered} />
-                    </h3>
+                    <p className={styles.name}>
+                        <GlitchText text={labels.name} isHovered={isHovered} />
+                    </p>
                     <p className={styles.role}>
-                        <GlitchText text="FULLSTACK DEVELOPER" isHovered={isHovered} />
+                        <GlitchText text={labels.role} isHovered={isHovered} />
                     </p>
                 </div>
 
@@ -207,7 +214,7 @@ const HoloCard: React.FC = () => {
                         />
                     ))}
                 </div>
-                <span className={styles.barcodeLabel}>ID-CF-2026-FSK</span>
+                <span className={styles.barcodeLabel}>{labels.serial}</span>
 
                 {/* Download sequence */}
                 {isDownloading ? (
@@ -221,13 +228,13 @@ const HoloCard: React.FC = () => {
                             />
                         </div>
                         <span className={styles.downloadLabel}>
-                            UPLOADING TO NEURAL LINK... {downloadProgress}%
+                            {labels.uploading} {downloadProgress}%
                         </span>
                     </div>
                 ) : (
                     <div className={styles.ctaBlock}>
                         <span className={styles.ctaText}>
-                            {'[ CLICK TO DOWNLOAD CV ]'}
+                            {labels.cta}
                         </span>
                     </div>
                 )}

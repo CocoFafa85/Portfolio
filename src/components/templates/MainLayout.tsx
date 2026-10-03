@@ -1,38 +1,34 @@
 import React from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'motion/react';
 import CyberpunkBackground from '../atoms/CyberpunkBackground/CyberpunkBackground';
+import { useMousePosition } from '../../hooks/useMousePosition';
+import { content } from '../../data/content';
 import styles from './MainLayout.module.scss';
 
 const MainLayout: React.FC = () => {
     const location = useLocation();
     const navigate = useNavigate();
+    useMousePosition();
 
     const isHome = location.pathname === '/';
 
-    const handleMouseMove = (e: React.MouseEvent) => {
-        const x = (e.clientX / window.innerWidth) * 2 - 1;
-        const y = (e.clientY / window.innerHeight) * 2 - 1;
-        document.documentElement.style.setProperty('--mouse-x', x.toString());
-        document.documentElement.style.setProperty('--mouse-y', y.toString());
-    };
-
     return (
-        <div className={styles.container} onMouseMove={handleMouseMove}>
+        <div className={styles.container}>
             {/* Perspective Grid removed */}
             <div className={styles.particlesBackground} />
 
             {!isHome && <CyberpunkBackground />}
 
             {!isHome && (
-                <div className={styles.backButton}>
+                <header className={styles.backButton}>
                     <button onClick={() => navigate('/')}>
-                        &lt; Retour
+                        {content.ui.backLabel}
                     </button>
-                </div>
+                </header>
             )}
 
-            <div className={`${styles.content} ${isHome ? styles.noScroll : ''}`}>
+            <main className={`${styles.content} ${isHome ? styles.noScroll : ''}`}>
                 <AnimatePresence mode="wait">
                     <motion.div
                         key={location.pathname}
@@ -45,7 +41,7 @@ const MainLayout: React.FC = () => {
                         <Outlet />
                     </motion.div>
                 </AnimatePresence>
-            </div>
+            </main>
         </div>
     );
 };

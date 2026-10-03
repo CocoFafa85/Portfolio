@@ -1,31 +1,21 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { User, Code, Briefcase } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
+import { content } from '../../../data/content';
+import { NavItem } from '../../../types/models';
 import styles from './OrbitMenu.module.scss';
 
-interface NavItem {
-    label: string;
-    path: string;
-    icon: React.ReactNode;
-}
+// Icons are visual only: labels and paths come from content.nav
+const navIcons: Record<NavItem['id'], React.ReactNode> = {
+    about: <User size={24} aria-hidden="true" />,
+    skills: <Code size={24} aria-hidden="true" />,
+    projects: <Briefcase size={24} aria-hidden="true" />,
+};
 
-const navItems: NavItem[] = [
-    { label: 'About', path: '/about', icon: <User size={24} /> },
-    { label: 'Skills', path: '/skills', icon: <Code size={24} /> },
-    { label: 'Projects', path: '/projects', icon: <Briefcase size={24} /> },
-];
+const navItems = content.nav;
 
 const OrbitMenu: React.FC = () => {
-    const [isMobile, setIsMobile] = useState(false);
-
-    useEffect(() => {
-        const checkMobile = () => setIsMobile(window.innerWidth <= 768);
-        checkMobile();
-        window.addEventListener('resize', checkMobile);
-        return () => window.removeEventListener('resize', checkMobile);
-    }, []);
-
     // Helper to calculate position on a circle
     const getPosition = (index: number, total: number, radius: number) => {
         const angle = (index / total) * 2 * Math.PI - Math.PI / 2; // Start at top (-90deg)
@@ -35,13 +25,13 @@ const OrbitMenu: React.FC = () => {
     };
 
     return (
-        <div className={styles.orbitContainer}>
+        <nav className={styles.orbitContainer} aria-label={content.ui.mainNavLabel}>
             <div className={styles.stargateRing} />
             {navItems.map((item, index) => {
                 const { x, y } = getPosition(index, navItems.length, 200); // 200px radius
                 return (
                     <div
-                        key={item.label}
+                        key={item.id}
                         className={styles.orbitItem}
                         style={{
                             left: `calc(50% + ${x}px)`,
@@ -56,14 +46,14 @@ const OrbitMenu: React.FC = () => {
                                 whileHover={{ rotate: 15 }}
                                 style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
                             >
-                                {item.icon}
+                                {navIcons[item.id]}
                                 <span>{item.label}</span>
                             </motion.div>
                         </NavLink>
                     </div>
                 );
             })}
-        </div>
+        </nav>
     );
 };
 

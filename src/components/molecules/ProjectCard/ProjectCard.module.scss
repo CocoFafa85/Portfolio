@@ -171,6 +171,15 @@
     transform: translateY(0);
 }
 
+// Keyboard: reveal the Demo / Code actions as soon as one of them has focus
+.card:focus-within .overlay {
+    opacity: 1;
+}
+
+.card:focus-within .links {
+    transform: translateY(0);
+}
+
 .linkButton {
     padding: 0.7rem 1.5rem;
     border-radius: 6px;
@@ -248,7 +257,7 @@
 
     // Diagonal hazard stripe ribbon
     &::after {
-        content: 'EN TRAVAUX';
+        content: attr(data-ribbon);
         position: absolute;
         top: 22px;
         right: -35px;
@@ -273,7 +282,7 @@
 
     // Blinking WIP badge
     &::before {
-        content: '🚧 WIP';
+        content: attr(data-badge);
         position: absolute;
         bottom: 12px;
         right: 12px;

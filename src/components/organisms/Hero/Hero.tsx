@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion, Variants } from 'framer-motion';
+import { motion, Variants } from 'motion/react';
 import styles from './Hero.module.scss';
 
 interface HeroProps {
@@ -40,12 +40,14 @@ const Hero: React.FC<HeroProps> = ({ title, subtitle }) => {
         <section className={styles.heroContainer}>
             <motion.h1
                 className={styles.title}
+                aria-label={title}
                 initial="hidden"
                 animate="visible"
                 transition={{ staggerChildren: 0.08, delayChildren: 0.5 }}
             >
+                {/* Letters are visual only: screen readers get the whole title via aria-label */}
                 {letters.map((char, index) => (
-                    <motion.span key={index} variants={letterVariants} style={{ display: 'inline-block', minWidth: char === ' ' ? '0.5em' : 'auto' }}>
+                    <motion.span key={index} aria-hidden="true" variants={letterVariants} style={{ display: 'inline-block', minWidth: char === ' ' ? '0.5em' : 'auto' }}>
                         {char}
                     </motion.span>
                 ))}

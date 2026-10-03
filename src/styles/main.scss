@@ -23,6 +23,7 @@
   --neon-purple: #{$neon-purple};
   --neon-yellow: #{$neon-yellow};
   --neon-green: #{$neon-green};
+  --neon-fuchsia: #{$neon-fuchsia};
   --neon-orange: #{$neon-orange};
 
   --text-primary: #ffffff;
@@ -87,13 +88,26 @@ a {
   }
 }
 
-// Utility Classes
-.neon-text-pink {
-  @include neon-text($neon-pink);
+// ═══════════════════════════════════════════════
+// ACCESSIBILITY — honor the OS "reduce motion" setting for every CSS
+// animation and transition (Motion animations: <MotionConfig> in App.tsx,
+// canvas backgrounds: static frame).
+// ═══════════════════════════════════════════════
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
 
-.glass-panel {
-  @include glass-panel;
+// Visible keyboard focus on every interactive element (mouse clicks keep no ring)
+:focus-visible {
+  outline: 2px solid var(--neon-cyan);
+  outline-offset: 3px;
 }
 
 // GLOBAL GLITCH TITLE

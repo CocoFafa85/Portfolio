@@ -1,0 +1,37 @@
+{
+    "siteUrl": "https://corentinfanic.dev",
+    "siteName": "Corentin FANIC",
+    "image": "/og-image.jpg",
+    "pages": [
+        {
+            "id": "home",
+            "path": "/",
+            "title": "Corentin FANIC | Développeur Full Stack",
+            "description": "Portfolio de Corentin FANIC - Développeur Full Stack Cyberpunk. Découvrez mes projets et compétences."
+        },
+        {
+            "id": "about",
+            "path": "/about",
+            "title": "À propos | Corentin FANIC",
+            "description": "Le parcours de Corentin FANIC, des Sables d'Olonne au développement full stack, et ses ambitions DevOps."
+        },
+        {
+            "id": "skills",
+            "path": "/skills",
+            "title": "Compétences | Corentin FANIC",
+            "description": "Les compétences de Corentin FANIC en front-end, back-end, bases de données, DevOps et sécurité. CV téléchargeable."
+        },
+        {
+            "id": "projects",
+            "path": "/projects",
+            "title": "Projets | Corentin FANIC",
+            "description": "Les projets de Corentin FANIC : jeux, simulation 3D et sites web, avec démos et code source."
+        }
+    ],
+    "notFound": {
+        "id": "notFound",
+        "path": "/404",
+        "title": "Signal perdu (404) | Corentin FANIC",
+        "description": "Cette adresse ne mène nulle part : la transmission s'est perdue dans la matrice."
+    }
+}
