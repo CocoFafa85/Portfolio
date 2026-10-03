@@ -1,5 +1,5 @@
 import React, { useRef, useState, useCallback, useEffect } from 'react';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
 import styles from './HoloCard.module.scss';
 
 const CV_URL = `${import.meta.env.BASE_URL}cv_resume.pdf`;

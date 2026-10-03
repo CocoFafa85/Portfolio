@@ -3,7 +3,7 @@ import styles from './Skills.module.scss';
 import { content } from '../../data/content';
 import SkillGroup from '../../components/molecules/SkillGroup/SkillGroup';
 import HoloCard from '../../components/organisms/HoloCard/HoloCard';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 
 const Skills: React.FC = () => {
     return (

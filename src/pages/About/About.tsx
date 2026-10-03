@@ -1,6 +1,6 @@
 import React from 'react';
 import TimeConvector from '../../components/organisms/TimeConvector/TimeConvector';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import styles from './About.module.scss';
 
 const About: React.FC = () => {

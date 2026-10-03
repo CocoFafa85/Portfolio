@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './SkillGroup.module.scss';
 import { SkillCategory } from '../../../types/models';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 
 interface SkillGroupProps {
     category: SkillCategory;

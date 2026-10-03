@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { User, Code, Briefcase } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 import styles from './OrbitMenu.module.scss';
 
 interface NavItem {

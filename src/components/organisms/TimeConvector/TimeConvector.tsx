@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'motion/react';
 import { content } from '../../../data/content';
 import styles from './TimeConvector.module.scss';
 import { PortfolioContent } from '../../../types/models';

@@ -4,7 +4,7 @@ import Hero from '../../components/organisms/Hero/Hero';
 import OrbitMenu from '../../components/molecules/OrbitMenu/OrbitMenu';
 import QuantumField from '../../components/atoms/QuantumField/QuantumField';
 import { content } from '../../data/content';
-import { motion } from 'framer-motion';
+import { motion } from 'motion/react';
 
 const Home: React.FC = () => {
     const [scale, setScale] = React.useState(1);

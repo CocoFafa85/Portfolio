@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import styles from './Projects.module.scss';
 import { content } from '../../data/content';
 import ProjectCard from '../../components/molecules/ProjectCard/ProjectCard';
-import { motion, useInView } from 'framer-motion';
+import { motion, useInView } from 'motion/react';
 
 const Projects: React.FC = () => {
     const ref = useRef(null);

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'motion/react';
 import CyberpunkBackground from '../atoms/CyberpunkBackground/CyberpunkBackground';
 import styles from './MainLayout.module.scss';
 
