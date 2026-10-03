@@ -6,8 +6,10 @@ $electric-light: color.mix(#fff, $neon-cyan, 60%);
 
 // ═══════════════════════════════════════════════
 // TRIP OVERLAY — above the page, under the navigation bar (cockpit view).
-// Timeline (--travel-ms): cover 0 → 42 %, full cover 42 → 58 % (pages swap
-// at 50 %), clear 58 → 100 %. Transform and opacity only.
+// Timeline (--travel-ms): the cover rises over 42 % of the trip and holds
+// until the new page is mounted (.arrived, at ~50 % on time), then clears
+// over 42 %: a slow device lengthens the darkness, never shows the swap.
+// Transform and opacity only.
 // ═══════════════════════════════════════════════
 .overlay {
     position: fixed;
@@ -23,7 +25,12 @@ $electric-light: color.mix(#fff, $neon-cyan, 60%);
     inset: 0;
     background: $bg-deep;
     opacity: 0;
-    animation: travel-cover var(--travel-ms) linear forwards;
+    animation: travel-cover-in calc(var(--travel-ms) * 0.42) ease-in forwards;
+}
+
+.arrived .cover {
+    opacity: 1;
+    animation: travel-cover-out calc(var(--travel-ms) * 0.42) ease-out forwards;
 }
 
 .flash {
@@ -87,11 +94,14 @@ $electric-light: color.mix(#fff, $neon-cyan, 60%);
     top: 88%;
 }
 
-@keyframes travel-cover {
-    0% { opacity: 0; }
-    42% { opacity: 1; }
-    58% { opacity: 1; }
-    100% { opacity: 0; }
+@keyframes travel-cover-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes travel-cover-out {
+    from { opacity: 1; }
+    to { opacity: 0; }
 }
 
 @keyframes travel-flash {
