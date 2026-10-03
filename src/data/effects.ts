@@ -44,23 +44,23 @@ export const circuitEffects = {
         busTraces: [3, 6],
         busReach: [60, 240],
     } satisfies BoardConfig,
-    /** Static drawing (once per resize); darker, more even black after review */
+    /** Static drawing (once per resize); darker, more even black after the reviews of 2026-10-03 and 2026-10-04 */
     style: {
-        maskAlpha: 0.97,
+        maskAlpha: 0.98,
         traceWidth: 2.2,
-        traceAlpha: 0.26,
+        traceAlpha: 0.16,
         sheenWidth: 0.8,
-        sheenAlpha: 0.05,
+        sheenAlpha: 0.03,
         pinWidth: 1.4,
         viaRadius: 3,
         holeRadius: 1.2,
         padSize: 5,
-        silkAlpha: 0.3,
+        silkAlpha: 0.18,
         silkWidth: 0.6,
         labelFont: '9px monospace',
         labelOffset: 9,
         grainSize: 96,
-        grainAlpha: 0.035,
+        grainAlpha: 0.02,
     },
     /** Data pulses (the only animated part): frequency ×4 after review (was 1.4–3.4 s, 3 max) */
     pulse: {
