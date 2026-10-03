@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import { getTravelStyle, isHomePath, isTravelStyle, normalizePath } from './travel';
+import { getTravelStyle, isHomePath, isTimeTravel, isTravelStyle, normalizePath } from './travel';
+
+const ORDER = ['/about', '/skills', '/projects'];
 
 describe('getTravelStyle', () => {
     it('jumps to hyperspace from the home page to an inner page', () => {
@@ -30,6 +32,49 @@ describe('getTravelStyle', () => {
         expect(styles).toEqual(['timeTravel', 'timeTravel', 'timeTravel']);
     });
 
+    it('travels forward (left to right) when moving down the bar order', () => {
+        // Arrange / Act
+        const styles = [
+            getTravelStyle('/about', '/skills', ORDER),
+            getTravelStyle('/about', '/projects', ORDER),
+            getTravelStyle('/skills', '/projects', ORDER),
+        ];
+
+        // Assert
+        expect(styles).toEqual(['timeTravel', 'timeTravel', 'timeTravel']);
+    });
+
+    it('travels back (right to left) when moving up the bar order', () => {
+        // Arrange / Act
+        const styles = [
+            getTravelStyle('/projects', '/skills', ORDER),
+            getTravelStyle('/projects', '/about', ORDER),
+            getTravelStyle('/skills/', '/about', ORDER),
+        ];
+
+        // Assert
+        expect(styles).toEqual(['timeTravelBack', 'timeTravelBack', 'timeTravelBack']);
+    });
+
+    it('travels forward to or from a page outside the bar (404)', () => {
+        // Arrange / Act
+        const styles = [
+            getTravelStyle('/page-inconnue', '/about', ORDER),
+            getTravelStyle('/projects', '/page-inconnue', ORDER),
+        ];
+
+        // Assert
+        expect(styles).toEqual(['timeTravel', 'timeTravel']);
+    });
+
+    it('keeps hyperspace for the home page whatever the order', () => {
+        // Arrange / Act
+        const styles = [getTravelStyle('/projects', '/', ORDER), getTravelStyle('/', '/about', ORDER)];
+
+        // Assert
+        expect(styles).toEqual(['hyperspace', 'hyperspace']);
+    });
+
     it('does not travel when the page stays the same, trailing slash or not', () => {
         // Arrange / Act
         const style = getTravelStyle('/about/', '/about');
@@ -52,12 +97,22 @@ describe('normalizePath / isHomePath', () => {
 describe('isTravelStyle', () => {
     it('accepts only the known styles', () => {
         // Arrange
-        const candidates: unknown[] = ['hyperspace', 'timeTravel', 'none', 'kawoosh', undefined, 3];
+        const candidates: unknown[] = ['hyperspace', 'timeTravel', 'timeTravelBack', 'none', 'kawoosh', undefined, 3];
 
         // Act
         const accepted = candidates.map(isTravelStyle);
 
         // Assert
-        expect(accepted).toEqual([true, true, true, false, false, false]);
+        expect(accepted).toEqual([true, true, true, true, false, false, false]);
+    });
+});
+
+describe('isTimeTravel', () => {
+    it('groups both directions of the 88 mph trip', () => {
+        // Arrange / Act
+        const results = (['timeTravel', 'timeTravelBack', 'hyperspace', 'none'] as const).map(isTimeTravel);
+
+        // Assert
+        expect(results).toEqual([true, true, false, false]);
     });
 });

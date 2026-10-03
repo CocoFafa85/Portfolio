@@ -17,7 +17,7 @@ const MainLayout: React.FC = () => {
     const travel = useTravel(location.pathname);
     useMousePosition();
 
-    // The background follows the page on screen, so it switches under the overlay
+    // Background and navigation bar follow the page on screen: they switch under the overlay
     const isHome = isHomePath(travel.shownPath);
 
     return (
@@ -26,9 +26,12 @@ const MainLayout: React.FC = () => {
 
             {!isHome && <CircuitBackground />}
 
-            <HudNav />
+            {/* No navigation bar on the home page (its orbital menu is the navigation) */}
+            <AnimatePresence initial={false}>
+                {!isHome && <HudNav key="hud" />}
+            </AnimatePresence>
 
-            <main className={`${styles.content} ${isHome ? styles.noScroll : ''}`}>
+            <main className={isHome ? `${styles.content} ${styles.homeContent}` : styles.content}>
                 {/* initial={false}: no trip on first load (keeps the LCP) */}
                 <AnimatePresence
                     mode="wait"

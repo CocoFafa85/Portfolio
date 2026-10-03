@@ -2,7 +2,7 @@ import React, { useState, type CSSProperties } from 'react';
 import { useReducedMotion } from 'motion/react';
 import { travelEffects as fx } from '../../../data/effects';
 import { createRandom } from '../../../utils/random';
-import type { TravelStyle } from '../../../utils/travel';
+import { isTimeTravel, type TravelStyle } from '../../../utils/travel';
 import { createRadialStreaks, createSpeedStreaks } from '../../../utils/travelFx';
 import styles from './TravelOverlay.module.scss';
 
@@ -29,7 +29,7 @@ const SPEED_VARS: CssVars[] = createSpeedStreaks(fx.timeTravel, random).map((s) 
  * Full-screen "sas" of a trip (LOT 1, C2): darkness covers the screen, holds
  * until the new page is actually mounted (even on a slow device), then clears.
  * Hyperspace star lines (home ↔ inner page) or 88 mph light streaks, flash and
- * fire trails (between inner pages). CSS keyframes on transform and opacity
+ * fire trails (between inner pages, mirrored when travelling back). CSS keyframes on transform and opacity
  * only; never intercepts the pointer, stays under the navigation bar, unmounts
  * at the end. Not rendered in reduced motion.
  */
@@ -49,7 +49,7 @@ const TravelOverlay: React.FC<TravelOverlayProps> = ({ style, arrived }) => {
                 ? RADIAL_VARS.map((vars, i) => <span key={i} className={styles.radial} style={vars} />)
                 : SPEED_VARS.map((vars, i) => <span key={i} className={styles.speed} style={vars} />)}
             <div className={styles.flash} />
-            {style === 'timeTravel' && (
+            {isTimeTravel(style) && (
                 <>
                     <span className={`${styles.fire} ${styles.fireHigh}`} />
                     <span className={`${styles.fire} ${styles.fireLow}`} />

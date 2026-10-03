@@ -59,7 +59,9 @@ $electric-light: color.mix(#fff, $neon-cyan, 60%);
 }
 
 // ─── 88 mph: light streaks rushing past, electric flash, fire trails ───
-.timeTravel .flash {
+// Forward (.timeTravel): left to right. Back (.timeTravelBack): exact mirror.
+.timeTravel .flash,
+.timeTravelBack .flash {
     background: $electric-light;
 }
 
@@ -84,6 +86,16 @@ $electric-light: color.mix(#fff, $neon-cyan, 60%);
     transform: scaleX(0);
     transform-origin: 100% 50%;
     animation: travel-fire calc(var(--travel-ms) * 0.6) ease-out calc(var(--travel-ms) * 0.5) forwards;
+}
+
+.timeTravelBack .speed {
+    transform: translateX(calc(-1 * var(--width) - 20px));
+    animation-name: travel-speed-back;
+}
+
+.timeTravelBack .fire {
+    background: linear-gradient(270deg, transparent, $fire-orange 40%, $neon-pink);
+    transform-origin: 0 50%;
 }
 
 .fireHigh {
@@ -119,6 +131,11 @@ $electric-light: color.mix(#fff, $neon-cyan, 60%);
 @keyframes travel-speed {
     from { transform: translateX(110vw); }
     to { transform: translateX(calc(-1 * var(--width) - 20px)); }
+}
+
+@keyframes travel-speed-back {
+    from { transform: translateX(calc(-1 * var(--width) - 20px)); }
+    to { transform: translateX(110vw); }
 }
 
 @keyframes travel-fire {

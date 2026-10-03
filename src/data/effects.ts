@@ -13,6 +13,8 @@ import type { RadialSettings, SpeedSettings } from '../utils/travelFx';
 export const navEffects = {
     /** Glide of the active-page indicator along the luminous line */
     indicator: { type: 'spring', visualDuration: 0.4, bounce: 0.15 } satisfies Transition,
+    /** Fade of the whole bar when it appears or leaves (it is hidden on the home page) */
+    appear: { duration: 0.3, ease: 'easeOut' } satisfies Transition,
 };
 
 /** Printed-circuit background of the inner pages (LOT 1, C3) */
@@ -42,28 +44,28 @@ export const circuitEffects = {
         busTraces: [3, 6],
         busReach: [60, 240],
     } satisfies BoardConfig,
-    /** Static drawing (once per resize) */
+    /** Static drawing (once per resize); darker, more even black after review */
     style: {
-        maskAlpha: 0.9,
+        maskAlpha: 0.97,
         traceWidth: 2.2,
-        traceAlpha: 0.42,
+        traceAlpha: 0.26,
         sheenWidth: 0.8,
-        sheenAlpha: 0.12,
+        sheenAlpha: 0.05,
         pinWidth: 1.4,
         viaRadius: 3,
         holeRadius: 1.2,
         padSize: 5,
-        silkAlpha: 0.5,
+        silkAlpha: 0.3,
         silkWidth: 0.6,
         labelFont: '9px monospace',
         labelOffset: 9,
         grainSize: 96,
-        grainAlpha: 0.08,
+        grainAlpha: 0.035,
     },
-    /** Rare data pulses (the only animated part) */
+    /** Data pulses (the only animated part): frequency ×4 after review (was 1.4–3.4 s, 3 max) */
     pulse: {
-        max: 3,
-        intervalMs: [1400, 3400],
+        max: 8,
+        intervalMs: [350, 850],
         speed: 150,
         trail: 42,
         minTraceLength: 60,
