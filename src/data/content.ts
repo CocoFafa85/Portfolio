@@ -156,6 +156,12 @@ Mon approche est résolument DevOps et Agile. Au-delà du simple versioning avec
             }
         ]
     },
+    notFound: {
+        code: "ERREUR 404",
+        title: "Signal perdu",
+        message: "Cette adresse ne mène nulle part : la transmission s'est perdue dans le réseau.",
+        cta: "Retour à l'accueil"
+    },
     links: [
         { label: "RCS (Rugby)", url: "https://rc-sablais.ffr.fr/", context: "About Me — étape 1" },
         { label: "LinkedIn", url: "http://www.linkedin.com/in/corentin-fanic-832630293", context: "About Me — étape 2" },

@@ -1,0 +1,51 @@
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
+
+.notFoundPage {
+    min-height: 100vh;
+    padding: 120px 1.5rem 4rem;
+    @include flex-center;
+}
+
+.panel {
+    @include glass-panel;
+    max-width: 640px;
+    width: 100%;
+    padding: 2.5rem 2rem;
+    border-radius: 12px;
+    border-color: rgba($neon-pink, 0.3);
+    text-align: center;
+}
+
+.code {
+    font-family: $font-orbitron;
+    font-size: 0.9rem;
+    letter-spacing: 4px;
+    color: $neon-pink;
+    margin-bottom: 1rem;
+}
+
+.message {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 2rem;
+}
+
+.homeLink {
+    display: inline-block;
+    padding: 0.7rem 1.5rem;
+    border: 1px solid $neon-cyan;
+    border-radius: 6px;
+    font-family: $font-orbitron;
+    font-size: 0.85rem;
+    color: $neon-cyan;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+
+    &:hover {
+        color: $neon-cyan;
+        background: rgba($neon-cyan, 0.15);
+        box-shadow: 0 0 15px rgba($neon-cyan, 0.5);
+    }
+}

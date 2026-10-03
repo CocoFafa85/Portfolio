@@ -102,5 +102,11 @@ export interface PortfolioContent {
         labels: ProjectLabels;
         list: Project[];
     };
+    notFound: {
+        code: string;
+        title: string;
+        message: string;
+        cta: string;
+    };
     links: ReferenceLink[];
 }
