@@ -16,8 +16,9 @@
     gap: 1rem;
     padding: 0 1.25rem;
     border-bottom: 1px solid rgba($neon-cyan, 0.14);
-    // Soft fade rather than a panel: keeps the links readable over the backgrounds
-    background: linear-gradient(rgba($bg-deep, 0.92), rgba($bg-deep, 0.6));
+    // No hazy veil (review of 2026-10-04): a flat strip of the board's own black
+    // solder mask, so no pad or trace ever sits behind a link (AA contrast)
+    background: $pcb-mask;
     font-family: $font-orbitron;
 
     @include mobile {
