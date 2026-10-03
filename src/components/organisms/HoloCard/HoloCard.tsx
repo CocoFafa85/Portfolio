@@ -15,53 +15,44 @@ interface GlitchTextProps {
 
 const GlitchText: React.FC<GlitchTextProps> = ({ text, isHovered }) => {
     const [display, setDisplay] = useState(text);
-    const [cycle, setCycle] = useState(0);
-    const isHoveredRef = useRef(isHovered);
 
-    // Keep ref in sync with prop
+    // Decode cycles run only while hovered; each cycle restarts after a pause.
     useEffect(() => {
-        isHoveredRef.current = isHovered;
-        if (isHovered) {
-            // Start a new cycle when hover begins
-            setCycle(c => c + 1);
-        } else {
-            setDisplay(text);
-        }
+        if (!isHovered) return;
+
+        let interval: ReturnType<typeof setInterval> | undefined;
+        let pause: ReturnType<typeof setTimeout> | undefined;
+
+        const runCycle = () => {
+            let iteration = 0;
+            interval = setInterval(() => {
+                setDisplay(
+                    text
+                        .split('')
+                        .map((char, i) => {
+                            if (char === ' ') return ' ';
+                            if (i < iteration) return text[i];
+                            return GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)];
+                        })
+                        .join('')
+                );
+                iteration += 1 / 2;
+                if (iteration >= text.length) {
+                    clearInterval(interval);
+                    setDisplay(text);
+                    pause = setTimeout(runCycle, 1500);
+                }
+            }, 40);
+        };
+
+        runCycle();
+        return () => {
+            clearInterval(interval);
+            clearTimeout(pause);
+        };
     }, [isHovered, text]);
 
-    useEffect(() => {
-        if (!isHoveredRef.current || cycle === 0) return;
-
-        let iteration = 0;
-        const interval = setInterval(() => {
-            setDisplay(
-                text
-                    .split('')
-                    .map((char, i) => {
-                        if (char === ' ') return ' ';
-                        if (i < iteration) return text[i];
-                        return GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)];
-                    })
-                    .join('')
-            );
-            iteration += 1 / 2;
-            if (iteration >= text.length) {
-                clearInterval(interval);
-                setDisplay(text);
-                // Restart loop after a pause if still hovered
-                const timeout = setTimeout(() => {
-                    if (isHoveredRef.current) {
-                        setCycle(c => c + 1);
-                    }
-                }, 1500);
-                return () => clearTimeout(timeout);
-            }
-        }, 40);
-
-        return () => clearInterval(interval);
-    }, [cycle, text]);
-
-    return <span className={styles.glitchText}>{display}</span>;
+    return <span className={styles.glitchText}>{isHovered ? display : text}</span>;
 };
 
 const HoloCard: React.FC = () => {

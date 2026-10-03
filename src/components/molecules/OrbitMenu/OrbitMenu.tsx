@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { User, Code, Briefcase } from 'lucide-react';
 import { motion } from 'motion/react';
@@ -17,15 +17,6 @@ const navItems: NavItem[] = [
 ];
 
 const OrbitMenu: React.FC = () => {
-    const [isMobile, setIsMobile] = useState(false);
-
-    useEffect(() => {
-        const checkMobile = () => setIsMobile(window.innerWidth <= 768);
-        checkMobile();
-        window.addEventListener('resize', checkMobile);
-        return () => window.removeEventListener('resize', checkMobile);
-    }, []);
-
     // Helper to calculate position on a circle
     const getPosition = (index: number, total: number, radius: number) => {
         const angle = (index / total) * 2 * Math.PI - Math.PI / 2; // Start at top (-90deg)

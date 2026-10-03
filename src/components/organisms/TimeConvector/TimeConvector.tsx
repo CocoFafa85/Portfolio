@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { content } from '../../../data/content';
 import styles from './TimeConvector.module.scss';
-import { PortfolioContent } from '../../../types/models';
 
 // Assuming AboutContent interface is accessible via content.ts types, 
 // but we just need to access content.about.timeline.
