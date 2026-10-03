@@ -4,7 +4,6 @@ import { content } from '../../../data/content';
 import styles from './HoloCard.module.scss';
 
 const CV_URL = `${import.meta.env.BASE_URL}${content.cv.file}`;
-const CV_DRIVE_URL = 'https://drive.google.com/file/d/1DmMs3MerkEATmfSbVSKeU3yTCGiKyutW/view?usp=sharing';
 
 const labels = content.skills.holoCard;
 
@@ -114,17 +113,13 @@ const HoloCard: React.FC = () => {
 
                 // Trigger actual download after animation completes
                 setTimeout(() => {
-                    // Try local PDF first, fallback to Drive
+                    // The CV ships with the site (public/), a single download action
                     const link = document.createElement('a');
                     link.href = CV_URL;
                     link.download = content.cv.downloadName;
-                    link.target = '_blank';
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
-
-                    // Also open Drive link as fallback
-                    window.open(CV_DRIVE_URL, '_blank');
 
                     setTimeout(() => {
                         setIsDownloading(false);
