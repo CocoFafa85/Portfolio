@@ -19,6 +19,17 @@ export function createRandom(seed: number): Random {
     };
 }
 
+/**
+ * Stateless draw in [0, 1) for a (seed, a, b) triple: random access where a
+ * sequence would not do (e.g. the glyph of character `a` at step `b`).
+ */
+export function hashUnit(seed: number, a: number, b: number): number {
+    let x = (seed ^ Math.imul(a + 1, 374761393) ^ Math.imul(b + 1, 668265263)) >>> 0;
+    x = Math.imul(x ^ (x >>> 13), 1274126177);
+    x ^= x >>> 16;
+    return (x >>> 0) / 4294967296;
+}
+
 /** Uniform number in [min, max). */
 export function between(random: Random, min: number, max: number): number {
     return min + random() * (max - min);
