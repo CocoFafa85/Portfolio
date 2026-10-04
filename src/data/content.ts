@@ -23,7 +23,8 @@ export const content: PortfolioContent = {
     },
     home: {
         title: "Corentin FANIC",
-        subtitle: "Développeur full stack"
+        roles: ["Développeur Full Stack", "Expert SI", "DevOps"],
+        rolesSeparator: " · "
     },
     about: {
         title: "Evolution",

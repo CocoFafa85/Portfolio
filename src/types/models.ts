@@ -96,7 +96,10 @@ export interface PortfolioContent {
     cv: CvFile;
     home: {
         title: string;
-        subtitle: string;
+        /** Subtitle words decoded one into the next (LOT 2, H2) */
+        roles: string[];
+        /** Joins the roles when they are shown together (reduced motion) */
+        rolesSeparator: string;
     };
     about: {
         title: string;

@@ -15,6 +15,10 @@ export const heroEffects = {
     /** Title decoded from glyph noise, then the neon tube lights up */
     decode: { seed: 1985, steps: 22, spread: 0.28, durationMs: 700 } satisfies DecodeSettings & { durationMs: number },
     igniteMs: 360,
+    /** Subtitle: the first role decodes from noise with the title, then each role decodes into the next */
+    roles: {
+        seed: 7, steps: 20, spread: 0.3, introMs: 900, morphMs: 480, holdMs: 2200,
+    } satisfies DecodeSettings & Record<'introMs' | 'morphMs' | 'holdMs', number>,
 };
 
 /** Navigation bar (LOT 1, C1) */

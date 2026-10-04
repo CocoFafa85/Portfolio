@@ -37,7 +37,8 @@ const Home: React.FC = () => {
             >
                 <Hero
                     title={content.home.title}
-                    subtitle={content.home.subtitle}
+                    roles={content.home.roles}
+                    rolesSeparator={content.home.rolesSeparator}
                 />
                 <OrbitMenu />
             </div>
