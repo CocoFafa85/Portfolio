@@ -2,6 +2,8 @@ import type { Transition } from 'motion/react';
 import type { PixelRatioCaps } from '../utils/canvas';
 import type { BoardConfig } from '../utils/circuit/board';
 import type { DecodeSettings } from '../utils/decode';
+import type { StarLayerSpec } from '../utils/starfield/layers';
+import type { MeteorSettings } from '../utils/starfield/meteors';
 import type { HoverSettings } from '../utils/circuit/hover';
 import type { RadialSettings, SpeedSettings } from '../utils/travelFx';
 
@@ -37,6 +39,31 @@ export const nebulaEffects = {
     fadeInMs: 900,
     /** Longest wait for an idle moment before loading the shader chunk */
     idleTimeoutMs: 1500,
+};
+
+/** Home starfield over the nebula (LOT 2, H4): far, mid and blurred near layers, shooting stars */
+export const starEffects = {
+    seed: 2035,
+    /** Sprite tints: 0 white, 1 cyan, 2 violet, 3 pink (palette.ts); the near layer uses the soft sprite */
+    layers: [
+        { perMegapixel: 400, min: 110, radius: [0.9, 2.3], alpha: [0.25, 0.6], speed: [2, 5], parallax: 4, twinkle: 0, tints: [0, 1, 2] },
+        { perMegapixel: 110, min: 34, radius: [2.1, 3.9], alpha: [0.5, 0.9], speed: [6, 12], parallax: 11, twinkle: 0.25, tints: [0, 1, 2, 3] },
+        { perMegapixel: 8, min: 5, radius: [6, 15], alpha: [0.05, 0.14], speed: [10, 20], parallax: 28, twinkle: 0, tints: [0] },
+    ] satisfies StarLayerSpec[],
+    /** Index of the layer drawn with the soft out-of-focus sprite (depth of field) */
+    blurredLayer: 2,
+    meteor: {
+        max: 2, intervalMs: [4500, 9000], speed: [650, 1000], length: [110, 220], lifeMs: [700, 1100],
+        angle: [0.35, 0.7], startBand: 0.35,
+    } satisfies MeteorSettings & { max: number },
+    /** First shooting star, after the title has lit up */
+    firstMeteorMs: 2500,
+    /** Share of the remaining distance the parallax closes each frame */
+    pointerSmoothing: 0.06,
+    sprite: { size: 64, core: 0.25, softCore: 0.6, softEdge: 0.35 },
+    trail: { width: 256, height: 8, bright: 0.55, headRadius: 5, thickness: 3.2 },
+    pixelRatio: { fine: 2, coarse: 1.5, maxPixels: 8_000_000 } satisfies PixelRatioCaps,
+    resizeDebounceMs: 150,
 };
 
 /** Navigation bar (LOT 1, C1) */

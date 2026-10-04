@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './Home.module.scss';
 import Hero from '../../components/organisms/Hero/Hero';
 import OrbitMenu from '../../components/molecules/OrbitMenu/OrbitMenu';
-import QuantumField from '../../components/atoms/QuantumField/QuantumField';
+import StarField from '../../components/atoms/StarField/StarField';
 import NebulaBackground from '../../components/atoms/NebulaBackground/NebulaBackground';
 import { content } from '../../data/content';
 import { motion } from 'motion/react';
@@ -32,7 +32,7 @@ const Home: React.FC = () => {
             className={styles.homeWrapper}
         >
             <NebulaBackground />
-            <QuantumField />
+            <StarField />
             <div
                 className={styles.scalableContent}
                 style={{ transform: `scale(${scale})` }}

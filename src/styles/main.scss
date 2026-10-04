@@ -48,6 +48,13 @@
   --nebula-magenta: #{$nebula-magenta};
   --nebula-teal: #{$nebula-teal};
 
+  // Read by the home starfield canvas (StarField/palette.ts)
+  --star-white: #{$star-white};
+  --star-cyan: #{$star-cyan};
+  --star-violet: #{$star-violet};
+  --star-pink: #{$star-pink};
+  --star-trail: #{$star-trail};
+
   --font-orbitron: 'Orbitron', sans-serif;
   --font-montserrat: 'Montserrat Alternates', sans-serif;
 
