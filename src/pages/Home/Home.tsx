@@ -1,47 +1,31 @@
 import React from 'react';
-import styles from './Home.module.scss';
+import NebulaBackground from '../../components/atoms/NebulaBackground/NebulaBackground';
+import StarField from '../../components/atoms/StarField/StarField';
 import Hero from '../../components/organisms/Hero/Hero';
-import OrbitMenu from '../../components/molecules/OrbitMenu/OrbitMenu';
-import QuantumField from '../../components/atoms/QuantumField/QuantumField';
+import StargateMenu from '../../components/organisms/StargateMenu/StargateMenu';
 import { content } from '../../data/content';
-import { motion } from 'motion/react';
 import { usePageMeta } from '../../hooks/usePageMeta';
+import styles from './Home.module.scss';
 
+/**
+ * Home page (LOT 2): nebula and starfield behind, the decoded title and
+ * roles on top, the particle stargate (the orbital menu) in the space left
+ * below. Fluid sizes in CSS, the gate fits its own cell.
+ */
 const Home: React.FC = () => {
     usePageMeta('home');
-    const [scale, setScale] = React.useState(1);
-
-    React.useEffect(() => {
-        const handleResize = () => {
-            const targetWidth = 1000;
-            const currentRatio = window.innerWidth / targetWidth;
-            setScale(Math.max(0.7, Math.min(currentRatio, 1)));
-        };
-
-        window.addEventListener('resize', handleResize);
-        handleResize(); // Init
-
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
 
     return (
-        <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className={styles.homeWrapper}
-        >
-            <QuantumField />
-            <div
-                className={styles.scalableContent}
-                style={{ transform: `scale(${scale})` }}
-            >
-                <Hero
-                    title={content.home.title}
-                    subtitle={content.home.subtitle}
-                />
-                <OrbitMenu />
-            </div>
-        </motion.div>
+        <div className={styles.home}>
+            <NebulaBackground />
+            <StarField />
+            <Hero
+                title={content.home.title}
+                roles={content.home.roles}
+                rolesSeparator={content.home.rolesSeparator}
+            />
+            <StargateMenu />
+        </div>
     );
 };
 

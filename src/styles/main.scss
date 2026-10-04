@@ -41,6 +41,29 @@
   --pcb-chip-edge: #{$pcb-chip-edge};
   --pcb-pin: #{$pcb-pin};
 
+  // Read by the home nebula shader (NebulaBackground/NebulaShader.tsx)
+  --nebula-void: #{$nebula-void};
+  --nebula-violet-deep: #{$nebula-violet-deep};
+  --nebula-violet: #{$nebula-violet};
+  --nebula-magenta: #{$nebula-magenta};
+  --nebula-teal: #{$nebula-teal};
+
+  // Read by the home starfield canvas (StarField/palette.ts)
+  --star-white: #{$star-white};
+  --star-cyan: #{$star-cyan};
+  --star-violet: #{$star-violet};
+  --star-pink: #{$star-pink};
+  --star-trail: #{$star-trail};
+
+  // Read by the particle gate (StargateMenu/gatePalette.ts), in this order
+  --gate-aura: #{$gate-aura};
+  --gate-body: #{$gate-body};
+  --gate-rim: #{$gate-rim};
+  --gate-glyph: #{$gate-glyph};
+  --gate-chevron: #{$gate-chevron};
+  --gate-chevron-core: #{$gate-chevron-core};
+  --gate-horizon: #{$gate-horizon};
+
   --font-orbitron: 'Orbitron', sans-serif;
   --font-montserrat: 'Montserrat Alternates', sans-serif;
 

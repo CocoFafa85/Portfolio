@@ -1,0 +1,101 @@
+@use 'sass:color';
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+// Covers the whole home (its positioned parent) so the dive can fill the screen
+.canvas {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+// The gate's own cell, below the title: the gate is fitted inside it
+.gate {
+    position: relative;
+    z-index: 2;
+    min-height: 0;
+    margin: 0 clamp(0.5rem, 3vw, 2rem) clamp(0.5rem, 3vh, 1.5rem);
+}
+
+.list {
+    list-style: none;
+}
+
+// Placed on its chevron by the scene (transform); shown with the gate (or its
+// CSS fallback), always shown when focused from the keyboard
+.destination {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 0 0.5rem;
+    font-family: $font-orbitron;
+    font-weight: 700;
+    font-size: clamp(1rem, 2.2vw, 1.6rem);
+    letter-spacing: 0.12em;
+    color: $neon-pink;
+    text-shadow: 0 0 10px color.change($neon-pink, $alpha: 0.6), 0 0 2px $bg-deep;
+    opacity: 0;
+    transition: color 0.2s ease, text-shadow 0.2s ease, opacity 0.3s ease;
+
+    .gate[data-placed]:not([data-gl='pending']) &,
+    &:focus-visible {
+        opacity: 1;
+    }
+
+    &:hover,
+    &:focus-visible {
+        color: #fff;
+        text-shadow: 0 0 12px $neon-pink, 0 0 2px $bg-deep;
+    }
+}
+
+// Page name: part of the link's accessible name, shown at the centre instead
+.name {
+    @include visually-hidden;
+}
+
+.readout {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: $font-orbitron;
+    font-weight: 700;
+    font-size: clamp(1.1rem, 3vw, 2.2rem);
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: $neon-cyan;
+    text-shadow: 0 0 14px color.change($neon-cyan, $alpha: 0.7);
+    pointer-events: none;
+}
+
+// Dial sequence: the numbers and the name fade out as the camera dives
+// (doubled class: outweighs the "shown with the gate" rule above)
+.gate.gate[data-dialing] .destination,
+.gate.gate[data-dialing] .readout {
+    opacity: 0;
+    transition: opacity 0.25s ease var(--dive-at, 520ms);
+}
+
+// Without WebGL: a plain neon ring behind the numbers
+.gate[data-gl='off']::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: min(70%, 70vh);
+    aspect-ratio: 1;
+    border: 2px solid color.change($neon-violet, $alpha: 0.6);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 24px color.change($neon-pink, $alpha: 0.35), inset 0 0 24px color.change($neon-cyan, $alpha: 0.25);
+}

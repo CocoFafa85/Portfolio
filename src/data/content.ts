@@ -9,7 +9,8 @@ export const content: PortfolioContent = {
         cvDownloadLabel: "Télécharger le CV de Corentin FANIC (PDF)"
     },
     decor: {
-        circuit: { chip: "U", resistor: "R", capacitor: "C" }
+        circuit: { chip: "U", resistor: "R", capacitor: "C" },
+        decodeGlyphs: "01<>/\\[]{}#$%&*+=?ABCDEFHKLMNPRSTUVXZ"
     },
     nav: [
         { id: "about", label: "About", path: "/about" },
@@ -22,7 +23,8 @@ export const content: PortfolioContent = {
     },
     home: {
         title: "Corentin FANIC",
-        subtitle: "Développeur full stack"
+        roles: ["Développeur Full Stack", "Expert SI", "DevOps"],
+        rolesSeparator: " · "
     },
     about: {
         title: "Evolution",

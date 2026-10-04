@@ -90,11 +90,16 @@ export interface PortfolioContent {
     /** Decorative texts drawn by the backgrounds */
     decor: {
         circuit: CircuitDesignators;
+        /** Characters drawn while a text decodes (home title and subtitle) */
+        decodeGlyphs: string;
     };
     cv: CvFile;
     home: {
         title: string;
-        subtitle: string;
+        /** Subtitle words decoded one into the next (LOT 2, H2) */
+        roles: string[];
+        /** Joins the roles when they are shown together (reduced motion) */
+        rolesSeparator: string;
     };
     about: {
         title: string;

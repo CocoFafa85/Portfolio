@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { between, createRandom, inRange } from './random';
+import { between, createRandom, hashUnit, inRange } from './random';
 
 const take = (seed: number, count: number): number[] => {
     const random = createRandom(seed);
@@ -49,5 +49,32 @@ describe('between / inRange', () => {
 
         // Assert
         expect(values.every((v) => v >= 10 && v < 20)).toBe(true);
+    });
+});
+
+describe('hashUnit', () => {
+    it('returns the same draw for the same triple and another for a neighbour', () => {
+        // Arrange / Act
+        const first = hashUnit(1985, 3, 7);
+        const again = hashUnit(1985, 3, 7);
+        const neighbour = hashUnit(1985, 3, 8);
+
+        // Assert
+        expect(again).toBe(first);
+        expect(neighbour).not.toBe(first);
+    });
+
+    it('spreads its draws evenly over [0, 1)', () => {
+        // Arrange
+        const draws: number[] = [];
+
+        // Act
+        for (let a = 0; a < 100; a++) for (let b = 0; b < 100; b++) draws.push(hashUnit(42, a, b));
+        const mean = draws.reduce((sum, value) => sum + value, 0) / draws.length;
+
+        // Assert
+        expect(Math.min(...draws)).toBeGreaterThanOrEqual(0);
+        expect(Math.max(...draws)).toBeLessThan(1);
+        expect(mean).toBeCloseTo(0.5, 1);
     });
 });

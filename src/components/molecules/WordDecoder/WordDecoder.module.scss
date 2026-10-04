@@ -1,0 +1,36 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+// Home subtitle: roles decoded one into the next (LOT 2, H2)
+.roles {
+    font-family: $font-montserrat;
+    font-size: clamp(0.95rem, 2.6vw, 1.5rem);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: $neon-cyan;
+}
+
+// Every role once, for screen readers only
+.spoken {
+    @include visually-hidden;
+}
+
+// All roles stacked in one cell: the slot is as wide as the longest one
+.slot {
+    display: inline-grid;
+    justify-items: center;
+    white-space: pre;
+
+    > * {
+        grid-area: 1 / 1;
+    }
+}
+
+.sizer {
+    visibility: hidden;
+}
+
+// Characters not decoded yet
+.glyph {
+    opacity: 0.55;
+}

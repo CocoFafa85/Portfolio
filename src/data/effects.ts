@@ -1,6 +1,12 @@
 import type { Transition } from 'motion/react';
 import type { PixelRatioCaps } from '../utils/canvas';
 import type { BoardConfig } from '../utils/circuit/board';
+import type { DecodeSettings } from '../utils/decode';
+import type { StarLayerSpec } from '../utils/starfield/layers';
+import type { MeteorSettings } from '../utils/starfield/meteors';
+import type { DialTimeline } from '../utils/stargate/dial';
+import type { GateConfig } from '../utils/stargate/geometry';
+import type { FitSettings } from '../utils/stargate/view';
 import type { HoverSettings } from '../utils/circuit/hover';
 import type { RadialSettings, SpeedSettings } from '../utils/travelFx';
 
@@ -8,6 +14,111 @@ import type { RadialSettings, SpeedSettings } from '../utils/travelFx';
  * Tuning constants of the visual effects (durations, springs, densities).
  * Kept apart from the components so a feel change never touches their logic.
  */
+
+/** Home title and subtitle (LOT 2, H1 and H2) */
+export const heroEffects = {
+    /** Title decoded from glyph noise, then the neon tube lights up */
+    decode: { seed: 1985, steps: 22, spread: 0.28, durationMs: 700 } satisfies DecodeSettings & { durationMs: number },
+    igniteMs: 360,
+    /** Subtitle: the first role decodes from noise with the title, then each role decodes into the next */
+    roles: {
+        seed: 7, steps: 20, spread: 0.3, introMs: 900, morphMs: 480, holdMs: 2200,
+    } satisfies DecodeSettings & Record<'introMs' | 'morphMs' | 'holdMs', number>,
+};
+
+/** Home nebula, Paper Shaders mesh gradient (LOT 2, H4) */
+export const nebulaEffects = {
+    /** Colour spots, as design tokens; the void repeats so the darkness dominates */
+    tokens: ['--nebula-void', '--nebula-violet-deep', '--nebula-violet', '--nebula-void', '--nebula-magenta', '--nebula-teal'],
+    speed: 0.14,
+    distortion: 0.85,
+    swirl: 0.25,
+    grainMixer: 0.08,
+    grainOverlay: 0.1,
+    /** A soft nebula needs few pixels: never above the device ratio 1, capped in device pixels */
+    minPixelRatio: 1,
+    maxPixelCount: { fine: 1_500_000, coarse: 600_000 },
+    /** The shader fades in over the CSS gradient once its chunk is loaded */
+    fadeInMs: 900,
+    /** The shader chunk loads at the first idle moment after bootAfterMs (see gateEffects), at the latest idleTimeoutMs later */
+    bootAfterMs: 900,
+    idleTimeoutMs: 1500,
+};
+
+/** Home starfield over the nebula (LOT 2, H4): far, mid and blurred near layers, shooting stars */
+export const starEffects = {
+    seed: 2035,
+    /** Sprite tints: 0 white, 1 cyan, 2 violet, 3 pink (palette.ts); the near layer uses the soft sprite */
+    layers: [
+        { perMegapixel: 400, min: 110, radius: [0.9, 2.3], alpha: [0.25, 0.6], speed: [2, 5], parallax: 4, twinkle: 0, tints: [0, 1, 2] },
+        { perMegapixel: 110, min: 34, radius: [2.1, 3.9], alpha: [0.5, 0.9], speed: [6, 12], parallax: 11, twinkle: 0.25, tints: [0, 1, 2, 3] },
+        { perMegapixel: 8, min: 5, radius: [6, 15], alpha: [0.05, 0.14], speed: [10, 20], parallax: 28, twinkle: 0, tints: [0] },
+    ] satisfies StarLayerSpec[],
+    /** Index of the layer drawn with the soft out-of-focus sprite (depth of field) */
+    blurredLayer: 2,
+    meteor: {
+        max: 2, intervalMs: [4500, 9000], speed: [650, 1000], length: [110, 220], lifeMs: [700, 1100],
+        angle: [0.35, 0.7], startBand: 0.35,
+    } satisfies MeteorSettings & { max: number },
+    /** First shooting star, after the title has lit up */
+    firstMeteorMs: 2500,
+    /** Share of the remaining distance the parallax closes each frame */
+    pointerSmoothing: 0.06,
+    sprite: { size: 64, core: 0.25, softCore: 0.6, softEdge: 0.35 },
+    trail: { width: 256, height: 8, bright: 0.55, headRadius: 5, thickness: 3.2 },
+    pixelRatio: { fine: 2, coarse: 1.5, maxPixels: 8_000_000 } satisfies PixelRatioCaps,
+    resizeDebounceMs: 150,
+};
+
+/** Home particle gate, the orbital menu (LOT 2, H3; model units: gate radius 1) */
+export const gateEffects = {
+    seed: 2026,
+    shape: {
+        ring: { inner: 0.8, outer: 1, depth: 0.13, rimShare: 0.2, rimWidth: 0.012, points: 7000, bodySize: [1.9, 3.4], rimSize: 2.6, delay: [0, 0.3] },
+        aura: { inner: 0.95, reach: 0.24, depth: 0.3, points: 2400, size: [2.6, 4.6], delay: [0, 0.4] },
+        glyphs: {
+            count: 39, radius: 0.7, rim: 0.62, width: 0.075, height: 0.09, vertices: [3, 5],
+            rimPoints: 700, pointsPerGlyph: 34, rimSize: 1.8, glyphSize: 2.1, delay: [0.2, 0.5],
+        },
+        chevrons: {
+            count: 9, outer: 1.08, inner: 0.93, outerHalf: 0.065, innerHalf: 0.03,
+            core: { outer: 1.045, inner: 0.965, outerHalf: 0.03, innerHalf: 0.015 },
+            depth: 0.08, bodyPoints: 160, corePoints: 70, bodySize: 2.2, coreSize: 2.6, delay: [0.45, 0.7],
+        },
+        horizon: { radius: 0.6, depth: 0.05, points: 2600, size: [1.4, 3.2], delay: [0.55, 0.9] },
+        scatter: { radius: [2.4, 6.4], widen: 1.6, depth: -3 },
+    } satisfies GateConfig,
+    /** Chevron of each orbital destination, in content.nav order (top, lower right, lower left) */
+    destinations: [0, 3, 6],
+    /** Radius (model units) where the destination numbers sit, inside their chevron */
+    labelRadius: 0.5,
+    /** The gate assembles from the particle cloud on arrival; the links work at once */
+    introMs: 1400,
+    /** WebGL boots at the first idle moment after bootAfterMs since the page started (at the latest
+     *  bootTimeoutMs later): never while the GPU is still drawing the first frames */
+    bootAfterMs: 900,
+    bootTimeoutMs: 1200,
+    /** Height: aura 1.19 + room for the tilt (clear of the title); width: chevron tips 1.08.
+     *  Dive: the camera stops just short of the horizon, still full of its dust when the cover lands */
+    fit: { extent: 1.26, sideExtent: 1.12, margin: 8, camera: 2.6, diveDepth: 2.5 } satisfies FitSettings,
+    /** Camera tilt with a fine pointer (radians at the screen edge) and idle sway */
+    tilt: { x: 0.22, y: 0.32, smoothing: 0.05, swayX: 0.02, swayY: 0.03, swayPeriodX: 2300, swayPeriodY: 3100 },
+    /** Share of the remaining light a hovered chevron gains each frame */
+    hoverSmoothing: 0.2,
+    /** Horizon dust brightness at rest (it reaches 1 as the horizon forms) */
+    horizonIdle: 0.38,
+    /** Particle size scale: proportional to the gate radius on screen */
+    pointSize: { scale: 3.2, referenceRadius: 260, min: 0.7 },
+    shimmer: 0.004,
+    /** Links follow the tilted gate once it moved by more than this (CSS px) */
+    linkEpsilon: 0.25,
+    dial: {
+        chevronStepMs: 38, flare: 1.6, flareMs: 180, spin: 3.8, spinMs: 460,
+        horizonAtMs: 320, vortexMs: 320, brightenMs: 220, diveAtMs: 520, diveMs: 420, navigateAtMs: 760,
+    } satisfies DialTimeline,
+    pixelRatio: { fine: 2, coarse: 1.5, maxPixels: 8_000_000 } satisfies PixelRatioCaps,
+    resizeDebounceMs: 150,
+};
 
 /** Navigation bar (LOT 1, C1) */
 export const navEffects = {
@@ -44,23 +155,23 @@ export const circuitEffects = {
         busTraces: [3, 6],
         busReach: [60, 240],
     } satisfies BoardConfig,
-    /** Static drawing (once per resize); darker, more even black after review */
+    /** Static drawing (once per resize); darker, more even black after the reviews of 2026-10-03 and 2026-10-04 */
     style: {
-        maskAlpha: 0.97,
+        maskAlpha: 0.98,
         traceWidth: 2.2,
-        traceAlpha: 0.26,
+        traceAlpha: 0.16,
         sheenWidth: 0.8,
-        sheenAlpha: 0.05,
+        sheenAlpha: 0.03,
         pinWidth: 1.4,
         viaRadius: 3,
         holeRadius: 1.2,
         padSize: 5,
-        silkAlpha: 0.3,
+        silkAlpha: 0.18,
         silkWidth: 0.6,
         labelFont: '9px monospace',
         labelOffset: 9,
         grainSize: 96,
-        grainAlpha: 0.035,
+        grainAlpha: 0.02,
     },
     /** Data pulses (the only animated part): frequency ×4 after review (was 1.4–3.4 s, 3 max) */
     pulse: {
