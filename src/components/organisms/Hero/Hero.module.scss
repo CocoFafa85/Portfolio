@@ -1,23 +1,21 @@
 @use '../../../styles/variables' as *;
 
 .heroContainer {
+    position: relative;
+    z-index: 10;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
     text-align: center;
-    z-index: 10;
+    padding: clamp(1.5rem, 7vh, 4.5rem) 1rem 0;
 
-    // 3D Tilt Effect
+    // 3D tilt with the pointer (desktop only)
     transform-style: preserve-3d;
     transform: perspective(1000px) rotateX(calc(var(--mouse-y, 0) * 10deg)) rotateY(calc(var(--mouse-x, 0) * -10deg));
     transition: transform 0.1s ease-out;
 
     @media (max-width: 768px) {
-        height: auto;
-        min-height: 40vh;
-        padding-bottom: 2rem;
-        transform: none; // Disable 3D tilt on mobile
+        transform: none;
     }
 }
 

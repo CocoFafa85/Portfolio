@@ -55,6 +55,15 @@
   --star-pink: #{$star-pink};
   --star-trail: #{$star-trail};
 
+  // Read by the particle gate (StargateMenu/gatePalette.ts), in this order
+  --gate-aura: #{$gate-aura};
+  --gate-body: #{$gate-body};
+  --gate-rim: #{$gate-rim};
+  --gate-glyph: #{$gate-glyph};
+  --gate-chevron: #{$gate-chevron};
+  --gate-chevron-core: #{$gate-chevron-core};
+  --gate-horizon: #{$gate-horizon};
+
   --font-orbitron: 'Orbitron', sans-serif;
   --font-montserrat: 'Montserrat Alternates', sans-serif;
 

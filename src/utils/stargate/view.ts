@@ -8,8 +8,10 @@ export interface Rect {
 
 /** How the gate fits its cell (values in effects.ts). */
 export interface FitSettings {
-    /** Farthest drawn radius in model units (aura included), with a margin for the tilt */
+    /** Farthest drawn radius in model units (aura included), with a margin for the tilt: fits the cell height */
     extent: number;
+    /** Radius that must stay within the cell width (chevron tips); the faint aura may be cropped on the sides */
+    sideExtent: number;
     /** Free space kept inside the cell, in CSS pixels */
     margin: number;
     /** Distance of the camera to the gate plane at rest */
@@ -31,14 +33,16 @@ export interface GateView {
 const NEAR = 0.03;
 
 /**
- * Sizes and centres the gate in `cell` so that its whole extent (aura and
- * tilt included) stays inside: the gate never covers the content above it.
+ * Sizes and centres the gate in `cell`: its whole extent (aura and tilt
+ * included) stays within the cell height, so the gate never covers the
+ * content above it; across, only the chevrons must stay inside.
  */
 export function fitGate(cell: Rect, viewportWidth: number, viewportHeight: number, fit: FitSettings, out: GateView): void {
-    const radius = Math.max(0, Math.min(cell.width, cell.height) / 2 - fit.margin);
+    // Unit radius on screen, in pixels: the whole extent fits the height, the chevrons fit the width
+    const unit = Math.max(0, Math.min((cell.height / 2 - fit.margin) / fit.extent, (cell.width / 2 - fit.margin) / fit.sideExtent));
     out.aspect = viewportWidth / viewportHeight;
-    // Projected radius in pixels = extent × focal / camera × (height / 2)
-    out.focal = ((radius / (viewportHeight / 2)) * fit.camera) / fit.extent;
+    // Projected radius in pixels = radius × focal / camera × (height / 2)
+    out.focal = ((unit / (viewportHeight / 2)) * fit.camera);
     out.offsetX = ((cell.x + cell.width / 2) / viewportWidth) * 2 - 1;
     out.offsetY = 1 - ((cell.y + cell.height / 2) / viewportHeight) * 2;
 }

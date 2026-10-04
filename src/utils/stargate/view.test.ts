@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { fitGate, projectGatePoint, type FitSettings, type GateView, type Rect } from './view';
 
-const FIT: FitSettings = { extent: 1.4, margin: 8, camera: 2.6, diveDepth: 2.95 };
+const FIT: FitSettings = { extent: 1.4, sideExtent: 1.1, margin: 8, camera: 2.6, diveDepth: 2.95 };
 const W = 1440;
 const H = 900;
 // Cell below a heading block: 1440 × 640 starting 260 px from the top
@@ -44,7 +44,7 @@ describe('fitGate', () => {
         expect(bottom.y).toBeCloseTo(900 - 8, 3);
     });
 
-    it('is limited by the width on a narrow cell', () => {
+    it('keeps the chevrons, not the aura, within a narrow cell', () => {
         // Arrange: phone-like cell, 375 wide and 500 tall
         const narrow: Rect = { x: 0, y: 300, width: 375, height: 500 };
         const view: GateView = { focal: 0, aspect: 0, offsetX: 0, offsetY: 0 };
@@ -52,7 +52,7 @@ describe('fitGate', () => {
         const out = new Float32Array(2);
 
         // Act
-        projectGatePoint(FIT.extent, 0, 0, 0, 0, 0, view, FIT, 375, 812, out);
+        projectGatePoint(FIT.sideExtent, 0, 0, 0, 0, 0, view, FIT, 375, 812, out);
 
         // Assert
         expect(out[0]).toBeCloseTo(375 - 8, 3);

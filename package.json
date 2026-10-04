@@ -15,7 +15,6 @@
     "@fontsource/orbitron": "^5.1.1",
     "@paper-design/shaders-react": "^0.0.81",
     "@types/react-router-dom": "^5.3.3",
-    "lucide-react": "^0.475.0",
     "motion": "^14.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
