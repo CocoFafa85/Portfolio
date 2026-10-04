@@ -93,8 +93,9 @@ export const gateEffects = {
     labelRadius: 0.5,
     /** The gate assembles from the particle cloud on arrival; the links work at once */
     introMs: 1400,
-    /** Height: aura 1.19 + room for the tilt (clear of the title); width: chevron tips 1.08 */
-    fit: { extent: 1.26, sideExtent: 1.12, margin: 8, camera: 2.6, diveDepth: 2.95 } satisfies FitSettings,
+    /** Height: aura 1.19 + room for the tilt (clear of the title); width: chevron tips 1.08.
+     *  Dive: the camera stops just short of the horizon, still full of its dust when the cover lands */
+    fit: { extent: 1.26, sideExtent: 1.12, margin: 8, camera: 2.6, diveDepth: 2.5 } satisfies FitSettings,
     /** Camera tilt with a fine pointer (radians at the screen edge) and idle sway */
     tilt: { x: 0.22, y: 0.32, smoothing: 0.05, swayX: 0.02, swayY: 0.03, swayPeriodX: 2300, swayPeriodY: 3100 },
     /** Share of the remaining light a hovered chevron gains each frame */

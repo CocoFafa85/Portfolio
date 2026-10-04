@@ -76,6 +76,13 @@
     pointer-events: none;
 }
 
+// Dial sequence: the numbers and the name fade out as the camera dives
+.gate[data-dialing] .destination,
+.gate[data-dialing] .readout {
+    opacity: 0;
+    transition: opacity 0.25s ease var(--dive-at, 520ms);
+}
+
 // Without WebGL: a plain neon ring behind the numbers
 .gate[data-gl='off']::before {
     content: '';
