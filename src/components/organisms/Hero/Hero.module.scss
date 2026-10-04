@@ -21,24 +21,14 @@
     }
 }
 
+// Typography and neon of the title live in DecodeTitle; here only its place
 .title {
-    font-family: $font-orbitron;
-    font-size: 4rem;
-    font-weight: 700;
-    color: #fff;
-    text-shadow: 0 0 10px rgba($neon-pink, 0.8), 0 0 20px rgba($neon-pink, 0.4);
     margin-bottom: 1rem;
-    display: flex;
-    gap: 0.2em;
 
     // Amplified parallax — title floats independently
     transform: translate(calc(var(--mouse-x, 0) * 30px),
             calc(var(--mouse-y, 0) * 30px));
     transition: transform 0.15s ease-out;
-
-    @media (max-width: 768px) {
-        font-size: 2.5rem;
-    }
 }
 
 .subtitle {

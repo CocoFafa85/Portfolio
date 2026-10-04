@@ -1,0 +1,50 @@
+@use '../../../styles/variables' as *;
+
+// Home title: decoded like a terminal, then lit like a neon tube (LOT 2, H1)
+.title {
+    font-family: $font-orbitron;
+    font-weight: 700;
+    font-size: clamp(1.5rem, 7.2vw, 4rem);
+    letter-spacing: 0.06em;
+    white-space: pre;
+    color: var(--text-secondary);
+}
+
+// Keeps the width of its final letter: the noise is laid over it
+.char {
+    position: relative;
+    display: inline-block;
+}
+
+// Final letter not decoded yet: still laid out, not visible
+.pending {
+    color: transparent;
+}
+
+.noise {
+    position: absolute;
+    inset: 0;
+    text-align: center;
+    color: $neon-cyan;
+    pointer-events: none;
+    user-select: none;
+}
+
+// Neon tube on: white core, pink halo, a brief flicker (opacity only)
+.lit {
+    color: #fff;
+    text-shadow:
+        0 0 6px rgba($neon-pink, 0.85),
+        0 0 18px $neon-pink,
+        0 0 40px rgba($neon-pink, 0.5);
+    animation: tube var(--ignite-ms, 360ms) steps(1, end) both;
+}
+
+@keyframes tube {
+    0% { opacity: 0.55; }
+    12% { opacity: 1; }
+    20% { opacity: 0.35; }
+    30% { opacity: 1; }
+    40% { opacity: 0.6; }
+    52%, 100% { opacity: 1; }
+}

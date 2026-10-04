@@ -90,6 +90,8 @@ export interface PortfolioContent {
     /** Decorative texts drawn by the backgrounds */
     decor: {
         circuit: CircuitDesignators;
+        /** Characters drawn while a text decodes (home title and subtitle) */
+        decodeGlyphs: string;
     };
     cv: CvFile;
     home: {

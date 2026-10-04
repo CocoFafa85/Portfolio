@@ -1,6 +1,7 @@
 import type { Transition } from 'motion/react';
 import type { PixelRatioCaps } from '../utils/canvas';
 import type { BoardConfig } from '../utils/circuit/board';
+import type { DecodeSettings } from '../utils/decode';
 import type { HoverSettings } from '../utils/circuit/hover';
 import type { RadialSettings, SpeedSettings } from '../utils/travelFx';
 
@@ -8,6 +9,13 @@ import type { RadialSettings, SpeedSettings } from '../utils/travelFx';
  * Tuning constants of the visual effects (durations, springs, densities).
  * Kept apart from the components so a feel change never touches their logic.
  */
+
+/** Home title and subtitle (LOT 2, H1 and H2) */
+export const heroEffects = {
+    /** Title decoded from glyph noise, then the neon tube lights up */
+    decode: { seed: 1985, steps: 22, spread: 0.28, durationMs: 700 } satisfies DecodeSettings & { durationMs: number },
+    igniteMs: 360,
+};
 
 /** Navigation bar (LOT 1, C1) */
 export const navEffects = {
