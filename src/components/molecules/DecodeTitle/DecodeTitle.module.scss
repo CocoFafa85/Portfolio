@@ -16,9 +16,11 @@
     display: inline-block;
 }
 
-// Final letter not decoded yet: still laid out, not visible
+// Final letter not decoded yet: an unlit tube under the noise. Painted from
+// the first frame, so the letters count for the LCP at once (a transparent
+// text would only count when it locks, ~0,8 s later)
 .pending {
-    color: transparent;
+    color: $tube-unlit;
 }
 
 .noise {
