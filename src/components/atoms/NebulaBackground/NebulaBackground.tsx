@@ -16,7 +16,7 @@ const VARS: CssVars = { '--nebula-fade-ms': `${fx.fadeInMs}ms` };
  */
 const NebulaBackground: React.FC = () => {
     const reducedMotion = useReducedMotion();
-    const idle = useIdleReady(fx.idleTimeoutMs);
+    const idle = useIdleReady(fx.idleTimeoutMs, fx.bootAfterMs);
 
     return (
         <div className={styles.nebula} style={VARS} aria-hidden="true">

@@ -15,13 +15,16 @@
         $nebula-void;
 }
 
+// Hidden until its first frame is drawn, then fades in over the CSS gradient
 .shader {
     position: absolute;
     inset: 0;
-    animation: fadeIn var(--nebula-fade-ms, 900ms) ease-out both;
-}
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity var(--nebula-fade-ms, 900ms) ease-out;
 
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    &[data-ready] {
+        opacity: 1;
+    }
 }

@@ -1,6 +1,5 @@
 import type { GateGeometry } from '../../../utils/stargate/writer';
 import type { FitSettings, GateView } from '../../../utils/stargate/view';
-import { GATE_FRAGMENT_SHADER, GATE_VERTEX_SHADER } from './gateShaders';
 
 /** Everything that changes from one frame to the next (written in place by the scene). */
 export interface GateFrame {
@@ -27,36 +26,19 @@ const UNIFORMS = [
 ] as const;
 type UniformName = (typeof UNIFORMS)[number];
 
-function compile(gl: WebGLRenderingContext, type: number, source: string): WebGLShader | null {
-    const shader = gl.createShader(type);
-    if (!shader) return null;
-    gl.shaderSource(shader, source);
-    gl.compileShader(shader);
-    if (gl.getShaderParameter(shader, gl.COMPILE_STATUS)) return shader;
-    gl.deleteShader(shader);
-    return null;
-}
-
 /**
- * WebGL program of the particle gate: one static buffer per attribute,
- * one draw call per frame, additive blending. Returns null when the GPU
- * refuses the shaders (the menu then shows its CSS fallback).
+ * Draws the particle gate with its linked program (compiled without blocking,
+ * see gateBoot.ts): one static buffer per attribute, one draw call per frame,
+ * additive blending.
  */
 export function createGateRenderer(
     gl: WebGLRenderingContext,
+    program: WebGLProgram,
     geometry: GateGeometry,
     tones: Float32Array,
     fit: FitSettings,
     settings: { horizonIdle: number; shimmer: number }
-): GateRenderer | null {
-    const vertex = compile(gl, gl.VERTEX_SHADER, GATE_VERTEX_SHADER);
-    const fragment = compile(gl, gl.FRAGMENT_SHADER, GATE_FRAGMENT_SHADER);
-    const program = gl.createProgram();
-    if (!vertex || !fragment || !program) return null;
-    gl.attachShader(program, vertex);
-    gl.attachShader(program, fragment);
-    gl.linkProgram(program);
-    if (!gl.getProgramParameter(program, gl.LINK_STATUS)) return null;
+): GateRenderer {
     gl.useProgram(program);
 
     const buffers: WebGLBuffer[] = [];
@@ -106,8 +88,6 @@ export function createGateRenderer(
         dispose() {
             buffers.forEach((buffer) => gl.deleteBuffer(buffer));
             gl.deleteProgram(program);
-            gl.deleteShader(vertex);
-            gl.deleteShader(fragment);
         },
     };
 }

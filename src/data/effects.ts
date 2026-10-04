@@ -40,7 +40,8 @@ export const nebulaEffects = {
     maxPixelCount: { fine: 1_500_000, coarse: 600_000 },
     /** The shader fades in over the CSS gradient once its chunk is loaded */
     fadeInMs: 900,
-    /** Longest wait for an idle moment before loading the shader chunk */
+    /** The shader chunk loads at the first idle moment after bootAfterMs (see gateEffects), at the latest idleTimeoutMs later */
+    bootAfterMs: 900,
     idleTimeoutMs: 1500,
 };
 
@@ -93,6 +94,10 @@ export const gateEffects = {
     labelRadius: 0.5,
     /** The gate assembles from the particle cloud on arrival; the links work at once */
     introMs: 1400,
+    /** WebGL boots at the first idle moment after bootAfterMs since the page started (at the latest
+     *  bootTimeoutMs later): never while the GPU is still drawing the first frames */
+    bootAfterMs: 900,
+    bootTimeoutMs: 1200,
     /** Height: aura 1.19 + room for the tilt (clear of the title); width: chevron tips 1.08.
      *  Dive: the camera stops just short of the horizon, still full of its dust when the cover lands */
     fit: { extent: 1.26, sideExtent: 1.12, margin: 8, camera: 2.6, diveDepth: 2.5 } satisfies FitSettings,

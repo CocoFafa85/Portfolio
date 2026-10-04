@@ -1,16 +1,13 @@
 import { gateEffects as fx } from '../../../data/effects';
-import { createRandom } from '../../../utils/random';
 import { assembleProgress, createDialState, dialState, type DialState } from '../../../utils/stargate/dial';
-import { buildGateGeometry } from '../../../utils/stargate/geometry';
 import { fitGate, projectGatePoint, type GateView, type Rect } from '../../../utils/stargate/view';
 import { onGate } from '../../../utils/stargate/writer';
-import { createGateRenderer, type GateFrame, type GateRenderer } from './gateRenderer';
-import { readGateTones } from './gatePalette';
+import type { GateFrame, GateRenderer } from './gateRenderer';
 
 /** State of the particle gate, built once; nothing here is allocated per frame. */
 export interface GateScene {
     canvas: HTMLCanvasElement;
-    /** Null without WebGL: the links are still placed, the cell shows its CSS ring */
+    /** Null until the program is ready (gateBoot.ts), or without WebGL: the links are placed anyway */
     renderer: GateRenderer | null;
     view: GateView;
     frame: GateFrame;
@@ -36,17 +33,10 @@ export interface GateScene {
 
 const IDLE_SPIN = (Math.PI * 2) / 120_000;
 
-/** WebGL program of the gate, or null when the browser or the GPU cannot run it. */
-export function createRenderer(canvas: HTMLCanvasElement): GateRenderer | null {
-    const gl = canvas.getContext('webgl', { alpha: true, antialias: false, premultipliedAlpha: true });
-    if (!gl || gl.isContextLost()) return null;
-    return createGateRenderer(gl, buildGateGeometry(fx.shape, createRandom(fx.seed)), readGateTones(), fx.fit, fx);
-}
-
+/** Scene of the gate; its renderer is attached once the program is ready. */
 export function createGateScene(canvas: HTMLCanvasElement, links: (HTMLElement | null)[]): GateScene {
-    const renderer = createRenderer(canvas);
     return {
-        canvas, renderer, links,
+        canvas, renderer: null, links,
         view: { focal: 0, aspect: 1, offsetX: 0, offsetY: 0 },
         frame: { time: 0, assemble: 0, spin: 0, vortex: 0, dive: 0, horizon: 0, tiltX: 0, tiltY: 0, pointScale: 1, lit: new Float32Array(9) },
         dial: createDialState(fx.shape.chevrons.count),

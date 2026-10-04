@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createRandom } from '../random';
-import { buildGateGeometry, gateParticleCount, type GateConfig } from './geometry';
+import { buildGateGeometry, gateGeometrySteps, gateParticleCount, type GateConfig } from './geometry';
 import { GROUP, TONE } from './writer';
 
 const CONFIG: GateConfig = {
@@ -94,5 +94,26 @@ describe('buildGateGeometry', () => {
         // Assert
         expect(nearest).toBeGreaterThanOrEqual(2.4 - 1e-6);
         expect(meanZ).toBeLessThan(-2);
+    });
+});
+
+describe('gateGeometrySteps', () => {
+    it('pauses after each part and ends on the same gate as the one-shot build', () => {
+        // Arrange
+        const steps = gateGeometrySteps(CONFIG, createRandom(7));
+        const whole = buildGateGeometry(CONFIG, createRandom(7));
+
+        // Act
+        let pauses = 0;
+        let step = steps.next();
+        while (!step.done) {
+            pauses++;
+            step = steps.next();
+        }
+
+        // Assert: aura, ring, glyphs, chevrons, then the horizon closes the gate
+        expect(pauses).toBe(4);
+        expect(step.value.to).toEqual(whole.to);
+        expect(step.value.params).toEqual(whole.params);
     });
 });

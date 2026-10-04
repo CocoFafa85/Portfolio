@@ -2,7 +2,8 @@ import { useCallback, useEffect, useRef, type RefObject } from 'react';
 import { gateEffects as fx } from '../../../data/effects';
 import { useAnimationLoop } from '../../../hooks/useAnimationLoop';
 import { capPixelRatio } from '../../../utils/canvas';
-import { createGateScene, createRenderer, layoutGateScene, stepGateScene, type GateScene } from './gateScene';
+import { startGateBoot } from './gateBoot';
+import { createGateScene, layoutGateScene, stepGateScene, type GateScene } from './gateScene';
 
 export interface GateControls {
     /** Lights a chevron (hover or focus of its destination), -1 for none */
@@ -14,8 +15,9 @@ export interface GateControls {
 const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 /**
- * Drives the particle gate: builds it after the first paint (it never delays
- * the title), fits it to its cell on every resize, tilts it with a fine
+ * Drives the particle gate: places the links at once, boots WebGL at the first
+ * idle moment and compiles without blocking (it never delays the title nor
+ * makes a long task), fits the gate to its cell on every resize, tilts it with a fine
  * pointer, survives a WebGL context loss, and runs it in useAnimationLoop
  * (paused when hidden or off screen). Reduced motion: one still frame.
  */
@@ -34,8 +36,6 @@ export function useGateScene(
         const scene = createGateScene(canvas, linksRef.current);
         sceneRef.current = scene;
         const coarse = window.matchMedia('(pointer: coarse)').matches;
-        const markGl = () => { cell.dataset.gl = scene.renderer ? 'on' : 'off'; };
-        markGl();
 
         const layout = () => {
             const width = root.clientWidth;
@@ -47,6 +47,19 @@ export function useGateScene(
             cell.dataset.placed = 'true';
         };
         layout();
+
+        let cancelBoot = () => {};
+        const boot = () => {
+            cell.dataset.gl = 'pending';
+            cancelBoot = startGateBoot(canvas, (renderer) => {
+                scene.renderer = renderer;
+                // The gate assembles from the moment it first shows
+                scene.start = performance.now();
+                cell.dataset.gl = renderer ? 'on' : 'off';
+                stepGateScene(scene, performance.now(), reducedMotion());
+            });
+        };
+        boot();
 
         let resizeTimer = 0;
         const observer = new ResizeObserver(() => {
@@ -62,23 +75,20 @@ export function useGateScene(
         };
         const onLost = (event: Event) => {
             event.preventDefault();
+            cancelBoot();
             scene.renderer = null;
-            markGl();
-        };
-        const onRestored = () => {
-            scene.renderer = createRenderer(canvas);
-            markGl();
-            layout();
+            cell.dataset.gl = 'off';
         };
         window.addEventListener('pointermove', onPointerMove, { passive: true });
         canvas.addEventListener('webglcontextlost', onLost);
-        canvas.addEventListener('webglcontextrestored', onRestored);
+        canvas.addEventListener('webglcontextrestored', boot);
         return () => {
             window.clearTimeout(resizeTimer);
             observer.disconnect();
             window.removeEventListener('pointermove', onPointerMove);
             canvas.removeEventListener('webglcontextlost', onLost);
-            canvas.removeEventListener('webglcontextrestored', onRestored);
+            canvas.removeEventListener('webglcontextrestored', boot);
+            cancelBoot();
             scene.renderer?.dispose();
             sceneRef.current = null;
         };

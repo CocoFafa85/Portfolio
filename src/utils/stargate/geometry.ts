@@ -33,8 +33,10 @@ export function gateParticleCount(cfg: GateConfig): number {
  * Generates the particle gate: aura, ring body with two bright rims, glyph
  * band, nine chevrons and the horizon dust, each particle with its start in
  * a scattered cloud (the gate assembles from it). Deterministic for `random`.
+ * A generator: it pauses after each part, so a caller can spread the work
+ * over several frames (no long task); it returns the finished geometry.
  */
-export function buildGateGeometry(cfg: GateConfig, random: Random): GateGeometry {
+export function* gateGeometrySteps(cfg: GateConfig, random: Random): Generator<void, GateGeometry> {
     const writer = createWriter(gateParticleCount(cfg), cfg.scatter, random);
     const { aura, ring, horizon } = cfg;
 
@@ -43,6 +45,7 @@ export function buildGateGeometry(cfg: GateConfig, random: Random): GateGeometry
         const [x, y] = onGate(random() * Math.PI * 2, aura.inner + random() ** 2 * aura.reach);
         writer.push(x, y, (random() - 0.5) * aura.depth, inRange(random, aura.size), GROUP.static, inRange(random, aura.delay), random(), TONE.aura);
     }
+    yield;
 
     for (let i = 0; i < ring.points; i++) {
         const pick = random();
@@ -64,9 +67,11 @@ export function buildGateGeometry(cfg: GateConfig, random: Random): GateGeometry
         const [x, y] = onGate(angle, radius);
         writer.push(x, y, (random() - 0.5) * ring.depth, size, GROUP.static, inRange(random, ring.delay), random(), tone);
     }
-
+    yield;
     addGlyphBand(writer, cfg.glyphs);
+    yield;
     addChevrons(writer, cfg.chevrons);
+    yield;
 
     for (let i = 0; i < horizon.points; i++) {
         const [x, y] = onGate(random() * Math.PI * 2, horizon.radius * Math.sqrt(random()));
@@ -74,4 +79,12 @@ export function buildGateGeometry(cfg: GateConfig, random: Random): GateGeometry
     }
 
     return writer.geometry;
+}
+
+/** The whole gate at once (same result as running gateGeometrySteps to the end). */
+export function buildGateGeometry(cfg: GateConfig, random: Random): GateGeometry {
+    const steps = gateGeometrySteps(cfg, random);
+    let step = steps.next();
+    while (!step.done) step = steps.next();
+    return step.value;
 }

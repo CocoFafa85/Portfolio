@@ -24,7 +24,8 @@
     list-style: none;
 }
 
-// Placed on its chevron by the scene (transform), hidden until then
+// Placed on its chevron by the scene (transform); shown with the gate (or its
+// CSS fallback), always shown when focused from the keyboard
 .destination {
     position: absolute;
     top: 0;
@@ -44,7 +45,8 @@
     opacity: 0;
     transition: color 0.2s ease, text-shadow 0.2s ease, opacity 0.3s ease;
 
-    .gate[data-placed] & {
+    .gate[data-placed]:not([data-gl='pending']) &,
+    &:focus-visible {
         opacity: 1;
     }
 
@@ -77,8 +79,9 @@
 }
 
 // Dial sequence: the numbers and the name fade out as the camera dives
-.gate[data-dialing] .destination,
-.gate[data-dialing] .readout {
+// (doubled class: outweighs the "shown with the gate" rule above)
+.gate.gate[data-dialing] .destination,
+.gate.gate[data-dialing] .readout {
     opacity: 0;
     transition: opacity 0.25s ease var(--dive-at, 520ms);
 }
