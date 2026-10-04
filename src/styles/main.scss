@@ -41,6 +41,13 @@
   --pcb-chip-edge: #{$pcb-chip-edge};
   --pcb-pin: #{$pcb-pin};
 
+  // Read by the home nebula shader (NebulaBackground/NebulaShader.tsx)
+  --nebula-void: #{$nebula-void};
+  --nebula-violet-deep: #{$nebula-violet-deep};
+  --nebula-violet: #{$nebula-violet};
+  --nebula-magenta: #{$nebula-magenta};
+  --nebula-teal: #{$nebula-teal};
+
   --font-orbitron: 'Orbitron', sans-serif;
   --font-montserrat: 'Montserrat Alternates', sans-serif;
 

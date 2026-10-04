@@ -21,6 +21,24 @@ export const heroEffects = {
     } satisfies DecodeSettings & Record<'introMs' | 'morphMs' | 'holdMs', number>,
 };
 
+/** Home nebula, Paper Shaders mesh gradient (LOT 2, H4) */
+export const nebulaEffects = {
+    /** Colour spots, as design tokens; the void repeats so the darkness dominates */
+    tokens: ['--nebula-void', '--nebula-violet-deep', '--nebula-violet', '--nebula-void', '--nebula-magenta', '--nebula-teal'],
+    speed: 0.14,
+    distortion: 0.85,
+    swirl: 0.25,
+    grainMixer: 0.08,
+    grainOverlay: 0.1,
+    /** A soft nebula needs few pixels: never above the device ratio 1, capped in device pixels */
+    minPixelRatio: 1,
+    maxPixelCount: { fine: 1_500_000, coarse: 600_000 },
+    /** The shader fades in over the CSS gradient once its chunk is loaded */
+    fadeInMs: 900,
+    /** Longest wait for an idle moment before loading the shader chunk */
+    idleTimeoutMs: 1500,
+};
+
 /** Navigation bar (LOT 1, C1) */
 export const navEffects = {
     /** Glide of the active-page indicator along the luminous line */

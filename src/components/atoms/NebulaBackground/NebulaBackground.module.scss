@@ -1,0 +1,27 @@
+@use 'sass:color';
+@use '../../../styles/variables' as *;
+
+// Full screen, behind the home content; the CSS gradient is the fallback
+// (before the shader loads, without WebGL and in reduced motion)
+.nebula {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(ellipse at 28% 32%, color.change($nebula-violet, $alpha: 0.6), transparent 55%),
+        radial-gradient(ellipse at 76% 72%, color.change($nebula-magenta, $alpha: 0.5), transparent 55%),
+        radial-gradient(ellipse at 64% 18%, color.change($nebula-teal, $alpha: 0.55), transparent 50%),
+        $nebula-void;
+}
+
+.shader {
+    position: absolute;
+    inset: 0;
+    animation: fadeIn var(--nebula-fade-ms, 900ms) ease-out both;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}

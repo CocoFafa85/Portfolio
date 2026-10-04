@@ -3,6 +3,7 @@ import styles from './Home.module.scss';
 import Hero from '../../components/organisms/Hero/Hero';
 import OrbitMenu from '../../components/molecules/OrbitMenu/OrbitMenu';
 import QuantumField from '../../components/atoms/QuantumField/QuantumField';
+import NebulaBackground from '../../components/atoms/NebulaBackground/NebulaBackground';
 import { content } from '../../data/content';
 import { motion } from 'motion/react';
 import { usePageMeta } from '../../hooks/usePageMeta';
@@ -30,6 +31,7 @@ const Home: React.FC = () => {
             animate={{ opacity: 1 }}
             className={styles.homeWrapper}
         >
+            <NebulaBackground />
             <QuantumField />
             <div
                 className={styles.scalableContent}

@@ -35,6 +35,14 @@ $fire-orange: #ff7a1a;
 // Unlit neon tube: a title letter not decoded yet, barely visible (LOT 2, H1)
 $tube-unlit: #1d1630;
 
+// Home nebula (LOT 2, H4): very dark colour spots of the mesh gradient,
+// also the CSS fallback shown before the shader and in reduced motion
+$nebula-void: #05050d;
+$nebula-violet-deep: #1c0838;
+$nebula-violet: #3a0b52;
+$nebula-magenta: #4d0a3c;
+$nebula-teal: #062a45;
+
 // Navigation bar height, the <main> area starts right below it
 $hud-height: 56px;
 $hud-height-mobile: 52px;
