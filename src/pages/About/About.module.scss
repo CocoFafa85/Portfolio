@@ -31,8 +31,11 @@
     border: 1px solid rgba($neon-cyan, 0.1);
     border-radius: 12px;
 
+    // Fixed line height: the title keeps its height when Orbitron replaces the
+    // fallback font, so the cockpit below never shifts (CLS)
     h1 {
         margin-bottom: 0;
+        line-height: 1.2;
     }
 
     @include mobile {

@@ -8,6 +8,8 @@ import type { DialTimeline } from '../utils/stargate/dial';
 import type { GateConfig } from '../utils/stargate/geometry';
 import type { FitSettings } from '../utils/stargate/view';
 import type { HoverSettings } from '../utils/circuit/hover';
+import type { BoltSettings } from '../utils/timeCircuits/bolts';
+import type { JumpTimeline } from '../utils/timeCircuits/jump';
 import type { RadialSettings, SpeedSettings } from '../utils/travelFx';
 
 /**
@@ -126,6 +128,38 @@ export const gateEffects = {
         horizonAtMs: 320, vortexMs: 320, brightenMs: 220, diveAtMs: 520, diveMs: 420, navigateAtMs: 760,
     } satisfies DialTimeline,
     pixelRatio: { fine: 2, coarse: 1.5, maxPixels: 8_000_000 } satisfies PixelRatioCaps,
+    resizeDebounceMs: 150,
+};
+
+/**
+ * DeLorean convector of the About page (LOT 3, A2): the time jump played
+ * when an era is chosen (ms from the jump start). The speed digits and the
+ * landing follow `jump` (utils/timeCircuits/jump.ts); the visual layers are
+ * CSS keyframes started with `layers`, as CSS variables of the console.
+ */
+export const convectorEffects = {
+    jump: {
+        accelMs: 900, topSpeed: 88, speedCurve: 2.1, arriveMs: 1035, revealMs: 1160, decayAtMs: 1150, decayMs: 600, endMs: 1750,
+    } satisfies JumpTimeline,
+    layers: {
+        /** The chosen row flickers as it arms */
+        armMs: 280,
+        /** Lightning crackles around the console just before 88 */
+        boltsAt: 800, boltsMs: 290,
+        /** White-blue flash (peak at a third), then the fire trails as the jump lands */
+        flashAt: 950, flashMs: 240,
+        fireAt: 1035, fireMs: 750,
+        /** The capacitor charges with the speed, holds a moment after landing, then cools */
+        coolAt: 1115, coolMs: 520,
+    },
+    bolts: { count: 6, depth: 5, jitter: 0.42 } satisfies BoltSettings,
+    boltSeed: 1955,
+    /** The flux capacitor powers on at the first idle moment after powerOnAfterMs (its glows are
+     *  the costliest part of the console to paint: never in the first frames), at the latest powerOnTimeoutMs later */
+    powerOnAfterMs: 700,
+    powerOnTimeoutMs: 1200,
+    /** Era text after the landing: each line fades and rises in */
+    reveal: { durationS: 0.38, staggerS: 0.09, rise: 10 },
     resizeDebounceMs: 150,
 };
 

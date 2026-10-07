@@ -1,0 +1,196 @@
+@use '../../../styles/variables' as *;
+
+// ═══════════════════════════════════════════════
+// FLUX CAPACITOR — brushed metal box, dark window, three glass tubes in a Y
+// ═══════════════════════════════════════════════
+.box {
+    position: relative;
+    display: block;
+    aspect-ratio: 5 / 6;
+    // Fixed: a percentage padding would follow the parent's width, not the box's
+    padding: 10px 10px 20px;
+    // Plain metal until powered (first paint), then brushed with a soft drop shadow
+    background: $tc-metal;
+    border-radius: 6px;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), inset 0 -2px 0 rgba(0, 0, 0, 0.45);
+
+    &[data-power='on'] {
+        background: linear-gradient(150deg, $tc-metal-light, $tc-metal 38%, $tc-metal-dark);
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.22), inset 0 -2px 0 rgba(0, 0, 0, 0.45), 0 6px 14px rgba(0, 0, 0, 0.65);
+    }
+
+    // Engraved name plate (a pseudo-element: decorative, never audited as text)
+    &::after {
+        content: attr(data-label);
+        position: absolute;
+        right: 0;
+        bottom: 5%;
+        left: 0;
+        font: 700 8px/1 $font-orbitron;
+        letter-spacing: 0.14em;
+        text-align: center;
+        color: #17181c;
+        text-shadow: 0 1px 0 rgba(255, 255, 255, 0.28);
+    }
+}
+
+.screw {
+    position: absolute;
+    top: 3.5%;
+    width: 7px;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: #6a6e78;
+    border: 1px solid #1a1b20;
+
+    &:first-child { left: 4%; }
+    &:nth-child(2) { right: 4%; }
+}
+
+.window {
+    position: relative;
+    display: block;
+    height: 100%;
+    overflow: hidden;
+    background: #07080c;
+    border: 2px solid #191b20;
+    border-radius: 4px;
+}
+
+// Inside of the window, mounted at power-on: it lights up with a short flicker
+.core {
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0) 14%),
+        radial-gradient(circle at 50% 50%, #121722, #05060a 75%);
+    animation: tc-power-on 0.6s ease-out both;
+
+    // Glass reflection
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: linear-gradient(125deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0) 35%);
+    }
+}
+
+@keyframes tc-power-on {
+    0% { opacity: 0; }
+    30% { opacity: 0.7; }
+    45% { opacity: 0.2; }
+    100% { opacity: 1; }
+}
+
+.glow {
+    position: absolute;
+    inset: -25%;
+    background: radial-gradient(circle at 50% 50%, rgba($tc-flux-light, 0.9), rgba($tc-flux-glow, 0.4) 22%, transparent 58%);
+    opacity: 0.18;
+}
+
+// A tube starts at the hub and points outwards (x axis): its light runs back to the hub
+.tube {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 46%;
+    height: 11%;
+    overflow: hidden;
+    transform-origin: 0 0;
+    background: linear-gradient(180deg, rgba(225, 247, 255, 0.26), rgba(120, 180, 210, 0.07) 48%, rgba(225, 247, 255, 0.16));
+    border-radius: 999px;
+    box-shadow: inset 0 0 0 1px rgba(200, 235, 255, 0.25);
+
+    // Electrode rings
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: repeating-linear-gradient(90deg, rgba(0, 0, 0, 0.4) 0 1px, transparent 1px 8px);
+    }
+
+    // Metal cap at the outer end
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 1;
+        width: 7px;
+        background: linear-gradient(90deg, #70747e, #2b2d33);
+    }
+}
+
+.left { transform: rotate(-142deg) translate(9px, -50%); }
+.right { transform: rotate(-38deg) translate(9px, -50%); }
+.down { transform: rotate(90deg) translate(9px, -50%); }
+
+.chase {
+    position: absolute;
+    top: 18%;
+    right: -32px;
+    bottom: 18%;
+    left: 0;
+    background: repeating-linear-gradient(90deg,
+            rgba($tc-flux-light, 0) 0, rgba($tc-flux-light, 0.95) 5px, rgba($tc-flux-light, 0) 10px, rgba($tc-flux-light, 0) 16px);
+    animation: tc-chase 1.5s linear infinite;
+}
+
+.fast {
+    opacity: 0;
+    animation-duration: 0.16s;
+}
+
+.hub {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 18%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, #fff 0, #c8f6ff 28%, #3a8fb0 56%, #1a1c22 60%, #5a5e68 78%, #2a2c32);
+}
+
+// Jump (A2 bis): the light rushes and the glow charges up, then cools down
+:global([data-jumping='true']) {
+    .fast {
+        animation:
+            tc-chase 0.16s linear infinite,
+            tc-charge-up var(--jump-accel) ease-in var(--jump-offset) both,
+            tc-charge-down var(--cool-ms) ease-out calc(var(--cool-at) + var(--jump-offset)) forwards;
+    }
+
+    .glow {
+        animation:
+            tc-glow-up var(--jump-accel) ease-in var(--jump-offset) both,
+            tc-glow-down var(--cool-ms) ease-out calc(var(--cool-at) + var(--jump-offset)) forwards;
+    }
+}
+
+@keyframes tc-chase {
+    to { transform: translateX(-16px); }
+}
+
+@keyframes tc-charge-up {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes tc-charge-down {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+
+@keyframes tc-glow-up {
+    from { opacity: 0.18; }
+    to { opacity: 1; }
+}
+
+@keyframes tc-glow-down {
+    from { opacity: 1; }
+    to { opacity: 0.18; }
+}

@@ -59,6 +59,34 @@ $gate-chevron: #9e94c7;
 $gate-chevron-core: #ff2e94;
 $gate-horizon: #268cf2;
 
+// DeLorean time circuits (About, LOT 3): one LED colour per row (red destination,
+// green present, amber last departed), its lighter lit core and its label strip
+// (dark text on the strips: 6.4:1 or more)
+$tc-red: #ff3b2f;
+$tc-red-lit: #ff8577;
+$tc-red-strip: #ff5a47;
+$tc-green: #2bff5e;
+$tc-green-lit: #9bffb2;
+$tc-green-strip: #2fd65a;
+$tc-amber: #ffae1a;
+$tc-amber-lit: #ffd98a;
+$tc-amber-strip: #ffb21a;
+// Console: gunmetal frame, black display glass, engraved plates
+$tc-console: #111218;
+$tc-console-light: #1d1e25;
+$tc-console-dark: #0c0d11;
+$tc-console-edge: #2a2c35;
+$tc-glass: #040405;
+$tc-plate: #0e0e12;
+$tc-plate-text: #f2f2f2;
+$tc-label: #d2d2da;
+// Flux capacitor: brushed metal box, white-blue light running in its tubes
+$tc-metal-light: #646a75;
+$tc-metal: #3a3d45;
+$tc-metal-dark: #23252b;
+$tc-flux-light: #ebfcff;
+$tc-flux-glow: #50beff;
+
 // Navigation bar height, the <main> area starts right below it
 $hud-height: 56px;
 $hud-height-mobile: 52px;
