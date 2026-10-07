@@ -12,8 +12,9 @@ type CssVars = CSSProperties & Record<`--${string}`, string>;
 const DIVE_VARS: CssVars = { '--dive-at': `${fx.dial.diveAtMs}ms` };
 
 /**
- * Home orbital menu (LOT 2, H3): a stargate of ~16 000 particles (WebGL,
- * no 3D library) that assembles on arrival and follows the pointer. The three
+ * Home orbital menu (LOT 2, H3): a stargate of ~27 000 particles (WebGL,
+ * no 3D library) that assembles on arrival and sways gently (no pointer
+ * parallax since the review of 2026-10-07). The three
  * destinations are real links, numbered 01, 02, 03 on their chevron; hover or
  * focus lights the chevron and shows the page name at the centre. The gate is
  * fitted to its own cell: it never covers the title. Render it as a child of

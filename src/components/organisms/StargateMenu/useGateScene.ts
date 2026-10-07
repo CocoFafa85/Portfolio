@@ -17,8 +17,9 @@ const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)'
 /**
  * Drives the particle gate: places the links at once, boots WebGL at the first
  * idle moment and compiles without blocking (it never delays the title nor
- * makes a long task), fits the gate to its cell on every resize, tilts it with a fine
- * pointer, survives a WebGL context loss, and runs it in useAnimationLoop
+ * makes a long task), fits the gate to its cell on every resize (no pointer
+ * parallax since the review of 2026-10-07: only an idle sway), survives a
+ * WebGL context loss, and runs it in useAnimationLoop
  * (paused when hidden or off screen). Reduced motion: one still frame.
  */
 export function useGateScene(
@@ -68,24 +69,17 @@ export function useGateScene(
         });
         observer.observe(root);
         observer.observe(cell);
-        const onPointerMove = (event: PointerEvent) => {
-            if (event.pointerType === 'touch') return;
-            scene.pointer.x = event.clientX / window.innerWidth - 0.5;
-            scene.pointer.y = event.clientY / window.innerHeight - 0.5;
-        };
         const onLost = (event: Event) => {
             event.preventDefault();
             cancelBoot();
             scene.renderer = null;
             cell.dataset.gl = 'off';
         };
-        window.addEventListener('pointermove', onPointerMove, { passive: true });
         canvas.addEventListener('webglcontextlost', onLost);
         canvas.addEventListener('webglcontextrestored', boot);
         return () => {
             window.clearTimeout(resizeTimer);
             observer.disconnect();
-            window.removeEventListener('pointermove', onPointerMove);
             canvas.removeEventListener('webglcontextlost', onLost);
             canvas.removeEventListener('webglcontextrestored', boot);
             cancelBoot();

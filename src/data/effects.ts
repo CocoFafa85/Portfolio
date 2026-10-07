@@ -109,8 +109,8 @@ export const gateEffects = {
     /** Height: aura 1.19 + room for the tilt (clear of the title); width: chevron tips 1.08.
      *  Dive: the camera stops just short of the horizon, still full of its dust when the cover lands */
     fit: { extent: 1.26, sideExtent: 1.12, margin: 8, camera: 2.6, diveDepth: 2.5 } satisfies FitSettings,
-    /** Camera tilt with a fine pointer (radians at the screen edge) and idle sway */
-    tilt: { x: 0.22, y: 0.32, smoothing: 0.05, swayX: 0.02, swayY: 0.03, swayPeriodX: 2300, swayPeriodY: 3100 },
+    /** Idle camera sway (radians, ms); the pointer tilt was removed after review (2026-10-07) */
+    sway: { x: 0.02, y: 0.03, periodX: 2300, periodY: 3100 },
     /** Share of the remaining light a hovered chevron gains each frame */
     hoverSmoothing: 0.2,
     /** Horizon dust brightness at rest (it reaches 1 as the horizon forms) */
