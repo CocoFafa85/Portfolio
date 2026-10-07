@@ -27,7 +27,7 @@ export const content: PortfolioContent = {
         rolesSeparator: " · "
     },
     about: {
-        title: "Evolution",
+        title: "Qui suis-je ?",
         timeline: [
             {
                 id: "past",
