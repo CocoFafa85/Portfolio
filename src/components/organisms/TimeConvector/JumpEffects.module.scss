@@ -1,0 +1,97 @@
+@use 'sass:color';
+@use '../../../styles/variables' as *;
+
+// Same electric light as the 88 mph page trip (TravelOverlay)
+$electric-light: color.mix(#fff, $neon-cyan, 60%);
+
+// ═══════════════════════════════════════════════
+// JUMP EFFECTS — over the console, at rest invisible. A jump marks the
+// console data-jump-cycle="a" or "b" (alternating, so a jump picked mid-way
+// restarts the keyframes) and sets the timings (--bolts-at…, --jump-offset).
+// Transform and opacity only.
+// ═══════════════════════════════════════════════
+.effects {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: none;
+}
+
+// Drawn once (JumpEffects.tsx): colours of the core and of the halo
+.bolts {
+    --halo: #{rgba($tc-flux-glow, 0.45)};
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    color: $tc-flux-light;
+    opacity: 0;
+}
+
+.flash {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    background: radial-gradient(circle at var(--origin-x) var(--origin-y),
+            rgba($tc-flux-light, 0.95), rgba($electric-light, 0.55) 30%, rgba($tc-flux-glow, 0) 72%);
+}
+
+// Fire trails of the landing, anchored right like the forward 88 mph trip
+.fire {
+    position: absolute;
+    right: 3%;
+    left: 3%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, $fire-orange 40%, $neon-pink);
+    transform: scaleX(0);
+    transform-origin: 100% 50%;
+}
+
+.high { bottom: -11px; }
+.low { bottom: -18px; }
+
+@each $cycle in a, b {
+    :global([data-jump-cycle='#{$cycle}']) {
+        .bolts {
+            animation: tc-bolt-#{$cycle} var(--bolts-ms) steps(1, end) calc(var(--bolts-at) + var(--jump-offset)) both;
+
+            & + .bolts {
+                animation: tc-bolt-alt-#{$cycle} var(--bolts-ms) steps(1, end) calc(var(--bolts-at) + var(--jump-offset) + 37ms) both;
+            }
+        }
+
+        .flash {
+            animation: tc-flash-#{$cycle} var(--flash-ms) linear calc(var(--flash-at) + var(--jump-offset)) both;
+        }
+
+        .fire {
+            animation: tc-fire-#{$cycle} var(--fire-ms) ease-out calc(var(--fire-at) + var(--jump-offset)) both;
+        }
+
+        .low {
+            animation-delay: calc(var(--fire-at) + var(--jump-offset) + 50ms);
+        }
+    }
+
+    @keyframes tc-bolt-#{$cycle} {
+        0%, 30%, 62%, 100% { opacity: 0; }
+        10%, 44%, 80% { opacity: 1; }
+    }
+
+    @keyframes tc-bolt-alt-#{$cycle} {
+        0%, 22%, 52%, 100% { opacity: 0; }
+        6%, 34%, 70%, 88% { opacity: 1; }
+    }
+
+    @keyframes tc-flash-#{$cycle} {
+        0% { opacity: 0; }
+        31% { opacity: 0.92; }
+        100% { opacity: 0; }
+    }
+
+    @keyframes tc-fire-#{$cycle} {
+        0% { transform: scaleX(0); opacity: 1; }
+        40% { transform: scaleX(1); opacity: 1; }
+        100% { transform: scaleX(1); opacity: 0; }
+    }
+}

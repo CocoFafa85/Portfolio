@@ -1,0 +1,78 @@
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+// ═══════════════════════════════════════════════
+// ERA TEXTS — the tab panels (left aligned, 68 characters a line at most).
+// All laid out at load; the idle ones wait out of the flow, hidden, and
+// clipped by the stack so they never lengthen the page. Once the heights
+// are measured, the chosen one leaves the flow as well and the stack takes
+// its height: switching eras is a visibility and a height, no text layout.
+// ═══════════════════════════════════════════════
+.stack {
+    position: relative;
+    overflow: hidden;
+}
+
+// Two classes: stronger than `.panel { position: relative }` declared below
+// (with a single class, the idle panels stayed in the flow until measured: CLS)
+.panel.idle,
+.stack[data-measured] > .panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+}
+
+.panel.idle {
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.panel {
+    position: relative;
+    padding: 1.5rem 1.75rem;
+    background: rgba($bg-secondary, 0.82);
+    border: 1px solid rgba($neon-cyan, 0.24);
+    border-radius: 8px;
+
+    @include mobile {
+        padding: 1.1rem 1rem;
+    }
+
+    // Inside the panel: the stack clips anything drawn outside it
+    &:focus-visible {
+        outline-offset: -3px;
+    }
+}
+
+.title {
+    margin-bottom: 0.9rem;
+    font-size: clamp(1.35rem, 1.1rem + 1vw, 1.9rem);
+    line-height: 1.2;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: var(--accent, #{$neon-cyan});
+    text-shadow: 0 0 6px currentColor;
+}
+
+.paragraph {
+    max-width: 68ch;
+    margin-bottom: 0.85rem;
+    font-size: clamp(0.95rem, 0.9rem + 0.2vw, 1.05rem);
+    line-height: 1.75;
+    color: var(--text-primary);
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+
+    a {
+        color: $neon-cyan;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+
+        &:hover {
+            color: $neon-pink;
+        }
+    }
+}

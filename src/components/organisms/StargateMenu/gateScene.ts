@@ -20,13 +20,10 @@ export interface GateScene {
     dialStart: number;
     chosen: number;
     hot: number;
-    /** Pointer target (-0.5..0.5) and the smoothed tilt */
-    pointer: { x: number; y: number };
-    tilt: { x: number; y: number };
     links: (HTMLElement | null)[];
     /** Model x, y of each link anchor, inside its chevron */
     anchors: Float32Array;
-    /** Last tilt and dive the links were placed for */
+    /** Dive the links were last placed for (NaN: to place) */
     placed: Float32Array;
     scratch: Float32Array;
 }
@@ -42,8 +39,7 @@ export function createGateScene(canvas: HTMLCanvasElement, links: (HTMLElement |
         dial: createDialState(fx.shape.chevrons.count),
         cell: { x: 0, y: 0, width: 0, height: 0 },
         width: 0, height: 0, start: performance.now(), dialStart: -1, chosen: 0, hot: -1,
-        pointer: { x: 0, y: 0 }, tilt: { x: 0, y: 0 },
-        placed: Float32Array.from([NaN, NaN, NaN]), scratch: new Float32Array(2),
+        placed: Float32Array.from([NaN]), scratch: new Float32Array(2),
         anchors: Float32Array.from(fx.destinations.flatMap((chevron) =>
             onGate((chevron / fx.shape.chevrons.count) * Math.PI * 2, fx.labelRadius))),
     };
@@ -63,37 +59,31 @@ export function layoutGateScene(scene: GateScene, cell: Rect, width: number, hei
 }
 
 /**
- * Places the destination links on the tilted gate. They follow the pointer
- * tilt, not the idle sway (a 3 px drift at most): at rest nothing is
- * rewritten, so the frame loop stays free of string allocations.
+ * Places the destination links on the untilted gate, again only for a new
+ * layout or while the camera dives (they ignore the idle sway, a 3 px drift
+ * at most): at rest nothing is rewritten, so the frame loop stays free of
+ * string allocations.
  */
 function placeLinks(scene: GateScene): void {
-    const { tilt, frame, placed, scratch, anchors } = scene;
-    const moved = Math.abs(tilt.x - placed[0]) + Math.abs(tilt.y - placed[1]) + Math.abs(frame.dive - placed[2]);
+    const { frame, placed, scratch, anchors } = scene;
     // NaN (never placed, or a new layout) never compares as small: it forces a placement
-    if (moved * scene.height <= fx.linkEpsilon) return;
-    placed[0] = tilt.x;
-    placed[1] = tilt.y;
-    placed[2] = frame.dive;
+    if (Math.abs(frame.dive - placed[0]) * scene.height <= fx.linkEpsilon) return;
+    placed[0] = frame.dive;
     for (let i = 0; i < scene.links.length; i++) {
         const link = scene.links[i];
-        if (!link || !projectGatePoint(anchors[2 * i], anchors[2 * i + 1], 0, tilt.x, tilt.y, frame.dive,
+        if (!link || !projectGatePoint(anchors[2 * i], anchors[2 * i + 1], 0, 0, 0, frame.dive,
             scene.view, fx.fit, scene.width, scene.height, scratch)) continue;
         link.style.transform = `translate3d(${scratch[0] - scene.cell.x}px, ${scratch[1] - scene.cell.y}px, 0) translate(-50%, -50%)`;
     }
 }
 
-/** Computes and draws one frame. `still`: reduced motion (assembled, no tilt, no time). */
+/** Computes and draws one frame. `still`: reduced motion (assembled, no sway, no time). */
 export function stepGateScene(scene: GateScene, now: number, still: boolean): void {
-    const { frame, tilt, pointer } = scene;
+    const { frame } = scene;
     frame.time = still ? 0 : (now / 1000) % 3600;
     frame.assemble = still ? 1 : assembleProgress(now - scene.start, fx.introMs);
-    if (!still) {
-        tilt.x += (pointer.y * fx.tilt.x - tilt.x) * fx.tilt.smoothing;
-        tilt.y += (pointer.x * fx.tilt.y - tilt.y) * fx.tilt.smoothing;
-    }
-    frame.tiltX = still ? 0 : tilt.x + Math.sin(now / fx.tilt.swayPeriodX) * fx.tilt.swayX;
-    frame.tiltY = still ? 0 : tilt.y + Math.sin(now / fx.tilt.swayPeriodY) * fx.tilt.swayY;
+    frame.tiltX = still ? 0 : Math.sin(now / fx.sway.periodX) * fx.sway.x;
+    frame.tiltY = still ? 0 : Math.sin(now / fx.sway.periodY) * fx.sway.y;
     const idleSpin = still ? 0 : now * IDLE_SPIN;
     if (scene.dialStart >= 0) {
         dialState(now - scene.dialStart, scene.chosen, fx.dial, scene.dial);

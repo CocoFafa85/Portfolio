@@ -33,6 +33,8 @@ export interface ParticleWriter {
     random: Random;
     /** Adds a particle; its scattered start is drawn here */
     push(x: number, y: number, z: number, size: number, group: number, delay: number, phase: number, tone: number): void;
+    /** Particles written so far */
+    written(): number;
 }
 
 export function createWriter(count: number, scatter: ScatterSettings, random: Random): ParticleWriter {
@@ -65,7 +67,7 @@ export function createWriter(count: number, scatter: ScatterSettings, random: Ra
         geometry.tones[next] = tone;
         next++;
     };
-    return { geometry, random, push };
+    return { geometry, random, push, written: () => next };
 }
 
 /** Point on the gate plane at `radius`, angle measured clockwise from the top, plus a tangent shift. */

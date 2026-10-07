@@ -5,9 +5,24 @@ export interface TimelineStep {
     /** Tab label (Passé / Présent / Futur) */
     label: string;
     title: string;
+    /** One paragraph per line; links written [label](https://…) */
     content: string;
     /** CSS color (design token) of the period title */
     accent: string;
+    /** Date and time on the displays, local `YYYY-MM-DDTHH:mm`; null: the visitor's clock (the present) */
+    date: string | null;
+}
+
+/** Decorative texts of the DeLorean time circuits (About, LOT 3), as in the film */
+export interface TimeCircuitLabels {
+    /** Plate under each row (DESTINATION TIME…), by era */
+    plates: Record<TimeState, string>;
+    /** Strips above the displays */
+    fields: { month: string; day: string; year: string; hour: string; minute: string; am: string; pm: string };
+    /** Three-letter months shown by the month display, January first */
+    months: string[];
+    speedUnit: string;
+    capacitor: string;
 }
 
 export interface NavItem {
@@ -75,6 +90,8 @@ export interface UiLabels {
     homeLabel: string;
     /** Accessible name of the HoloCard download action */
     cvDownloadLabel: string;
+    /** Language of dates spelled out for screen readers (BCP 47) */
+    locale: string;
 }
 
 /** Silkscreen reference prefixes of the circuit background (U1, R12, C4...) */
@@ -92,6 +109,7 @@ export interface PortfolioContent {
         circuit: CircuitDesignators;
         /** Characters drawn while a text decodes (home title and subtitle) */
         decodeGlyphs: string;
+        timeCircuits: TimeCircuitLabels;
     };
     cv: CvFile;
     home: {
@@ -103,6 +121,12 @@ export interface PortfolioContent {
     };
     about: {
         title: string;
+        /** Accessible name of the era tabs (the rows of the time circuits) */
+        erasLabel: string;
+        /** Rows of the time circuits, top to bottom, as in the film: destination, present, last departed */
+        rowOrder: TimeState[];
+        /** Shown by the present row when the visitor's clock is unavailable (data F1), local `YYYY-MM-DDTHH:mm` */
+        presentFallback: string;
         timeline: TimelineStep[];
     };
     skills: {

@@ -116,4 +116,25 @@ describe('gateGeometrySteps', () => {
         expect(step.value.to).toEqual(whole.to);
         expect(step.value.params).toEqual(whole.params);
     });
+
+    it('never writes more than a chunk between two pauses, and still ends on the same gate', () => {
+        // Arrange
+        const steps = gateGeometrySteps(CONFIG, createRandom(7), 100);
+        const whole = buildGateGeometry(CONFIG, createRandom(7));
+
+        // Act
+        const written: number[] = [0];
+        let step = steps.next();
+        while (!step.done) {
+            written.push(step.value);
+            step = steps.next();
+        }
+
+        // Assert
+        const largest = Math.max(...written.slice(1).map((count, i) => count - written[i]));
+        expect(largest).toBeLessThanOrEqual(100);
+        expect(written.length).toBeGreaterThan(gateParticleCount(CONFIG) / 100);
+        expect(step.value.to).toEqual(whole.to);
+        expect(step.value.tones).toEqual(whole.tones);
+    });
 });

@@ -8,6 +8,8 @@ import type { DialTimeline } from '../utils/stargate/dial';
 import type { GateConfig } from '../utils/stargate/geometry';
 import type { FitSettings } from '../utils/stargate/view';
 import type { HoverSettings } from '../utils/circuit/hover';
+import type { BoltSettings } from '../utils/timeCircuits/bolts';
+import type { JumpTimeline } from '../utils/timeCircuits/jump';
 import type { RadialSettings, SpeedSettings } from '../utils/travelFx';
 
 /**
@@ -30,7 +32,8 @@ export const heroEffects = {
 export const nebulaEffects = {
     /** Colour spots, as design tokens; the void repeats so the darkness dominates */
     tokens: ['--nebula-void', '--nebula-violet-deep', '--nebula-violet', '--nebula-void', '--nebula-magenta', '--nebula-teal'],
-    speed: 0.14,
+    /** Pace of the colour waves: slightly faster after review (2026-10-07, was 0.14) */
+    speed: 0.19,
     distortion: 0.85,
     swirl: 0.25,
     grainMixer: 0.08,
@@ -45,17 +48,20 @@ export const nebulaEffects = {
     idleTimeoutMs: 1500,
 };
 
-/** Home starfield over the nebula (LOT 2, H4): far, mid and blurred near layers, shooting stars */
+/**
+ * Home starfield over the nebula (LOT 2, H4): mid and blurred near layers, shooting stars.
+ * The far layer (400 small pale stars per megapixel) was removed after review (2026-10-07):
+ * the background reads more even.
+ */
 export const starEffects = {
     seed: 2035,
     /** Sprite tints: 0 white, 1 cyan, 2 violet, 3 pink (palette.ts); the near layer uses the soft sprite */
     layers: [
-        { perMegapixel: 400, min: 110, radius: [0.9, 2.3], alpha: [0.25, 0.6], speed: [2, 5], parallax: 4, twinkle: 0, tints: [0, 1, 2] },
         { perMegapixel: 110, min: 34, radius: [2.1, 3.9], alpha: [0.5, 0.9], speed: [6, 12], parallax: 11, twinkle: 0.25, tints: [0, 1, 2, 3] },
         { perMegapixel: 8, min: 5, radius: [6, 15], alpha: [0.05, 0.14], speed: [10, 20], parallax: 28, twinkle: 0, tints: [0] },
     ] satisfies StarLayerSpec[],
     /** Index of the layer drawn with the soft out-of-focus sprite (depth of field) */
-    blurredLayer: 2,
+    blurredLayer: 1,
     meteor: {
         max: 2, intervalMs: [4500, 9000], speed: [650, 1000], length: [110, 220], lifeMs: [700, 1100],
         angle: [0.35, 0.7], startBand: 0.35,
@@ -70,28 +76,33 @@ export const starEffects = {
     resizeDebounceMs: 150,
 };
 
-/** Home particle gate, the orbital menu (LOT 2, H3; model units: gate radius 1) */
+/**
+ * Home particle gate, the orbital menu (LOT 2, H3; model units: gate radius 1).
+ * Review of 2026-10-07: denser and finer for a sharper gate (~16 000 → ~27 400 particles).
+ */
 export const gateEffects = {
     seed: 2026,
     shape: {
-        ring: { inner: 0.8, outer: 1, depth: 0.13, rimShare: 0.2, rimWidth: 0.012, points: 7000, bodySize: [1.9, 3.4], rimSize: 2.6, delay: [0, 0.3] },
-        aura: { inner: 0.95, reach: 0.24, depth: 0.3, points: 2400, size: [2.6, 4.6], delay: [0, 0.4] },
+        ring: { inner: 0.8, outer: 1, depth: 0.13, rimShare: 0.2, rimWidth: 0.012, points: 12600, bodySize: [1.6, 2.9], rimSize: 2.2, delay: [0, 0.3] },
+        aura: { inner: 0.95, reach: 0.24, depth: 0.3, points: 2800, size: [2.4, 4.2], delay: [0, 0.4] },
         glyphs: {
             count: 39, radius: 0.7, rim: 0.62, width: 0.075, height: 0.09, vertices: [3, 5],
-            rimPoints: 700, pointsPerGlyph: 34, rimSize: 1.8, glyphSize: 2.1, delay: [0.2, 0.5],
+            rimPoints: 1260, pointsPerGlyph: 60, rimSize: 1.6, glyphSize: 1.8, delay: [0.2, 0.5],
         },
         chevrons: {
             count: 9, outer: 1.08, inner: 0.93, outerHalf: 0.065, innerHalf: 0.03,
             core: { outer: 1.045, inner: 0.965, outerHalf: 0.03, innerHalf: 0.015 },
-            depth: 0.08, bodyPoints: 160, corePoints: 70, bodySize: 2.2, coreSize: 2.6, delay: [0.45, 0.7],
+            depth: 0.08, bodyPoints: 290, corePoints: 126, bodySize: 1.9, coreSize: 2.2, delay: [0.45, 0.7],
         },
-        horizon: { radius: 0.6, depth: 0.05, points: 2600, size: [1.4, 3.2], delay: [0.55, 0.9] },
+        horizon: { radius: 0.6, depth: 0.05, points: 4700, size: [1.2, 2.7], delay: [0.55, 0.9] },
         scatter: { radius: [2.4, 6.4], widen: 1.6, depth: -3 },
     } satisfies GateConfig,
     /** Chevron of each orbital destination, in content.nav order (top, lower right, lower left) */
     destinations: [0, 3, 6],
     /** Radius (model units) where the destination numbers sit, inside their chevron */
     labelRadius: 0.5,
+    /** Particles generated per frame while the gate boots: one slice stays well under a long task (50 ms) on a slow phone */
+    geometryChunk: 1500,
     /** The gate assembles from the particle cloud on arrival; the links work at once */
     introMs: 1400,
     /** WebGL boots at the first idle moment after bootAfterMs since the page started (at the latest
@@ -101,8 +112,8 @@ export const gateEffects = {
     /** Height: aura 1.19 + room for the tilt (clear of the title); width: chevron tips 1.08.
      *  Dive: the camera stops just short of the horizon, still full of its dust when the cover lands */
     fit: { extent: 1.26, sideExtent: 1.12, margin: 8, camera: 2.6, diveDepth: 2.5 } satisfies FitSettings,
-    /** Camera tilt with a fine pointer (radians at the screen edge) and idle sway */
-    tilt: { x: 0.22, y: 0.32, smoothing: 0.05, swayX: 0.02, swayY: 0.03, swayPeriodX: 2300, swayPeriodY: 3100 },
+    /** Idle camera sway (radians, ms); the pointer tilt was removed after review (2026-10-07) */
+    sway: { x: 0.02, y: 0.03, periodX: 2300, periodY: 3100 },
     /** Share of the remaining light a hovered chevron gains each frame */
     hoverSmoothing: 0.2,
     /** Horizon dust brightness at rest (it reaches 1 as the horizon forms) */
@@ -117,6 +128,43 @@ export const gateEffects = {
         horizonAtMs: 320, vortexMs: 320, brightenMs: 220, diveAtMs: 520, diveMs: 420, navigateAtMs: 760,
     } satisfies DialTimeline,
     pixelRatio: { fine: 2, coarse: 1.5, maxPixels: 8_000_000 } satisfies PixelRatioCaps,
+    resizeDebounceMs: 150,
+};
+
+/**
+ * DeLorean convector of the About page (LOT 3, A2): the time jump played
+ * when an era is chosen (ms from the jump start). The speed digits and the
+ * landing follow `jump` (utils/timeCircuits/jump.ts); the visual layers are
+ * CSS keyframes started with `layers`, as CSS variables of the console.
+ */
+export const convectorEffects = {
+    jump: {
+        accelMs: 900, topSpeed: 88, speedCurve: 2.1, arriveMs: 1035, revealMs: 1160, decayAtMs: 1150, decayMs: 600, endMs: 1750,
+    } satisfies JumpTimeline,
+    layers: {
+        /** The chosen row flickers as it arms */
+        armMs: 280,
+        /** Lightning crackles around the console just before 88 */
+        boltsAt: 800, boltsMs: 290,
+        /** White-blue flash (peak at a third), then the fire trails as the jump lands */
+        flashAt: 950, flashMs: 240,
+        fireAt: 1035, fireMs: 750,
+        /** The capacitor charges with the speed, holds a moment after landing, then cools */
+        coolAt: 1115, coolMs: 520,
+    },
+    bolts: { count: 6, depth: 5, jitter: 0.42 } satisfies BoltSettings,
+    boltSeed: 1955,
+    /** Bolts are drawn once per console size on two canvases: halo and core widths (CSS px) */
+    boltStroke: { halo: 5, core: 1.4 },
+    pixelRatio: { fine: 2, coarse: 1.5, maxPixels: 8_000_000 } satisfies PixelRatioCaps,
+    /** The flux capacitor powers on at the first idle moment after powerOnAfterMs (its glows are
+     *  the costliest part of the console to paint: never in the first frames), at the latest powerOnTimeoutMs later */
+    powerOnAfterMs: 700,
+    powerOnTimeoutMs: 1200,
+    /** Arrival through a page trip: lamp test (every segment lit, 88:88) once powered, then the dates */
+    arrivalTestMs: 900,
+    /** Era text after the landing: each line fades and rises in */
+    reveal: { durationS: 0.38, staggerS: 0.09, rise: 10 },
     resizeDebounceMs: 150,
 };
 

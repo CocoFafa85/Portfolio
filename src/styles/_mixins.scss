@@ -41,3 +41,11 @@
     @content;
   }
 }
+
+// Wide enough for two columns side by side (About cockpit, LOT 3); the
+// breakpoints are unified in LOT 6
+@mixin wide {
+  @media (min-width: 1024px) {
+    @content;
+  }
+}

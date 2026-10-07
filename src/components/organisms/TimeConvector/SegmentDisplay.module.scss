@@ -1,0 +1,113 @@
+@use '../../../styles/variables' as *;
+
+// DSEG7 / DSEG14 Classic Bold Italic, © 2017 keshikan, SIL Open Font License 1.1
+// (src/assets/fonts/dseg/DSEG-LICENSE.txt). Files used unmodified: "DSEG" is a reserved font name.
+@font-face {
+    font-family: 'DSEG7 Classic';
+    src: url('../../../assets/fonts/dseg/DSEG7Classic-BoldItalic.woff2') format('woff2');
+    font-weight: 700;
+    font-style: italic;
+    font-display: block;
+}
+
+@font-face {
+    font-family: 'DSEG14 Classic';
+    src: url('../../../assets/fonts/dseg/DSEG14Classic-BoldItalic.woff2') format('woff2');
+    font-weight: 700;
+    font-style: italic;
+    font-display: block;
+}
+
+// Advance of one DSEG cell (7 and 14 segments alike), measured: 0.816 em
+$cell: 0.816em;
+$pad-x: 0.2em;
+$pad-y: 0.2em;
+
+// ═══════════════════════════════════════════════
+// LED WINDOW — colours from the row (--seg, --seg-lit, --seg-halo, --seg-ghost, --seg-tint)
+// ═══════════════════════════════════════════════
+.window {
+    position: relative;
+    display: block;
+    box-sizing: content-box;
+    width: calc(var(--cells) * #{$cell});
+    height: 1em;
+    padding: $pad-y $pad-x calc(#{$pad-y} - 0.04em);
+    overflow: hidden;
+    // The DSEG families apply once the console powers on: the fonts are only
+    // requested then, after the first paint (never on its critical path)
+    font: italic 700 1em/1 monospace;
+    white-space: pre;
+    // Black glass in a plain colour: gradients or blurred shadows on each of the
+    // 16 windows delayed the first paint by ~1 s (measured, software raster);
+    // the tint comes from the glowing segments, the reflection is one per row
+    background: $tc-glass;
+    border: 1px solid #000;
+    border-radius: 3px;
+
+    // Unlit segments, faint (a pseudo-element: no low-contrast text in the page)
+    &::before {
+        content: attr(data-ghost);
+        position: absolute;
+        top: $pad-y;
+        left: $pad-x;
+        visibility: hidden;
+        color: var(--seg-ghost);
+    }
+}
+
+.lit {
+    position: absolute;
+    top: $pad-y;
+    left: $pad-x;
+    visibility: hidden;
+    color: var(--seg-lit);
+    text-shadow: 0 0 1px var(--seg), 0 0 0.25em var(--seg), 0 0 0.65em var(--seg-halo);
+}
+
+// Powered console (TimeConvector): segments in the DSEG fonts, lit with a short flicker
+:global([data-power='on']) {
+    .window {
+        font-family: 'DSEG7 Classic', monospace;
+        animation: tc-power-on 0.6s ease-out both;
+
+        &::before {
+            visibility: visible;
+        }
+    }
+
+    .alpha {
+        font-family: 'DSEG14 Classic', monospace;
+    }
+
+    .lit {
+        visibility: visible;
+    }
+}
+
+// Lamp test on arrival through a page trip (useArrivalTest): every segment lit
+:global([data-power='on'][data-boot]) {
+    .window::before {
+        color: var(--seg-lit);
+        text-shadow: 0 0 1px var(--seg), 0 0 0.25em var(--seg), 0 0 0.65em var(--seg-halo);
+    }
+
+    .lit {
+        visibility: hidden;
+    }
+}
+
+@keyframes tc-power-on {
+    0% { opacity: 0; }
+    30% { opacity: 0.8; }
+    45% { opacity: 0.25; }
+    100% { opacity: 1; }
+}
+
+.blink {
+    animation: tc-reset 1s steps(1) infinite;
+}
+
+@keyframes tc-reset {
+    50% { opacity: 0; }
+}

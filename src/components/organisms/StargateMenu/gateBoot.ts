@@ -13,7 +13,7 @@ export interface GateBoot {
     gl: WebGLRenderingContext;
     pending: PendingProgram;
     program: WebGLProgram | null;
-    steps: Generator<void, GateGeometry> | null;
+    steps: Generator<number, GateGeometry> | null;
 }
 
 /**
@@ -39,7 +39,7 @@ export function finishGate(boot: GateBoot): GateRenderer | null | 'waiting' {
         if (!isProgramReady(boot.pending)) return 'waiting';
         boot.program = finishProgram(boot.pending);
         if (!boot.program) return null;
-        boot.steps = gateGeometrySteps(fx.shape, createRandom(fx.seed));
+        boot.steps = gateGeometrySteps(fx.shape, createRandom(fx.seed), fx.geometryChunk);
         return 'waiting';
     }
     const step = boot.steps.next();

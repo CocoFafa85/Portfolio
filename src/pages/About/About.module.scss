@@ -1,44 +1,44 @@
 @use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
 
 // ═══════════════════════════════════════════════
-// ABOUT PAGE — Scrollable & responsive
+// ABOUT PAGE — « Qui suis-je ? » (LOT 3)
 // ═══════════════════════════════════════════════
 .aboutPage {
     width: 100%;
-    max-width: 900px;
+    max-width: 1240px;
     min-height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     margin: 0 auto;
-    padding: 2.5rem 1.5rem 2rem;
+    padding: 2.5rem 1.5rem 3rem;
 
+    @include mobile {
+        padding: 1.5rem 1rem 2.5rem;
+    }
+}
+
+// Frame of the title (readability over the circuit). The heading itself has
+// no padding: the glitch pseudo-elements cover its box, letter for letter.
+.titleFrame {
+    width: fit-content;
+    max-width: 100%;
+    margin-bottom: 2rem;
+    padding: 1rem 2rem;
+    background: rgba($bg-secondary, 0.6);
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba($neon-cyan, 0.1);
+    border-radius: 12px;
+
+    // Fixed line height: the title keeps its height when Orbitron replaces the
+    // fallback font, so the cockpit below never shifts (CLS)
     h1 {
-        // Readability
-        padding: 1rem 2rem;
-        background: rgba($bg-secondary, 0.6);
-        backdrop-filter: blur(4px);
-        border-radius: 12px;
-        border: 1px solid rgba($neon-cyan, 0.1);
-        width: fit-content;
-        margin-bottom: 2rem;
+        margin-bottom: 0;
+        line-height: 1.2;
     }
-}
 
-// ═══════════════════════════════════════════════
-// RESPONSIVE
-// ═══════════════════════════════════════════════
-@media (max-width: 768px) {
-    .aboutPage {
-        width: 90%;
-        padding: 1.5rem 1rem 2rem;
-        font-size: 0.9rem;
-    }
-}
-
-@media (min-width: 1024px) {
-    .aboutPage {
-        max-width: 1000px;
-        font-size: 1.1rem;
+    @include mobile {
+        padding: 0.75rem 1rem;
     }
 }

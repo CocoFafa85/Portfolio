@@ -1,0 +1,9 @@
+// LED colours of a display group, read by its windows (SegmentDisplay.module.scss)
+@mixin tone($led, $lit, $strip) {
+    --seg: #{$led};
+    --seg-lit: #{$lit};
+    --seg-halo: #{rgba($led, 0.5)};
+    --seg-ghost: #{rgba($led, 0.11)};
+    --seg-tint: #{rgba($led, 0.13)};
+    --seg-strip: #{$strip};
+}
