@@ -2,8 +2,32 @@
 @use '../../../styles/mixins' as *;
 
 // ═══════════════════════════════════════════════
-// ERA TEXT — the tab panel (left aligned, 68 characters a line at most)
+// ERA TEXTS — the tab panels (left aligned, 68 characters a line at most).
+// All laid out at load; the idle ones wait out of the flow, hidden, and
+// clipped by the stack so they never lengthen the page. Once the heights
+// are measured, the chosen one leaves the flow as well and the stack takes
+// its height: switching eras is a visibility and a height, no text layout.
 // ═══════════════════════════════════════════════
+.stack {
+    position: relative;
+    overflow: hidden;
+}
+
+// Two classes: stronger than `.panel { position: relative }` declared below
+// (with a single class, the idle panels stayed in the flow until measured: CLS)
+.panel.idle,
+.stack[data-measured] > .panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+}
+
+.panel.idle {
+    visibility: hidden;
+    pointer-events: none;
+}
+
 .panel {
     position: relative;
     padding: 1.5rem 1.75rem;
@@ -13,6 +37,11 @@
 
     @include mobile {
         padding: 1.1rem 1rem;
+    }
+
+    // Inside the panel: the stack clips anything drawn outside it
+    &:focus-visible {
+        outline-offset: -3px;
     }
 }
 

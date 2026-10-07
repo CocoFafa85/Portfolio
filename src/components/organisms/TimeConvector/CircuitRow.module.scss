@@ -25,7 +25,8 @@
     border: 1px solid $tc-console-edge;
     border-top-color: #000;
     border-radius: 6px;
-    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+    // No transition of the border and glow: repainted every frame, they slowed the
+    // jump's first frames; the arming flicker carries the change
 }
 
 .selected {

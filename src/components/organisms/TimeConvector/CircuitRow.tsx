@@ -79,4 +79,5 @@ const CircuitRow: React.FC<CircuitRowProps> = ({
     );
 };
 
-export default CircuitRow;
+// Memoised: choosing an era re-renders only the two rows whose selection changes
+export default React.memo(CircuitRow);

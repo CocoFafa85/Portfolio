@@ -154,6 +154,9 @@ export const convectorEffects = {
     },
     bolts: { count: 6, depth: 5, jitter: 0.42 } satisfies BoltSettings,
     boltSeed: 1955,
+    /** Bolts are drawn once per console size on two canvases: halo and core widths (CSS px) */
+    boltStroke: { halo: 5, core: 1.4 },
+    pixelRatio: { fine: 2, coarse: 1.5, maxPixels: 8_000_000 } satisfies PixelRatioCaps,
     /** The flux capacitor powers on at the first idle moment after powerOnAfterMs (its glows are
      *  the costliest part of the console to paint: never in the first frames), at the latest powerOnTimeoutMs later */
     powerOnAfterMs: 700,
