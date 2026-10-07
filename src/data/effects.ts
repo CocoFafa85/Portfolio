@@ -30,7 +30,8 @@ export const heroEffects = {
 export const nebulaEffects = {
     /** Colour spots, as design tokens; the void repeats so the darkness dominates */
     tokens: ['--nebula-void', '--nebula-violet-deep', '--nebula-violet', '--nebula-void', '--nebula-magenta', '--nebula-teal'],
-    speed: 0.14,
+    /** Pace of the colour waves: slightly faster after review (2026-10-07, was 0.14) */
+    speed: 0.19,
     distortion: 0.85,
     swirl: 0.25,
     grainMixer: 0.08,
