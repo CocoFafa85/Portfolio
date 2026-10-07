@@ -1,7 +1,9 @@
 @use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
 
 // ═══════════════════════════════════════════════
-// COCKPIT — the console, then the text of the chosen era
+// COCKPIT — the console, then the text of the chosen era; side by side from
+// 1024 px (decision B): the console stays in view while the text scrolls
 // ═══════════════════════════════════════════════
 .cockpit {
     display: grid;
@@ -9,11 +11,23 @@
     gap: 2rem;
     width: 100%;
     max-width: 880px;
+
+    @include wide {
+        grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
+        gap: 2.5rem;
+        align-items: start;
+        max-width: 1180px;
+    }
 }
 
 .consoleColumn {
     container: console-column / inline-size;
     min-width: 0;
+
+    @include wide {
+        position: sticky;
+        top: 1.5rem;
+    }
 }
 
 // ═══════════════════════════════════════════════
