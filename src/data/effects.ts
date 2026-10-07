@@ -45,17 +45,20 @@ export const nebulaEffects = {
     idleTimeoutMs: 1500,
 };
 
-/** Home starfield over the nebula (LOT 2, H4): far, mid and blurred near layers, shooting stars */
+/**
+ * Home starfield over the nebula (LOT 2, H4): mid and blurred near layers, shooting stars.
+ * The far layer (400 small pale stars per megapixel) was removed after review (2026-10-07):
+ * the background reads more even.
+ */
 export const starEffects = {
     seed: 2035,
     /** Sprite tints: 0 white, 1 cyan, 2 violet, 3 pink (palette.ts); the near layer uses the soft sprite */
     layers: [
-        { perMegapixel: 400, min: 110, radius: [0.9, 2.3], alpha: [0.25, 0.6], speed: [2, 5], parallax: 4, twinkle: 0, tints: [0, 1, 2] },
         { perMegapixel: 110, min: 34, radius: [2.1, 3.9], alpha: [0.5, 0.9], speed: [6, 12], parallax: 11, twinkle: 0.25, tints: [0, 1, 2, 3] },
         { perMegapixel: 8, min: 5, radius: [6, 15], alpha: [0.05, 0.14], speed: [10, 20], parallax: 28, twinkle: 0, tints: [0] },
     ] satisfies StarLayerSpec[],
     /** Index of the layer drawn with the soft out-of-focus sprite (depth of field) */
-    blurredLayer: 2,
+    blurredLayer: 1,
     meteor: {
         max: 2, intervalMs: [4500, 9000], speed: [650, 1000], length: [110, 220], lifeMs: [700, 1100],
         angle: [0.35, 0.7], startBand: 0.35,

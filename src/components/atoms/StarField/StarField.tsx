@@ -28,8 +28,9 @@ interface Scene {
 }
 
 /**
- * Home starfield (LOT 2, H4), over the nebula: far stars, twinkling mid
- * stars and a few large out-of-focus near ones, each layer shifted by its
+ * Home starfield (LOT 2, H4), over the nebula: twinkling mid stars and a
+ * few large out-of-focus near ones (no far layer since the review of
+ * 2026-10-07: a more even background), each layer shifted by its
  * own parallax with a fine pointer; rare shooting stars with a tapered tail.
  * Typed arrays, sprites drawn once, no allocation per frame; paused when the
  * tab is hidden or the canvas off screen; reduced motion: one still frame.
