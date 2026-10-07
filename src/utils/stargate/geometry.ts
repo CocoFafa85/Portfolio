@@ -1,5 +1,5 @@
 import { inRange, type Random, type Range } from '../random';
-import { addChevrons, addGlyphBand, chevronCount, glyphBandCount, type ChevronSettings, type GlyphBandSettings } from './features';
+import { addChevrons, addGlyphBand, atChunk, chevronCount, glyphBandCount, type ChevronSettings, type GlyphBandSettings } from './features';
 import { GROUP, TONE, createWriter, onGate, type GateGeometry, type ScatterSettings } from './writer';
 
 /** Shape and density of the particle gate (values in effects.ts; model units, gate radius 1). */
@@ -33,10 +33,11 @@ export function gateParticleCount(cfg: GateConfig): number {
  * Generates the particle gate: aura, ring body with two bright rims, glyph
  * band, nine chevrons and the horizon dust, each particle with its start in
  * a scattered cloud (the gate assembles from it). Deterministic for `random`.
- * A generator: it pauses after each part, so a caller can spread the work
- * over several frames (no long task); it returns the finished geometry.
+ * A generator: it pauses after each part and every `chunk` particles,
+ * yielding the count written so far, so a caller can spread the work over
+ * several frames (no long task); it returns the finished geometry.
  */
-export function* gateGeometrySteps(cfg: GateConfig, random: Random): Generator<void, GateGeometry> {
+export function* gateGeometrySteps(cfg: GateConfig, random: Random, chunk = Infinity): Generator<number, GateGeometry> {
     const writer = createWriter(gateParticleCount(cfg), cfg.scatter, random);
     const { aura, ring, horizon } = cfg;
 
@@ -44,8 +45,9 @@ export function* gateGeometrySteps(cfg: GateConfig, random: Random): Generator<v
         // Density falls off away from the ring
         const [x, y] = onGate(random() * Math.PI * 2, aura.inner + random() ** 2 * aura.reach);
         writer.push(x, y, (random() - 0.5) * aura.depth, inRange(random, aura.size), GROUP.static, inRange(random, aura.delay), random(), TONE.aura);
+        if (atChunk(writer, chunk)) yield writer.written();
     }
-    yield;
+    yield writer.written();
 
     for (let i = 0; i < ring.points; i++) {
         const pick = random();
@@ -66,16 +68,18 @@ export function* gateGeometrySteps(cfg: GateConfig, random: Random): Generator<v
         }
         const [x, y] = onGate(angle, radius);
         writer.push(x, y, (random() - 0.5) * ring.depth, size, GROUP.static, inRange(random, ring.delay), random(), tone);
+        if (atChunk(writer, chunk)) yield writer.written();
     }
-    yield;
-    addGlyphBand(writer, cfg.glyphs);
-    yield;
-    addChevrons(writer, cfg.chevrons);
-    yield;
+    yield writer.written();
+    yield* addGlyphBand(writer, cfg.glyphs, chunk);
+    yield writer.written();
+    yield* addChevrons(writer, cfg.chevrons, chunk);
+    yield writer.written();
 
     for (let i = 0; i < horizon.points; i++) {
         const [x, y] = onGate(random() * Math.PI * 2, horizon.radius * Math.sqrt(random()));
         writer.push(x, y, (random() - 0.5) * horizon.depth, inRange(random, horizon.size), GROUP.horizon, inRange(random, horizon.delay), random(), TONE.horizon);
+        if (atChunk(writer, chunk)) yield writer.written();
     }
 
     return writer.geometry;

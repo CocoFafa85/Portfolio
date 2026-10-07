@@ -43,12 +43,19 @@ function trapezoidPoint(writer: ParticleWriter, angle: number, outer: number, in
     return onGate(angle, outer + (inner - outer) * along, half * (writer.random() * 2 - 1));
 }
 
-/** Glyphs: short random polylines (seeded), sampled into luminous points, plus the inner rim. */
-export function addGlyphBand(writer: ParticleWriter, band: GlyphBandSettings): void {
+/** True every `chunk` particles written: the generators pause there (no long task). */
+export const atChunk = (writer: ParticleWriter, chunk: number): boolean => writer.written() % chunk === 0;
+
+/**
+ * Glyphs: short random polylines (seeded), sampled into luminous points, plus
+ * the inner rim. Pauses every `chunk` particles, yielding the count written.
+ */
+export function* addGlyphBand(writer: ParticleWriter, band: GlyphBandSettings, chunk = Infinity): Generator<number, void> {
     const { random } = writer;
     for (let i = 0; i < band.rimPoints; i++) {
         const [x, y] = onGate(random() * Math.PI * 2, band.rim + random() * 0.008);
         writer.push(x, y, (random() - 0.5) * 0.05, band.rimSize, GROUP.glyph, inRange(random, band.delay), random(), TONE.glyph);
+        if (atChunk(writer, chunk)) yield writer.written();
     }
     const vertices = new Float32Array(Math.ceil(band.vertices[1]) * 2);
     for (let g = 0; g < band.count; g++) {
@@ -67,23 +74,26 @@ export function addGlyphBand(writer: ParticleWriter, band: GlyphBandSettings): v
             const radial = vertices[2 * a + 1] + (vertices[2 * b + 1] - vertices[2 * a + 1]) * t;
             const [x, y] = onGate(angle, band.radius + radial, tangent);
             writer.push(x, y, 0.02, band.glyphSize, GROUP.glyph, inRange(random, band.delay), random(), TONE.glyph);
+            if (atChunk(writer, chunk)) yield writer.written();
         }
     }
 }
 
-/** Chevron bodies (static metal) and their light cores (chevron index kept for lighting). */
-export function addChevrons(writer: ParticleWriter, chevron: ChevronSettings): void {
+/** Chevron bodies (static metal) and their light cores (chevron index kept for lighting); pauses like addGlyphBand. */
+export function* addChevrons(writer: ParticleWriter, chevron: ChevronSettings, chunk = Infinity): Generator<number, void> {
     const { random } = writer;
     for (let k = 0; k < chevron.count; k++) {
         const angle = (k / chevron.count) * Math.PI * 2;
         for (let i = 0; i < chevron.bodyPoints; i++) {
             const [x, y] = trapezoidPoint(writer, angle, chevron.outer, chevron.inner, chevron.outerHalf, chevron.innerHalf);
             writer.push(x, y, chevron.depth + (random() - 0.5) * 0.04, chevron.bodySize, GROUP.static, inRange(random, chevron.delay), random(), TONE.chevronBody);
+            if (atChunk(writer, chunk)) yield writer.written();
         }
         const { core } = chevron;
         for (let i = 0; i < chevron.corePoints; i++) {
             const [x, y] = trapezoidPoint(writer, angle, core.outer, core.inner, core.outerHalf, core.innerHalf);
             writer.push(x, y, chevron.depth + 0.03, chevron.coreSize, GROUP.chevron, inRange(random, chevron.delay), k, TONE.chevronCore);
+            if (atChunk(writer, chunk)) yield writer.written();
         }
     }
 }

@@ -73,28 +73,33 @@ export const starEffects = {
     resizeDebounceMs: 150,
 };
 
-/** Home particle gate, the orbital menu (LOT 2, H3; model units: gate radius 1) */
+/**
+ * Home particle gate, the orbital menu (LOT 2, H3; model units: gate radius 1).
+ * Review of 2026-10-07: denser and finer for a sharper gate (~16 000 → ~27 400 particles).
+ */
 export const gateEffects = {
     seed: 2026,
     shape: {
-        ring: { inner: 0.8, outer: 1, depth: 0.13, rimShare: 0.2, rimWidth: 0.012, points: 7000, bodySize: [1.9, 3.4], rimSize: 2.6, delay: [0, 0.3] },
-        aura: { inner: 0.95, reach: 0.24, depth: 0.3, points: 2400, size: [2.6, 4.6], delay: [0, 0.4] },
+        ring: { inner: 0.8, outer: 1, depth: 0.13, rimShare: 0.2, rimWidth: 0.012, points: 12600, bodySize: [1.6, 2.9], rimSize: 2.2, delay: [0, 0.3] },
+        aura: { inner: 0.95, reach: 0.24, depth: 0.3, points: 2800, size: [2.4, 4.2], delay: [0, 0.4] },
         glyphs: {
             count: 39, radius: 0.7, rim: 0.62, width: 0.075, height: 0.09, vertices: [3, 5],
-            rimPoints: 700, pointsPerGlyph: 34, rimSize: 1.8, glyphSize: 2.1, delay: [0.2, 0.5],
+            rimPoints: 1260, pointsPerGlyph: 60, rimSize: 1.6, glyphSize: 1.8, delay: [0.2, 0.5],
         },
         chevrons: {
             count: 9, outer: 1.08, inner: 0.93, outerHalf: 0.065, innerHalf: 0.03,
             core: { outer: 1.045, inner: 0.965, outerHalf: 0.03, innerHalf: 0.015 },
-            depth: 0.08, bodyPoints: 160, corePoints: 70, bodySize: 2.2, coreSize: 2.6, delay: [0.45, 0.7],
+            depth: 0.08, bodyPoints: 290, corePoints: 126, bodySize: 1.9, coreSize: 2.2, delay: [0.45, 0.7],
         },
-        horizon: { radius: 0.6, depth: 0.05, points: 2600, size: [1.4, 3.2], delay: [0.55, 0.9] },
+        horizon: { radius: 0.6, depth: 0.05, points: 4700, size: [1.2, 2.7], delay: [0.55, 0.9] },
         scatter: { radius: [2.4, 6.4], widen: 1.6, depth: -3 },
     } satisfies GateConfig,
     /** Chevron of each orbital destination, in content.nav order (top, lower right, lower left) */
     destinations: [0, 3, 6],
     /** Radius (model units) where the destination numbers sit, inside their chevron */
     labelRadius: 0.5,
+    /** Particles generated per frame while the gate boots: one slice stays well under a long task (50 ms) on a slow phone */
+    geometryChunk: 1500,
     /** The gate assembles from the particle cloud on arrival; the links work at once */
     introMs: 1400,
     /** WebGL boots at the first idle moment after bootAfterMs since the page started (at the latest
