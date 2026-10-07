@@ -161,6 +161,8 @@ export const convectorEffects = {
      *  the costliest part of the console to paint: never in the first frames), at the latest powerOnTimeoutMs later */
     powerOnAfterMs: 700,
     powerOnTimeoutMs: 1200,
+    /** Arrival through a page trip: lamp test (every segment lit, 88:88) once powered, then the dates */
+    arrivalTestMs: 900,
     /** Era text after the landing: each line fades and rises in */
     reveal: { durationS: 0.38, staggerS: 0.09, rise: 10 },
     resizeDebounceMs: 150,

@@ -85,6 +85,18 @@ $pad-y: 0.2em;
     }
 }
 
+// Lamp test on arrival through a page trip (useArrivalTest): every segment lit
+:global([data-power='on'][data-boot]) {
+    .window::before {
+        color: var(--seg-lit);
+        text-shadow: 0 0 1px var(--seg), 0 0 0.25em var(--seg), 0 0 0.65em var(--seg-halo);
+    }
+
+    .lit {
+        visibility: hidden;
+    }
+}
+
 @keyframes tc-power-on {
     0% { opacity: 0; }
     30% { opacity: 0.8; }

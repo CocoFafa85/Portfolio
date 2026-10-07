@@ -13,6 +13,7 @@ import JumpEffects from './JumpEffects';
 import { useBoltField } from './jumpBolts';
 import Speedometer from './Speedometer';
 import { usePresentClock } from './usePresentClock';
+import { useArrivalTest } from './useArrivalTest';
 import { useTimeJump } from './useTimeJump';
 import styles from './TimeConvector.module.scss';
 
@@ -58,6 +59,7 @@ const TimeConvector: React.FC = () => {
     const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
     const bolts = useBoltField(consoleRef, powered && !reducedMotion);
     const jump = useTimeJump(digitsRef);
+    const testing = useArrivalTest(powered, reducedMotion);
     // The text panel follows one render later: its switch never shares a frame with the jump start
     const shownEra = useDeferredValue(selected);
 
@@ -93,6 +95,7 @@ const TimeConvector: React.FC = () => {
                     ref={consoleRef}
                     className={styles.console}
                     data-power={powered ? 'on' : 'off'}
+                    data-boot={testing ? '' : undefined}
                     data-jumping={jump.jumping}
                     data-jump-cycle={jump.jumping ? JUMP_CYCLES[jump.id % 2] : undefined}
                     style={consoleStyle}

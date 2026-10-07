@@ -95,7 +95,8 @@
 
 // Lit lamp (once the console is powered): bright core and a crisp coloured
 // ring (a blurred halo per lamp was costly to paint)
-:global([data-power='on']) .on {
+:global([data-power='on']) .on,
+:global([data-power='on'][data-boot]) .lamp {
     background: var(--seg-lit);
     border-color: var(--seg);
     outline: 2px solid var(--seg-halo);
