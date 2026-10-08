@@ -55,18 +55,6 @@ export interface ProjectLabels {
     wipBadge: string;
 }
 
-export interface Skill {
-    name: string;
-    level: number; // 0-100
-    icon?: string;
-}
-
-export interface SkillCategory {
-    id: string;
-    title: string;
-    skills: Skill[];
-}
-
 /** A skill of the CV (F3): no level, no percentage (LOT 4) */
 export interface SkillEntry {
     name: string;
@@ -164,8 +152,8 @@ export interface PortfolioContent {
     };
     skills: {
         title: string;
-        intro: string;
-        categories: SkillCategory[];
+        /** Short lead above the groups (S1) */
+        lead: string;
         /** Skills of the CV (F3), by group */
         groups: SkillGroup[];
         /** F4 projects linked to the skills by their tags (until LOT 5 merges them with projects.list) */

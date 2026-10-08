@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { parseInlineLinks, splitParagraphs } from './story';
+import { parseEmphasis, parseInlineLinks, splitParagraphs } from './story';
 
 describe('splitParagraphs', () => {
     it('makes one paragraph per line and drops empty lines', () => {
@@ -62,5 +62,35 @@ describe('parseInlineLinks', () => {
 
         // Assert
         expect(segments).toEqual([{ kind: 'text', text: paragraph }]);
+    });
+});
+
+describe('parseEmphasis', () => {
+    it('separates keywords written **like this** from the plain text, in order', () => {
+        // Arrange
+        const text = 'Composants (**React**, **Angular**) et typage strict.';
+
+        // Act
+        const segments = parseEmphasis(text);
+
+        // Assert
+        expect(segments).toEqual([
+            { kind: 'text', text: 'Composants (' },
+            { kind: 'keyword', text: 'React' },
+            { kind: 'text', text: ', ' },
+            { kind: 'keyword', text: 'Angular' },
+            { kind: 'text', text: ') et typage strict.' },
+        ]);
+    });
+
+    it('leaves an unclosed marker as plain text', () => {
+        // Arrange
+        const text = 'Un **mot sans fin';
+
+        // Act
+        const segments = parseEmphasis(text);
+
+        // Assert
+        expect(segments).toEqual([{ kind: 'text', text: 'Un **mot sans fin' }]);
     });
 });

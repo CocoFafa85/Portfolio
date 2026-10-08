@@ -1,0 +1,60 @@
+@use 'sass:color';
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+// ═══════════════════════════════════════════════
+// SKILL SECTIONS (LOT 4) — each group under its intro; plain panels (few
+// distinct paint effects in the first frame, LOT 3 lesson)
+// ═══════════════════════════════════════════════
+.sections {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.section {
+    padding: 1.4rem 1.6rem 1.6rem;
+    background: color.change($bg-secondary, $alpha: 0.82);
+    border: 1px solid color.change($neon-pink, $alpha: 0.28);
+    border-radius: 10px;
+
+    @include mobile {
+        padding: 1.1rem 1rem 1.2rem;
+    }
+}
+
+.title {
+    margin-bottom: 0.75rem;
+    font-size: clamp(1.15rem, 1rem + 0.6vw, 1.5rem);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: $neon-pink;
+}
+
+.intro {
+    max-width: 75ch;
+    margin-bottom: 1.1rem;
+    font-size: clamp(0.95rem, 0.9rem + 0.2vw, 1.05rem);
+    line-height: 1.7;
+    color: var(--text-primary);
+}
+
+.keyword {
+    font-weight: 700;
+    color: $neon-cyan;
+}
+
+.badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    list-style: none;
+}
+
+.badge {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.9rem;
+    background: $bg-deep;
+    border: 1px solid #2a2a44;
+    border-radius: 6px;
+}

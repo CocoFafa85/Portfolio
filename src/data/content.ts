@@ -82,52 +82,15 @@ Mon objectif à long terme est de gérer un SI complet ou d'être responsable de
             uploading: "UPLOADING TO NEURAL LINK...",
             cta: "[ CLICK TO DOWNLOAD CV ]"
         },
-        intro: `Au cours de ma formation et de mes projets récents, j'ai forgé une base technique solide en alliant théorie et mise en pratique intensive.
-Côté Frontend, j'ai évolué vers une expertise moderne centrée sur l'architecture de composants (React.js) et le typage strict (TypeScript). Je maîtrise l'écosystème de build actuel (Vite, npm) et la création d'interfaces réactives et animées (SCSS Modules, Framer Motion, Bootstrap).
-Sur le Backend, je concois des architectures robustes et sécurisées (MVC, API RESTful) en utilisant PHP/Symfony et Java. J'assure la persistance et l'intégrité des données via des SGBD relationnels (MySQL, SQL Server) et NoSQL (MongoDB), en m'appuyant sur des ORM comme Doctrine.
-Mon approche est résolument DevOps et Agile. Au-delà du simple versioning avec Git/GitHub, je mets en place des pipelines d'intégration continue (CI/CD via GitHub Actions) et j'utilise Docker pour la conteneurisation. Sensible à la qualité et à la sécurité, j'applique les standards OWASP, réalise des tests d'API (Postman) et collabore efficacement via des outils comme Jira ou Trello.`,
-        categories: [
-            {
-                id: "frontend",
-                title: "Frontend",
-                skills: [
-                    { name: "React / Vite", level: 85 },
-                    { name: "TypeScript", level: 80 },
-                    { name: "SCSS", level: 90 },
-                    { name: "JavaScript", level: 85 },
-                    { name: "Bootstrap / Tailwind", level: 80 }
-                ]
-            },
-            {
-                id: "backend",
-                title: "Backend",
-                skills: [
-                    { name: "Node.js", level: 75 },
-                    { name: "PHP / Symfony / Laravel", level: 80 },
-                    { name: "Python", level: 70 },
-                    { name: "SQL (MySQL)", level: 95 },
-                    { name: "API REST", level: 80 }
-                ]
-            },
-            {
-                id: "tools",
-                title: "Outils & DevOps",
-                skills: [
-                    { name: "Git / GitHub", level: 85 },
-                    { name: "Docker", level: 60 },
-                    { name: "FTP", level: 85 },
-                    { name: "IDE", level: 95 },
-                    { name: "Hebergement", level: 95 },
-                    { name: "Jenkins", level: 80 }
-                ]
-            }
-        ],
+        lead: "Au cours de ma formation et de mes projets récents, j'ai forgé une base technique solide en alliant théorie et mise en pratique intensive.",
         // Skills of the CV of 2026-09-17 only (F3), grouped as validated on 2026-10-08;
+        // intro: the author's text validated on 2026-10-08 (S1), keywords **like this**;
         // icon: Simple Icons slug, null when the logo does not exist there (generic logo)
         groups: [
             {
                 id: "front",
                 title: "Front-end",
+                intro: "J'ai évolué vers une expertise moderne centrée sur l'architecture de composants (**React**, **Angular**) et le typage strict (**TypeScript**). Je crée des interfaces réactives et animées.",
                 skills: [
                     { name: "TypeScript", icon: "typescript" },
                     { name: "React", icon: "react" },
@@ -142,6 +105,7 @@ Mon approche est résolument DevOps et Agile. Au-delà du simple versioning avec
             {
                 id: "back",
                 title: "Back-end & langages",
+                intro: "Je conçois des architectures robustes et sécurisées (MVC, API RESTful) en utilisant **PHP/Symfony** et **Java**.",
                 skills: [
                     { name: "PHP", icon: "php" },
                     { name: "Symfony", icon: "symfony" },
@@ -167,6 +131,7 @@ Mon approche est résolument DevOps et Agile. Au-delà du simple versioning avec
             {
                 id: "data",
                 title: "Données",
+                intro: "J'assure la persistance et l'intégrité des données via des SGBD relationnels (**MySQL**, **SQL Server**) et NoSQL (**MongoDB**), en m'appuyant sur des ORM comme **Doctrine**.",
                 skills: [
                     { name: "SQL", icon: null },
                     { name: "MySQL", icon: "mysql" },
@@ -180,6 +145,7 @@ Mon approche est résolument DevOps et Agile. Au-delà du simple versioning avec
             {
                 id: "devops",
                 title: "DevOps, qualité & sécurité",
+                intro: "Mon approche est résolument **DevOps** et **Agile**. Au-delà du simple versioning avec **Git/GitHub**, je mets en place des pipelines d'intégration continue (CI/CD avec **Jenkins**) et j'utilise **Docker** pour la conteneurisation. Sensible à la qualité et à la sécurité, j'applique les standards **OWASP** et **SSDF**, automatise mes tests (**Selenium**, **Playwright**) et collabore efficacement via des outils comme **Jira** ou **Trello**.",
                 skills: [
                     { name: "Linux", icon: "linux" },
                     { name: "Git", icon: "git" },
