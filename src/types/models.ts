@@ -83,6 +83,15 @@ export interface SkillGroup {
     skills: SkillEntry[];
 }
 
+/** A Simple Icons logo, generated into src/data/generated/skillIcons.ts */
+export interface SkillIcon {
+    title: string;
+    /** Brand colour, #rrggbb */
+    hex: string;
+    /** SVG path on a 24 × 24 box */
+    path: string;
+}
+
 /** A project as the skills see it: its technologies are its tags (F4) */
 export interface ProjectRef {
     id: string;
@@ -155,6 +164,10 @@ export interface PortfolioContent {
         title: string;
         intro: string;
         categories: SkillCategory[];
+        /** Skills of the CV (F3), by group */
+        groups: SkillGroup[];
+        /** F4 projects linked to the skills by their tags (until LOT 5 merges them with projects.list) */
+        projects: ProjectRef[];
         holoCard: HoloCardLabels;
     };
     projects: {

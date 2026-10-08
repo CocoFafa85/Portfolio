@@ -118,6 +118,107 @@ Mon approche est résolument DevOps et Agile. Au-delà du simple versioning avec
                     { name: "Jenkins", level: 80 }
                 ]
             }
+        ],
+        // Skills of the CV of 2026-09-17 only (F3), grouped as validated on 2026-10-08;
+        // icon: Simple Icons slug, null when the logo does not exist there (generic logo)
+        groups: [
+            {
+                id: "front",
+                title: "Front-end",
+                skills: [
+                    { name: "TypeScript", icon: "typescript" },
+                    { name: "React", icon: "react" },
+                    { name: "Angular", icon: "angular" },
+                    { name: "JavaScript", icon: "javascript" },
+                    { name: "Three.js", icon: "threedotjs" },
+                    { name: "CSS", icon: "css" },
+                    { name: "Bootstrap", icon: "bootstrap" },
+                    { name: "Tailwind", icon: "tailwindcss" }
+                ]
+            },
+            {
+                id: "back",
+                title: "Back-end & langages",
+                skills: [
+                    { name: "PHP", icon: "php" },
+                    { name: "Symfony", icon: "symfony" },
+                    { name: "Doctrine", icon: "doctrine" },
+                    { name: "Java", icon: null },
+                    { name: "JUnit 5", icon: "junit5" },
+                    { name: "Swing", icon: null },
+                    { name: "Kotlin", icon: "kotlin" },
+                    { name: "C#", icon: null },
+                    { name: "C++", icon: "cplusplus" },
+                    { name: "Python", icon: "python" },
+                    { name: "Bash", icon: "gnubash" }
+                ]
+            },
+            {
+                id: "game",
+                title: "Jeu vidéo",
+                skills: [
+                    { name: "C#", icon: null },
+                    { name: "Unity", icon: "unity" }
+                ]
+            },
+            {
+                id: "data",
+                title: "Données",
+                skills: [
+                    { name: "SQL", icon: null },
+                    { name: "MySQL", icon: "mysql" },
+                    { name: "SQL Server", icon: null },
+                    { name: "HFSQL", icon: null },
+                    { name: "MongoDB", icon: "mongodb" },
+                    { name: "JSON", icon: "json" },
+                    { name: "XML", icon: "xml" }
+                ]
+            },
+            {
+                id: "devops",
+                title: "DevOps, qualité & sécurité",
+                skills: [
+                    { name: "Linux", icon: "linux" },
+                    { name: "Git", icon: "git" },
+                    { name: "GitHub", icon: "github" },
+                    { name: "Jenkins", icon: "jenkins" },
+                    { name: "Docker", icon: "docker" },
+                    { name: "CI / CD", icon: null },
+                    { name: "IaaS", icon: null },
+                    { name: "CaaS", icon: null },
+                    { name: "Selenium", icon: "selenium" },
+                    { name: "Playwright", icon: null },
+                    { name: "OWASP", icon: "owasp" },
+                    { name: "SSDF", icon: null }
+                ]
+            },
+            {
+                id: "tools",
+                title: "Outils & méthodes",
+                skills: [
+                    { name: "Agile", icon: null },
+                    { name: "DevOps", icon: null },
+                    { name: "Cycle en V", icon: null },
+                    { name: "Jira", icon: "jira" },
+                    { name: "Trello", icon: "trello" },
+                    { name: "Figma", icon: "figma" },
+                    { name: "IDE classiques & agentiques", icon: null },
+                    { name: "LLM & MCP", icon: "modelcontextprotocol" },
+                    { name: "FileZilla", icon: "filezilla" },
+                    { name: "MobaXterm", icon: null },
+                    { name: "WinSCP", icon: null },
+                    { name: "OVH", icon: "ovh" },
+                    { name: "O2Switch", icon: null },
+                    { name: "PlanetHoster", icon: null }
+                ]
+            }
+        ],
+        // F4 projects as Skills links them, by their tags (merged with projects.list in LOT 5)
+        projects: [
+            { id: "memory", title: "MemoryGame", tags: ["JavaScript", "CSS", "DOM"] },
+            { id: "solar", title: "SolarSystem", tags: ["JavaScript", "Three.js", "CSS"] },
+            { id: "first-portfolio", title: "First Portfolio", tags: ["CSS", "JavaScript", "Legacy"] },
+            { id: "soulsweeper", title: "SoulSweeper", tags: ["C#", "Unity"] }
         ]
     },
 

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { parseLocalDateTime } from '../utils/timeCircuits/time';
 import { content } from './content';
+import { skillIcons } from './generated/skillIcons';
 
 describe('content.about (LOT 3, data F1)', () => {
     it('gives each row of the time circuits one era, each era once', () => {
@@ -38,5 +39,42 @@ describe('content.about (LOT 3, data F1)', () => {
         // Assert
         expect(months).toHaveLength(12);
         expect(months.every((month) => /^[A-Z]{3}$/.test(month))).toBe(true);
+    });
+});
+
+describe('skills of the CV (F3, LOT 4)', () => {
+    it('lists the 54 entries of the CV in 6 groups, without any level', () => {
+        // Arrange
+        const { groups } = content.skills;
+
+        // Act
+        const entries = groups.flatMap((group) => group.skills);
+
+        // Assert
+        expect(groups.map((group) => group.id)).toEqual(['front', 'back', 'game', 'data', 'devops', 'tools']);
+        expect(entries).toHaveLength(54);
+        entries.forEach((entry) => expect(Object.keys(entry).sort()).toEqual(['icon', 'name']));
+    });
+
+    it('has a generated Simple Icons logo for every icon slug it names', () => {
+        // Arrange
+        const slugs = content.skills.groups.flatMap((group) => group.skills).map((skill) => skill.icon).filter((icon) => icon !== null);
+
+        // Act
+        const missing = slugs.filter((slug) => !skillIcons[slug]);
+
+        // Assert
+        expect(missing).toEqual([]);
+    });
+
+    it('never names a skill twice in one group', () => {
+        // Arrange
+        const { groups } = content.skills;
+
+        // Act
+        const duplicates = groups.filter((group) => new Set(group.skills.map((skill) => skill.name)).size !== group.skills.length);
+
+        // Assert
+        expect(duplicates).toEqual([]);
     });
 });
