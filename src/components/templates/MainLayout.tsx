@@ -6,6 +6,7 @@ import HudNav from '../organisms/HudNav/HudNav';
 import TravelOverlay from '../organisms/TravelOverlay/TravelOverlay';
 import PageTravel from './PageTravel';
 import { useMousePosition } from '../../hooks/useMousePosition';
+import { usePagePreload } from '../../hooks/usePagePreload';
 import { useTravel } from '../../hooks/useTravel';
 import { isHomePath } from '../../utils/travel';
 import styles from './MainLayout.module.scss';
@@ -16,6 +17,7 @@ const MainLayout: React.FC = () => {
     const outlet = useOutlet();
     const travel = useTravel(location.pathname);
     useMousePosition();
+    usePagePreload();
 
     // Background and navigation bar follow the page on screen: they switch under the overlay
     const isHome = isHomePath(travel.shownPath);

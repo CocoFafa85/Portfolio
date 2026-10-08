@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { content } from '../data/content';
+import { preloadPage } from '../pages/lazyPages';
 import { getTravelStyle, type TravelStyle } from '../utils/travel';
 
 /** Inner pages in navigation bar order: decides forward or back 88 mph trips */
@@ -32,8 +33,18 @@ export function useTravel(pathname: string): Travel {
     const latestPath = useRef(pathname);
     useEffect(() => {
         latestPath.current = pathname;
+        // The trip starts: load the destination now if no intent did it yet
+        preloadPage(pathname).catch(() => undefined);
     }, [pathname]);
-    const onExitComplete = useCallback(() => setShownPath(latestPath.current), []);
+    // The new page shows (and the cover clears) once its chunk is loaded (LOT 4, A0): usually
+    // long done (intent, trip start); on a failed load (an older deployment's files), reload the URL
+    const onExitComplete = useCallback(() => {
+        const path = latestPath.current;
+        preloadPage(path).then(
+            () => { if (latestPath.current === path) setShownPath(path); },
+            () => window.location.reload()
+        );
+    }, []);
 
     return { style: trip.style, id: trip.id, shownPath, onExitComplete };
 }

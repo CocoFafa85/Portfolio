@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { motion, useIsPresent, usePresenceData, useReducedMotion } from 'motion/react';
 import { isTravelStyle } from '../../utils/travel';
 import { ArrivalContext } from './arrival';
@@ -31,7 +31,11 @@ const PageTravel: React.FC<PageTravelProps> = ({ children }) => {
             exit="leave"
             inert={!isPresent}
         >
-            <ArrivalContext.Provider value={style}>{children}</ArrivalContext.Provider>
+            <ArrivalContext.Provider value={style}>
+                {/* An inner page in its own chunk (LOT 4, A0): the trip holds its cover until the chunk is in,
+                    so this empty fallback only shows on a direct load before the preloaded chunk runs */}
+                <Suspense fallback={null}>{children}</Suspense>
+            </ArrivalContext.Provider>
         </motion.div>
     );
 };
