@@ -36,8 +36,9 @@ export const nebulaEffects = {
     speed: 0.19,
     distortion: 0.85,
     swirl: 0.25,
-    grainMixer: 0.08,
-    grainOverlay: 0.1,
+    /** No grain: its still grey specks broke the even background (review of 2026-10-08, was 0.08 / 0.1) */
+    grainMixer: 0,
+    grainOverlay: 0,
     /** A soft nebula needs few pixels: never above the device ratio 1, capped in device pixels */
     minPixelRatio: 1,
     maxPixelCount: { fine: 1_500_000, coarse: 600_000 },
@@ -49,19 +50,19 @@ export const nebulaEffects = {
 };
 
 /**
- * Home starfield over the nebula (LOT 2, H4): mid and blurred near layers, shooting stars.
- * The far layer (400 small pale stars per megapixel) was removed after review (2026-10-07):
- * the background reads more even.
+ * Home starfield over the nebula (LOT 2, H4), shooting stars. Reviews: far layer removed
+ * (2026-10-07); grey out-of-focus near layer removed and the coloured layer tripled at three
+ * speeds, slow (the original), medium and fast (2026-10-08).
  */
 export const starEffects = {
     seed: 2035,
-    /** Sprite tints: 0 white, 1 cyan, 2 violet, 3 pink (palette.ts); the near layer uses the soft sprite */
+    /** Sprite tints: 0 white, 1 cyan, 2 violet, 3 pink (palette.ts). Same stars, three drift speeds (px/s);
+     *  the faster a layer, the nearer it feels: a little more parallax */
     layers: [
         { perMegapixel: 110, min: 34, radius: [2.1, 3.9], alpha: [0.5, 0.9], speed: [6, 12], parallax: 11, twinkle: 0.25, tints: [0, 1, 2, 3] },
-        { perMegapixel: 8, min: 5, radius: [6, 15], alpha: [0.05, 0.14], speed: [10, 20], parallax: 28, twinkle: 0, tints: [0] },
+        { perMegapixel: 110, min: 34, radius: [2.1, 3.9], alpha: [0.5, 0.9], speed: [20, 32], parallax: 16, twinkle: 0.25, tints: [0, 1, 2, 3] },
+        { perMegapixel: 110, min: 34, radius: [2.1, 3.9], alpha: [0.5, 0.9], speed: [48, 70], parallax: 22, twinkle: 0.25, tints: [0, 1, 2, 3] },
     ] satisfies StarLayerSpec[],
-    /** Index of the layer drawn with the soft out-of-focus sprite (depth of field) */
-    blurredLayer: 1,
     meteor: {
         max: 2, intervalMs: [4500, 9000], speed: [650, 1000], length: [110, 220], lifeMs: [700, 1100],
         angle: [0.35, 0.7], startBand: 0.35,
@@ -70,7 +71,7 @@ export const starEffects = {
     firstMeteorMs: 2500,
     /** Share of the remaining distance the parallax closes each frame */
     pointerSmoothing: 0.06,
-    sprite: { size: 64, core: 0.25, softCore: 0.6, softEdge: 0.35 },
+    sprite: { size: 64, core: 0.25 },
     trail: { width: 256, height: 8, bright: 0.55, headRadius: 5, thickness: 3.2 },
     pixelRatio: { fine: 2, coarse: 1.5, maxPixels: 8_000_000 } satisfies PixelRatioCaps,
     resizeDebounceMs: 150,

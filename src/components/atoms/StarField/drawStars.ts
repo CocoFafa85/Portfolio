@@ -3,10 +3,9 @@ import { STAR_STRIDE, starAlpha, type StarLayer } from '../../../utils/starfield
 import { meteorAlpha, meteorPose, type MeteorPool } from '../../../utils/starfield/meteors';
 import type { StarPalette } from './palette';
 
-/** Pre-rendered images: one per tint, the soft out-of-focus disc, the meteor trail. Built once. */
+/** Pre-rendered images: one per tint, the meteor trail. Built once. */
 export interface StarSprites {
     tints: HTMLCanvasElement[];
-    soft: HTMLCanvasElement;
     trail: HTMLCanvasElement;
 }
 
@@ -61,7 +60,6 @@ function trail(colour: string): HTMLCanvasElement {
 export function createStarSprites(palette: StarPalette): StarSprites {
     return {
         tints: palette.tints.map((colour) => disc(colour, fx.sprite.core, 1)),
-        soft: disc(palette.tints[0], fx.sprite.softCore, fx.sprite.softEdge),
         trail: trail(palette.trail),
     };
 }
