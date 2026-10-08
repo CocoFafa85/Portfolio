@@ -21,16 +21,18 @@
     }
 }
 
+// Title and note always on two lines: side by side, they fitted one line or two depending
+// on the font, and the late Orbitron swap moved everything below (CLS 0.033 on desktop)
 .head {
     display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    gap: 0.35rem 1rem;
+    flex-direction: column;
+    gap: 0.3rem;
     margin-bottom: 0.8rem;
 }
 
+// Large text (≥ 18.66 px bold): the neon violet reads at 4.47:1 on the rail, AA for large text
 .title {
-    font-size: 1rem;
+    font-size: 1.2rem;
     letter-spacing: 0.12em;
     text-transform: uppercase;
     color: $neon-violet;

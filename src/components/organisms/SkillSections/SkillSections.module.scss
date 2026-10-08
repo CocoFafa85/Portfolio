@@ -13,10 +13,6 @@
 }
 
 .section {
-    // Laid out and painted only near the screen (most groups are below the card on a
-    // phone); the browser remembers each size once seen (no jump when scrolling back)
-    content-visibility: auto;
-    contain-intrinsic-size: auto 18rem;
     padding: 1.4rem 1.6rem 1.6rem;
     background: color.change($bg-secondary, $alpha: 0.82);
     border: 1px solid color.change($neon-pink, $alpha: 0.28);
@@ -25,6 +21,14 @@
     @include mobile {
         padding: 1.1rem 1rem 1.2rem;
     }
+}
+
+// Groups from the third on are laid out and painted only near the screen (below the card on
+// a phone); never the first two, which a large screen shows at once (their estimated size
+// would shift the page when the real one comes in: CLS). The size is remembered once seen.
+.section:nth-of-type(n + 3) {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 18rem;
 }
 
 .title {
