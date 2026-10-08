@@ -19,7 +19,7 @@ export interface EpochStoryProps {
 /** One era's text, rendered once: its lines are laid out at load, never on a jump */
 const EraText: React.FC<{ step: TimelineStep }> = React.memo(({ step }) => (
     <>
-        <h2 className={styles.title} data-line="">{step.title}</h2>
+        <h1 className={styles.title} data-line="">{step.title}</h1>
         {splitParagraphs(step.content).map((paragraph, index) => (
             <p key={index} className={styles.paragraph} data-line="">
                 {parseInlineLinks(paragraph).map((segment, part) => (segment.kind === 'link'
@@ -31,7 +31,8 @@ const EraText: React.FC<{ step: TimelineStep }> = React.memo(({ step }) => (
 ));
 
 /**
- * Texts of the eras (LOT 3, A3), the tab panels of the convector. All three
+ * Texts of the eras (LOT 3, A3), the tab panels of the convector; the era
+ * title is the page's h1 (only the chosen panel is exposed). All three
  * are laid out from the start; only the chosen one is in the flow, the
  * others wait hidden (invisible to screen readers and to the keyboard): a
  * jump never lays text out (on a slow phone, shaping a new text took a whole

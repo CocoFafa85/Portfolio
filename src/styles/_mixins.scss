@@ -49,3 +49,10 @@
     @content;
   }
 }
+// Large screen (About cockpit spacing, review of 2026-10-08): room to spread
+// the two columns apart without shrinking them
+@mixin large {
+  @media (min-width: 1280px) {
+    @content;
+  }
+}

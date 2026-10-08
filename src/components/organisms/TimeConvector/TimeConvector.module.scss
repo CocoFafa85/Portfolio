@@ -3,7 +3,8 @@
 
 // ═══════════════════════════════════════════════
 // COCKPIT — the console, then the text of the chosen era; side by side from
-// 1024 px (decision B): the console stays in view while the text scrolls
+// 1024 px (decision B): the console stays in view while the text scrolls.
+// Larger and further apart since the page title went (review of 2026-10-08)
 // ═══════════════════════════════════════════════
 .cockpit {
     display: grid;
@@ -16,7 +17,11 @@
         grid-template-columns: minmax(0, 1.12fr) minmax(0, 1fr);
         gap: 2.5rem;
         align-items: start;
-        max-width: 1180px;
+        max-width: 1440px;
+    }
+
+    @include large {
+        gap: clamp(3.5rem, 6vw, 6rem);
     }
 }
 
@@ -46,7 +51,6 @@
     border-top-color: #34363f;
     border-radius: 10px;
     box-shadow: 0 0 0 1px #000, 0 18px 40px -14px rgba($neon-violet, 0.35);
-
     // Neon edge (cyberpunk)
     &::before {
         content: '';

@@ -31,6 +31,10 @@
 .panel {
     position: relative;
     padding: 1.5rem 1.75rem;
+
+    @include wide {
+        padding: 2rem 2.25rem;
+    }
     background: rgba($bg-secondary, 0.82);
     border: 1px solid rgba($neon-cyan, 0.24);
     border-radius: 8px;
@@ -45,9 +49,10 @@
     }
 }
 
+// The page h1 since the review of 2026-10-08 (larger), coloured by era (content.ts accents)
 .title {
-    margin-bottom: 0.9rem;
-    font-size: clamp(1.35rem, 1.1rem + 1vw, 1.9rem);
+    margin-bottom: 1rem;
+    font-size: clamp(1.7rem, 1.25rem + 1.6vw, 2.75rem);
     line-height: 1.2;
     letter-spacing: 0.03em;
     text-transform: uppercase;

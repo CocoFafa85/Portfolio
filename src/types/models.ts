@@ -120,7 +120,6 @@ export interface PortfolioContent {
         rolesSeparator: string;
     };
     about: {
-        title: string;
         /** Accessible name of the era tabs (the rows of the time circuits) */
         erasLabel: string;
         /** Rows of the time circuits, top to bottom, as in the film: destination, present, last departed */
