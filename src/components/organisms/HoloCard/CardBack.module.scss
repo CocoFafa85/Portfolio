@@ -1,0 +1,88 @@
+@use 'sass:color';
+@use '../../../styles/variables' as *;
+@use 'face';
+@use 'controls';
+
+// ═══════════════════════════════════════════════
+// BACK (LOT 4, S2) — magnetic stripe, film on the lower band, QR code
+// ═══════════════════════════════════════════════
+.face {
+    @include face.face;
+}
+
+.back {
+    transform: rotateY(180deg) translateZ(var(--d-half));
+}
+
+.frame {
+    @include face.frame;
+}
+
+.spin {
+    @include face.spin;
+}
+
+.base {
+    @include face.base;
+}
+
+.stripe {
+    @include face.layer;
+    top: 1.6em;
+    right: 2px;
+    bottom: auto;
+    left: 2px;
+    height: 2.6em;
+    border-radius: 0;
+    background: $holo-stripe;
+}
+
+.print {
+    @include face.layer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding: 1.3em 1.4em 1.2em;
+    transform: translateZ(var(--d-print));
+}
+
+// White plate, dark modules: the contrast scanners need
+.qrLink {
+    display: block;
+    padding: 0.2em;
+    line-height: 0;
+    background: $holo-qr-light;
+    border-radius: 0.5em;
+}
+
+// Canvas drawn once: its background and colour are the plate and module tokens
+.qr {
+    display: block;
+    width: 10.5em;
+    height: 10.5em;
+    color: $holo-qr-dark;
+    background: $holo-qr-light;
+    image-rendering: pixelated;
+}
+
+.caption {
+    margin-top: 0.9em;
+    font-family: $font-orbitron;
+    font-size: 0.66em;
+    letter-spacing: 0.18em;
+    color: $star-cyan;
+}
+
+.hint {
+    margin-top: 0.35em;
+    font-size: 0.72em;
+    color: $text-dim;
+}
+
+@include controls.actions;
+
+.actions {
+    justify-content: center;
+    margin-top: 1.4em;
+}

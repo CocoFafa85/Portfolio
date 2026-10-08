@@ -1,21 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { content } from '../data/content';
 import { linkedinQr } from '../data/generated/linkedinQr';
-import { hasFinderAt, qrSvg } from './qr';
-
-describe('qrSvg', () => {
-    it('merges a run of dark modules into one rectangle, offset by the quiet zone', () => {
-        // Arrange
-        const rows = ['0110', '1000'];
-
-        // Act
-        const svg = qrSvg(rows, '#000', '#fff', 4);
-
-        // Assert
-        expect(svg).toContain('viewBox="0 0 10 10"');
-        expect(svg).toContain('d="M5 4h2v1h-2zM4 5h1v1h-1z"');
-    });
-});
+import { hasFinderAt } from './qr';
 
 describe('generated LinkedIn QR code', () => {
     it('encodes the LinkedIn profile of content.ts (regenerate with npm run gen:assets)', () => {

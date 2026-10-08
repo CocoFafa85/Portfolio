@@ -1,246 +1,103 @@
-import React, { useRef, useState, useCallback, useEffect } from 'react';
-import { motion, useMotionValue, useSpring, useTransform } from 'motion/react';
+import React, { useCallback, useEffect, useRef, useState, type CSSProperties, type MouseEvent } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 import { content } from '../../../data/content';
+import { holoEffects as fx } from '../../../data/effects';
+import { useIdleReady } from '../../../hooks/useIdleReady';
+import CardBack from './CardBack';
+import CardFront from './CardFront';
+import { useCardTilt } from './useCardTilt';
+import { useCvDownload } from './useCvDownload';
 import styles from './HoloCard.module.scss';
 
-const CV_URL = `${import.meta.env.BASE_URL}${content.cv.file}`;
+const { depth } = fx;
+const SCENE_VARS = {
+    '--perspective': `${fx.perspective}px`,
+    '--d-half': `${depth.half}px`, '--d-film': `${depth.film}px`, '--d-print': `${depth.print}px`,
+    '--d-emblem': `${depth.emblem}px`, '--d-glare': `${depth.glare}px`, '--border-turn': `${fx.borderTurnMs}ms`,
+    '--press': fx.press,
+    '--sway-x': `${fx.sway.x}deg`, '--sway-y': `${fx.sway.y}deg`, '--sway-ms': `${fx.sway.periodMs}ms`,
+    '--drift': `${fx.film.drift * 100}%`,
+} as CSSProperties;
+// Edge slices between the faces, painted once: the thickness seen when the card tilts or turns
+const SLICE_Z = Array.from({ length: fx.slices }, (_, i) => (depth.half - 1) * (1 - (2 * i) / (fx.slices - 1)));
 
-const labels = content.skills.holoCard;
+/**
+ * HoloCard v2 (LOT 4, S2, direction A "access badge"): a thick holographic ID
+ * card. A fine pointer tilts it (the original spring) and shows its depth;
+ * a click or a tap on it flips it (back: QR code to LinkedIn); its buttons
+ * download the CV and flip it from the keyboard. The hidden face is inert and
+ * the focus follows the flip (never lost, never trapped). Reduced motion: no
+ * tilt, sway nor sequence.
+ */
+const Card: React.FC = () => {
+    const sceneRef = useRef<HTMLDivElement>(null);
+    const reducedMotion = Boolean(useReducedMotion());
+    const tilt = useCardTilt(sceneRef);
+    const download = useCvDownload(sceneRef);
+    const [flipped, setFlipped] = useState(false);
+    const [active, setActive] = useState(false);
+    const toBack = useRef<HTMLButtonElement>(null);
+    const toFront = useRef<HTMLButtonElement>(null);
+    const moveFocus = useRef(false);
 
-const GLITCH_CHARS = '!@#$%^&*()_+-=[]{}|;:,.<>?/\\~`0123456789ABCDEF';
-const BARCODE_PATTERN = [2, 1, 3, 1, 2, 3, 1, 2, 1, 3, 2, 1, 1, 3, 2, 1, 2, 3, 1, 2, 1, 1, 3, 2];
-
-interface GlitchTextProps {
-    text: string;
-    isHovered: boolean;
-}
-
-const GlitchText: React.FC<GlitchTextProps> = ({ text, isHovered }) => {
-    const [display, setDisplay] = useState(text);
-
-    // Decode cycles run only while hovered; each cycle restarts after a pause.
+    const flip = useCallback(() => {
+        // The focus was on the face that turns away (soon inert): take it to the other face
+        moveFocus.current = Boolean(sceneRef.current?.contains(document.activeElement));
+        setFlipped((side) => !side);
+    }, []);
     useEffect(() => {
-        if (!isHovered) return;
+        if (!moveFocus.current) return;
+        moveFocus.current = false;
+        (flipped ? toFront : toBack).current?.focus({ preventScroll: true });
+    }, [flipped]);
 
-        let interval: ReturnType<typeof setInterval> | undefined;
-        let pause: ReturnType<typeof setTimeout> | undefined;
-
-        const runCycle = () => {
-            let iteration = 0;
-            interval = setInterval(() => {
-                setDisplay(
-                    text
-                        .split('')
-                        .map((char, i) => {
-                            if (char === ' ') return ' ';
-                            if (i < iteration) return text[i];
-                            return GLITCH_CHARS[Math.floor(Math.random() * GLITCH_CHARS.length)];
-                        })
-                        .join('')
-                );
-                iteration += 1 / 2;
-                if (iteration >= text.length) {
-                    clearInterval(interval);
-                    setDisplay(text);
-                    pause = setTimeout(runCycle, 1500);
-                }
-            }, 40);
-        };
-
-        runCycle();
-        return () => {
-            clearInterval(interval);
-            clearTimeout(pause);
-        };
-    }, [isHovered, text]);
-
-    return <span className={styles.glitchText}>{isHovered ? display : text}</span>;
-};
-
-const HoloCard: React.FC = () => {
-    const cardRef = useRef<HTMLDivElement>(null);
-    const [isHovered, setIsHovered] = useState(false);
-    const [isDownloading, setIsDownloading] = useState(false);
-    const [downloadProgress, setDownloadProgress] = useState(0);
-
-    // Motion values for 3D tilt
-    const mouseX = useMotionValue(0.5);
-    const mouseY = useMotionValue(0.5);
-
-    const rotateX = useSpring(useTransform(mouseY, [0, 1], [15, -15]), { stiffness: 200, damping: 20 });
-    const rotateY = useSpring(useTransform(mouseX, [0, 1], [-15, 15]), { stiffness: 200, damping: 20 });
-
-    // Holographic shine position
-    const shineX = useTransform(mouseX, [0, 1], [0, 100]);
-    const shineY = useTransform(mouseY, [0, 1], [0, 100]);
-
-    const handleMouseMove = useCallback(
-        (e: React.MouseEvent<HTMLDivElement>) => {
-            if (!cardRef.current) return;
-            const rect = cardRef.current.getBoundingClientRect();
-            mouseX.set((e.clientX - rect.left) / rect.width);
-            mouseY.set((e.clientY - rect.top) / rect.height);
-        },
-        [mouseX, mouseY]
-    );
-
-    const handleMouseLeave = useCallback(() => {
-        setIsHovered(false);
-        mouseX.set(0.5);
-        mouseY.set(0.5);
-    }, [mouseX, mouseY]);
-
-    const handleDownload = useCallback(() => {
-        if (isDownloading) return;
-        setIsDownloading(true);
-        setDownloadProgress(0);
-
-        // Simulate upload progress
-        const duration = 2000;
-        const steps = 40;
-        const stepDuration = duration / steps;
-        let step = 0;
-
-        const interval = setInterval(() => {
-            step++;
-            // Non-linear progress for realism
-            const progress = Math.min(100, Math.round((step / steps) * 100 + Math.random() * 3));
-            setDownloadProgress(progress);
-
-            if (step >= steps) {
-                clearInterval(interval);
-                setDownloadProgress(100);
-
-                // Trigger actual download after animation completes
-                setTimeout(() => {
-                    // The CV ships with the site (public/), a single download action
-                    const link = document.createElement('a');
-                    link.href = CV_URL;
-                    link.download = content.cv.downloadName;
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-
-                    setTimeout(() => {
-                        setIsDownloading(false);
-                        setDownloadProgress(0);
-                    }, 500);
-                }, 400);
-            }
-        }, stepDuration);
-    }, [isDownloading]);
-
-    const handleKeyDown = useCallback(
-        (e: React.KeyboardEvent<HTMLDivElement>) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                handleDownload();
-            }
-        },
-        [handleDownload]
-    );
+    const onCardClick = (event: MouseEvent<HTMLDivElement>) => {
+        if (event.target instanceof Element && event.target.closest('button, a')) return;
+        flip();
+    };
 
     return (
-        <motion.div
-            ref={cardRef}
-            className={styles.holoCard}
-            style={{ rotateX, rotateY, transformPerspective: 1200 }}
-            onMouseMove={handleMouseMove}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={handleMouseLeave}
-            onClick={handleDownload}
-            // Keyboard access: same action and same glitch feedback as the mouse
-            role="button"
-            tabIndex={0}
-            aria-label={content.ui.cvDownloadLabel}
-            aria-busy={isDownloading}
-            onKeyDown={handleKeyDown}
-            onFocus={() => setIsHovered(true)}
-            onBlur={handleMouseLeave}
-            whileTap={{ scale: 0.98 }}
+        <div
+            ref={sceneRef}
+            className={styles.scene}
+            style={SCENE_VARS}
+            // Mounted after the page painted (below): the rich decor is on from the start
+            data-power="on"
+            onPointerMove={tilt.onPointerMove}
+            onPointerEnter={(event) => { if (event.pointerType !== 'touch') setActive(true); }}
+            onPointerLeave={(event) => { tilt.onPointerLeave(event); setActive(false); }}
+            onFocus={() => setActive(true)}
+            onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setActive(false); }}
         >
-            {/* Animated border */}
-            <div className={styles.borderGlow} />
-
-            {/* Holographic shine overlay */}
-            <motion.div
-                className={styles.holoShine}
-                style={{
-                    background: useTransform(
-                        [shineX, shineY],
-                        ([x, y]) =>
-                            `radial-gradient(circle at ${x}% ${y}%, rgba(0, 243, 255, 0.15) 0%, rgba(188, 19, 254, 0.08) 40%, transparent 70%)`
-                    ),
-                }}
-            />
-
-            {/* Noise texture */}
-            <div className={styles.noiseOverlay} />
-
-            {/* Card content */}
-            <div className={styles.cardInner}>
-                {/* Status indicator */}
-                <div className={styles.statusBar}>
-                    <span className={styles.statusDot} />
-                    <span className={styles.statusText}>{labels.status}</span>
+            {/* Press feedback in CSS (:active): motion's whileTap would make the card a tab stop */}
+            <div className={styles.press} onClick={onCardClick}>
+                <div className={styles.sway}>
+                <motion.div className={styles.card} style={{ rotateX: tilt.rotateX, rotateY: tilt.rotateY }}>
+                    <motion.div className={styles.flipper} initial={false} animate={{ rotateY: flipped ? 180 : 0 }}
+                        transition={reducedMotion ? { duration: 0 } : fx.flip}>
+                        {SLICE_Z.map((z, i) => (
+                            <span key={i} className={styles.slice} style={{ transform: `translateZ(${z}px)` }} aria-hidden="true" />
+                        ))}
+                        <CardFront tilt={tilt} download={download} active={active && !reducedMotion} hidden={flipped}
+                            flipRef={toBack} onFlip={flip} />
+                        <CardBack tilt={tilt} hidden={!flipped} flipRef={toFront} onFlip={flip} />
+                    </motion.div>
+                </motion.div>
                 </div>
-
-                {/* Avatar */}
-                <div className={styles.avatarContainer}>
-                    <div className={styles.avatarRing}>
-                        <div className={styles.avatarInner}>
-                            <span className={styles.avatarInitials}>{labels.initials}</span>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Identity info */}
-                <div className={styles.identityBlock}>
-                    <p className={styles.name}>
-                        <GlitchText text={labels.name} isHovered={isHovered} />
-                    </p>
-                    <p className={styles.role}>
-                        <GlitchText text={labels.role} isHovered={isHovered} />
-                    </p>
-                </div>
-
-                {/* Decorative barcode */}
-                <div className={styles.barcode}>
-                    {BARCODE_PATTERN.map((w, i) => (
-                        <div
-                            key={i}
-                            className={styles.bar}
-                            style={{ width: `${w}px` }}
-                        />
-                    ))}
-                </div>
-                <span className={styles.barcodeLabel}>{labels.serial}</span>
-
-                {/* Download sequence */}
-                {isDownloading ? (
-                    <div className={styles.downloadSequence}>
-                        <div className={styles.progressBarTrack}>
-                            <motion.div
-                                className={styles.progressBarFill}
-                                initial={{ width: '0%' }}
-                                animate={{ width: `${downloadProgress}%` }}
-                                transition={{ duration: 0.05 }}
-                            />
-                        </div>
-                        <span className={styles.downloadLabel}>
-                            {labels.uploading} {downloadProgress}%
-                        </span>
-                    </div>
-                ) : (
-                    <div className={styles.ctaBlock}>
-                        <span className={styles.ctaText}>
-                            {labels.cta}
-                        </span>
-                    </div>
-                )}
             </div>
-        </motion.div>
+            <span className={styles.status} role="status">{download.started ? content.skills.holoCard.started : ''}</span>
+        </div>
     );
+};
+
+/**
+ * The card mounts at the first idle moment after the page paints: its 3D
+ * layers are not in the same task as the page text (the LCP). Until then a
+ * slot of the same size and background holds its place (no layout shift).
+ */
+const HoloCard: React.FC = () => {
+    const ready = useIdleReady(fx.mountTimeoutMs);
+    return ready ? <Card /> : <div className={`${styles.scene} ${styles.slot}`} style={SCENE_VARS} aria-hidden="true" />;
 };
 
 export default HoloCard;

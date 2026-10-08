@@ -38,14 +38,29 @@ export interface CvFile {
     downloadName: string;
 }
 
+/** Texts of the HoloCard (Skills, LOT 4, S2): decorative print of an access badge, and its actions */
 export interface HoloCardLabels {
     status: string;
-    initials: string;
     name: string;
     role: string;
+    /** Printed under the barcode, which encodes it (Code 128) */
     serial: string;
+    /** Progress line of the download sequence */
     uploading: string;
-    cta: string;
+    /** Stamp printed when the download starts */
+    granted: string;
+    /** Visible text of the download button (its accessible name, ui.cvDownloadLabel, starts with it) */
+    download: string;
+    /** Flip buttons (visible text = accessible name) */
+    toBack: string;
+    toFront: string;
+    /** Under the QR code of the back */
+    qrCaption: string;
+    qrHint: string;
+    /** Alternative text of the QR code (the link's accessible name) */
+    qrAlt: string;
+    /** Announced to screen readers when the download starts */
+    started: string;
 }
 
 export interface ProjectLabels {

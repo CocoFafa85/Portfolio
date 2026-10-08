@@ -75,12 +75,18 @@ Mon objectif à long terme est de gérer un SI complet ou d'être responsable de
         title: "Compétences",
         holoCard: {
             status: "CLEARANCE: LEVEL 5",
-            initials: "CF",
             name: "CORENTIN FANIC",
             role: "FULLSTACK DEVELOPER",
             serial: "ID-CF-2026-FSK",
             uploading: "UPLOADING TO NEURAL LINK...",
-            cta: "[ CLICK TO DOWNLOAD CV ]"
+            granted: "ACCÈS AUTORISÉ",
+            download: "Télécharger le CV",
+            toBack: "Verso",
+            toFront: "Recto",
+            qrCaption: "LINKEDIN · CORENTIN FANIC",
+            qrHint: "Scanner ou cliquer le code",
+            qrAlt: "QR code du profil LinkedIn de Corentin FANIC",
+            started: "Téléchargement du CV lancé"
         },
         labels: {
             railTitle: "Projets",

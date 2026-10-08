@@ -175,6 +175,40 @@ export const neonFrameEffects = {
     cycleMs: 7500,
 };
 
+/**
+ * HoloCard v2 (Skills, LOT 4, S2, direction A "access badge"): a thick card
+ * that tilts under the pointer (the original tilt and spring), its layers in
+ * depth, an iridescent film that slides with the angle, a glare under the
+ * pointer; a press flips it; the button downloads the CV in under a second.
+ */
+export const holoEffects = {
+    perspective: 1200,
+    /** Tilt at the card edge (degrees) and its spring: the original card's */
+    tilt: { max: 15, spring: { stiffness: 200, damping: 20 } },
+    /** Idle sway while nobody points at the card (degrees, one elliptic loop in ms), in CSS */
+    sway: { x: 3, y: 5, periodMs: 8000 },
+    /** Film shift for a full tilt (share of the card), glare travel (share of the card) */
+    film: { shift: 0.22, drift: 0.06 },
+    glare: { travel: 0.5, rest: 0.03 },
+    /** Depth of the layers (px): edge half-thickness, film, print, emblem, glare */
+    depth: { half: 6, film: 1, print: 18, emblem: 34, glare: 44 },
+    /** Edge slices between the two faces (the visible thickness; each is a composited layer) */
+    slices: 3,
+    /** Press, then the flip (a spring on rotateY) */
+    press: 0.97,
+    flip: { type: 'spring', stiffness: 120, damping: 17, mass: 1 } satisfies Transition,
+    /** Download sequence (ms from the press): laser sweep, gauge, stamp, download, back to rest */
+    download: { scanMs: 620, gaugeMs: 760, stampAtMs: 640, stampMs: 180, downloadAtMs: 800, restAtMs: 1700 },
+    /** Name and role decode under the pointer or the focus, then rest before decoding again */
+    decode: { seed: 2049, steps: 16, spread: 0.3, durationMs: 640, pauseMs: 1500 } satisfies DecodeSettings & Record<'durationMs' | 'pauseMs', number>,
+    /** The card mounts at the first idle moment after the page paints (at the latest this late) */
+    mountTimeoutMs: 400,
+    /** Rotating neon border, one turn (ms): the original card's */
+    borderTurnMs: 4000,
+    /** QR canvas density: sharp on every screen, small anyway (~170 CSS px) */
+    qrPixelRatio: { fine: 2, coarse: 2, maxPixels: 400_000 } satisfies PixelRatioCaps,
+};
+
 /** Skill badges and the projects rail (Skills, LOT 4, S3): CSS variables of the sections */
 export const skillEffects = {
     /** Opacity of what is not linked to the pointed badge or project */

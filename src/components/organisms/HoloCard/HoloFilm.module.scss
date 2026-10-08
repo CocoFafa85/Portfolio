@@ -1,0 +1,99 @@
+@use 'sass:color';
+@use '../../../styles/variables' as *;
+
+// ═══════════════════════════════════════════════
+// HOLO FILM + GLARE (LOT 4, S2) — layers of a face, in depth (--d-film,
+// --d-glare); shown once the card powers on (no blend in the first frame)
+// ═══════════════════════════════════════════════
+.film,
+.glareLayer {
+    position: absolute;
+    inset: 0;
+    display: none;
+    overflow: hidden;
+    border-radius: var(--card-r);
+    backface-visibility: hidden;
+    will-change: transform;
+    pointer-events: none;
+
+    [data-power='on'] & {
+        display: block;
+    }
+}
+
+.film {
+    transform: translateZ(var(--d-film));
+    mix-blend-mode: screen;
+}
+
+// Security print of the front: hexagons, only where the film shows
+.hex {
+    opacity: 0.2;
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='22' height='38'%3E%3Cpath d='M11 1l10 6v12l-10 6-10-6V7z' fill='none' stroke='%23fff' stroke-width='1.2'/%3E%3C/svg%3E");
+    mask-size: 1.4em auto;
+}
+
+// Back: the film shows on the lower band, fading towards the stripe
+.stripe {
+    opacity: 0.3;
+    mask-image: linear-gradient(transparent 55%, #000);
+}
+
+// Slow drift of the colours (CSS, same period as the sway); the tilt shift adds on top
+.drift {
+    position: absolute;
+    inset: 0;
+
+    [data-power='on'] & {
+        animation: drift var(--sway-ms, 8s) ease-in-out infinite;
+    }
+}
+
+@keyframes drift {
+    0%, 100% { transform: translateX(calc(var(--drift) * -1)); }
+    25% { transform: translateY(var(--drift)); }
+    50% { transform: translateX(var(--drift)); }
+    75% { transform: translateY(calc(var(--drift) * -1)); }
+}
+
+.rainbow {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    // Own layer from power-on: raster once, then only moved (no paint on the first hover)
+    will-change: transform;
+    background: repeating-linear-gradient(
+        115deg,
+        $neon-cyan 0%,
+        $holo-indigo 7%,
+        $neon-violet 12%,
+        $neon-pink 18%,
+        $holo-amber 24%,
+        $holo-mint 30%,
+        $neon-cyan 36%
+    );
+}
+
+.glareLayer {
+    transform: translateZ(var(--d-glare));
+}
+
+.glare {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(
+        circle at 50% 50%,
+        color.change($star-white, $alpha: 0.32) 0%,
+        color.change($star-white, $alpha: 0.07) 18%,
+        transparent 34%
+    );
+    // screen, not overlay: overlay blending cost a 45–100 ms GPU frame when the glare lit up
+    mix-blend-mode: screen;
+    opacity: 0;
+    will-change: transform, opacity;
+}
