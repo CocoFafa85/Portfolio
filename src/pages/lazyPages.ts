@@ -51,3 +51,8 @@ export const pageRoute = (pathname: string): string => routeOf(pathname, import.
 export function preloadPage(path: string): Promise<unknown> {
     return lazyPages[path]?.preload() ?? Promise.resolve();
 }
+
+// Direct visit of an inner page: its HTML already downloaded the chunk (modulepreload);
+// evaluating it now, while the main bundle starts, often has it in before React's first
+// render (no fallback, no reveal in a later, separate layout). Never blocks the render.
+preloadPage(pageRoute(window.location.pathname)).catch(() => undefined);
