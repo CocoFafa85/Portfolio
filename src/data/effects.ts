@@ -189,6 +189,8 @@ export const skillEffects = {
      *  first frames: bundled, it delayed the page's paint), at the latest iconsTimeoutMs later */
     iconsAfterMs: 700,
     iconsTimeoutMs: 1200,
+    /** ...and only once the badges are this close to the screen */
+    iconsMargin: '300px',
 };
 
 /** Navigation bar (LOT 1, C1) */

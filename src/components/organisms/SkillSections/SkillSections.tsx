@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useState, type CSSProperties } from 'react';
+import React, { useCallback, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { skillEffects as fx } from '../../../data/effects';
 import type { ProjectRef, SkillLabels } from '../../../types/models';
 import { skillKeysOf, type LinkedGroup } from '../../../utils/skills';
@@ -30,7 +30,8 @@ const VARS = { '--skill-dim': fx.dimOpacity, '--skill-ms': `${fx.transitionMs}ms
 const SkillSections: React.FC<SkillSectionsProps> = ({ groups, projects, labels }) => {
     const [pointed, setPointed] = useState<Pointed>(null);
     const [pinned, setPinned] = useState<string | null>(null);
-    const icons = useSkillIcons();
+    const badgesRef = useRef<HTMLDivElement>(null);
+    const icons = useSkillIcons(badgesRef);
     const onPointSkill = useCallback((key: string | null) => setPointed(key ? { skill: key } : null), []);
     const onPointProject = useCallback((id: string | null) => setPointed(id ? { project: id } : null), []);
     const onPin = useCallback((key: string) => setPinned((current) => (current === key ? null : key)), []);
@@ -57,7 +58,7 @@ const SkillSections: React.FC<SkillSectionsProps> = ({ groups, projects, labels 
 
     return (
         <SkillIconsContext.Provider value={icons}>
-            <div className={styles.sections} style={VARS}>
+            <div ref={badgesRef} className={styles.sections} style={VARS}>
                 <ProjectRail projects={projects} labels={labels} lit={litProjects} note={note} onPoint={onPointProject} />
                 {groups.map((group) => (
                     <SkillSection key={group.id} group={group} labels={labels} lightOf={lightOf} pinned={pinned}

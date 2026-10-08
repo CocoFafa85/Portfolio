@@ -13,6 +13,10 @@
 }
 
 .section {
+    // Laid out and painted only near the screen (most groups are below the card on a
+    // phone); the browser remembers each size once seen (no jump when scrolling back)
+    content-visibility: auto;
+    contain-intrinsic-size: auto 18rem;
     padding: 1.4rem 1.6rem 1.6rem;
     background: color.change($bg-secondary, $alpha: 0.82);
     border: 1px solid color.change($neon-pink, $alpha: 0.28);
