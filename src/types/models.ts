@@ -67,6 +67,29 @@ export interface SkillCategory {
     skills: Skill[];
 }
 
+/** A skill of the CV (F3): no level, no percentage (LOT 4) */
+export interface SkillEntry {
+    name: string;
+    /** Simple Icons slug (src/data/generated/skillIcons.ts); null: generic logo */
+    icon: string | null;
+}
+
+/** A group of skills, headed by its short intro when it has one (S1) */
+export interface SkillGroup {
+    id: string;
+    title: string;
+    /** Intro block in the author's voice; keywords written **like this** */
+    intro?: string;
+    skills: SkillEntry[];
+}
+
+/** A project as the skills see it: its technologies are its tags (F4) */
+export interface ProjectRef {
+    id: string;
+    title: string;
+    tags: string[];
+}
+
 export interface Project {
     id: string;
     title: string;
