@@ -26,3 +26,21 @@ export function parseInlineLinks(paragraph: string): StorySegment[] {
     if (last < paragraph.length) segments.push({ kind: 'text', text: paragraph.slice(last) });
     return segments;
 }
+
+/** A run of a skills intro (LOT 4, S1): plain words or a keyword written `**keyword**`. */
+export type EmphasisSegment = { kind: 'text' | 'keyword'; text: string };
+
+const KEYWORD = /\*\*([^*]+)\*\*/g;
+
+/** Splits a text into plain runs and keywords written `**like this**` (an unclosed `**` stays plain). */
+export function parseEmphasis(text: string): EmphasisSegment[] {
+    const segments: EmphasisSegment[] = [];
+    let last = 0;
+    for (const match of text.matchAll(KEYWORD)) {
+        if (match.index > last) segments.push({ kind: 'text', text: text.slice(last, match.index) });
+        segments.push({ kind: 'keyword', text: match[1] });
+        last = match.index + match[0].length;
+    }
+    if (last < text.length) segments.push({ kind: 'text', text: text.slice(last) });
+    return segments;
+}

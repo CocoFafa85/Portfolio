@@ -38,14 +38,29 @@ export interface CvFile {
     downloadName: string;
 }
 
+/** Texts of the HoloCard (Skills, LOT 4, S2): decorative print of an access badge, and its actions */
 export interface HoloCardLabels {
     status: string;
-    initials: string;
     name: string;
     role: string;
+    /** Printed under the barcode, which encodes it (Code 128) */
     serial: string;
+    /** Progress line of the download sequence */
     uploading: string;
-    cta: string;
+    /** Stamp printed when the download starts */
+    granted: string;
+    /** Visible text of the download button (its accessible name, ui.cvDownloadLabel, starts with it) */
+    download: string;
+    /** Flip buttons (visible text = accessible name) */
+    toBack: string;
+    toFront: string;
+    /** Under the QR code of the back */
+    qrCaption: string;
+    qrHint: string;
+    /** Alternative text of the QR code (the link's accessible name) */
+    qrAlt: string;
+    /** Announced to screen readers when the download starts */
+    started: string;
 }
 
 export interface ProjectLabels {
@@ -55,16 +70,46 @@ export interface ProjectLabels {
     wipBadge: string;
 }
 
-export interface Skill {
+/** A skill of the CV (F3): no level, no percentage (LOT 4) */
+export interface SkillEntry {
     name: string;
-    level: number; // 0-100
-    icon?: string;
+    /** Simple Icons slug (src/data/generated/skillIcons.ts); null: generic logo */
+    icon: string | null;
 }
 
-export interface SkillCategory {
+/** A group of skills, headed by its short intro when it has one (S1) */
+export interface SkillGroup {
     id: string;
     title: string;
-    skills: Skill[];
+    /** Intro block in the author's voice; keywords written **like this** */
+    intro?: string;
+    skills: SkillEntry[];
+}
+
+/** Texts of the badges and of the projects rail (Skills, LOT 4, S3) */
+export interface SkillLabels {
+    railTitle: string;
+    /** Invites to point at a technology (shown while nothing is lit) */
+    railHint: string;
+    /** Before the projects of a badge (its description for screen readers too) */
+    usedIn: string;
+    noProject: string;
+}
+
+/** A Simple Icons logo, generated into src/data/generated/skillIcons.ts */
+export interface SkillIcon {
+    title: string;
+    /** Brand colour, #rrggbb */
+    hex: string;
+    /** SVG path on a 24 × 24 box */
+    path: string;
+}
+
+/** A project as the skills see it: its technologies are its tags (F4) */
+export interface ProjectRef {
+    id: string;
+    title: string;
+    tags: string[];
 }
 
 export interface Project {
@@ -111,6 +156,8 @@ export interface PortfolioContent {
         decodeGlyphs: string;
         timeCircuits: TimeCircuitLabels;
     };
+    /** Public profiles (the HoloCard back: its QR code is generated from this URL) */
+    profiles: { linkedin: string };
     cv: CvFile;
     home: {
         title: string;
@@ -120,7 +167,6 @@ export interface PortfolioContent {
         rolesSeparator: string;
     };
     about: {
-        title: string;
         /** Accessible name of the era tabs (the rows of the time circuits) */
         erasLabel: string;
         /** Rows of the time circuits, top to bottom, as in the film: destination, present, last departed */
@@ -131,8 +177,14 @@ export interface PortfolioContent {
     };
     skills: {
         title: string;
-        intro: string;
-        categories: SkillCategory[];
+        /** Rail of the projects and badge descriptions (S3) */
+        labels: SkillLabels;
+        /** Short lead above the groups (S1) */
+        lead: string;
+        /** Skills of the CV (F3), by group */
+        groups: SkillGroup[];
+        /** F4 projects linked to the skills by their tags (until LOT 5 merges them with projects.list) */
+        projects: ProjectRef[];
         holoCard: HoloCardLabels;
     };
     projects: {

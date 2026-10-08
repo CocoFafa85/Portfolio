@@ -1,123 +1,94 @@
-@import "../../styles/variables";
-
-.skillsPage {
-    padding: 3rem 2rem 5rem;
-    min-height: 100%;
-    // background: linear-gradient(135deg, $bg-deep, $bg-primary); // Removed so the circuit background shows through
-    background: transparent;
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
+@use 'sass:color';
+@use '../../styles/variables' as *;
+@use '../../styles/mixins' as *;
 
 // ═══════════════════════════════════════════════
-// HERO SECTION — Intro + HoloCard side by side
+// SKILLS PAGE (LOT 4) — layout B "merged sections": title, lead and HoloCard
+// side by side from 1024 px (card first on narrow screens, never pushed below
+// the text), then the groups of skills
 // ═══════════════════════════════════════════════
-.heroSection {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.page {
     width: 100%;
-    max-width: 1200px;
-    margin-bottom: 4rem;
-    gap: 2rem;
+    max-width: 1240px;
+    min-height: 100%;
+    margin: 0 auto;
+    padding: 2.5rem 1.5rem 4rem;
+
+    @include mobile {
+        padding: 1.5rem 1rem 3rem;
+    }
 }
 
-.intro {
-    max-width: 800px;
-    text-align: center;
-    font-family: $font-montserrat;
-    line-height: 1.6;
-    line-height: 1.6;
-    font-size: 1.1rem;
-    color: rgba(255, 255, 255, 0.9);
-    
-    // Readability boost
-    background: rgba($bg-secondary, 0.7);
-    backdrop-filter: blur(4px);
-    padding: 2rem;
-    border-radius: 16px;
-    border: 1px solid rgba($neon-cyan, 0.1);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+.hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    gap: 2rem;
+    margin-bottom: 2.5rem;
+
+    @include wide {
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        justify-items: start;
+        gap: 3rem;
+    }
+}
+
+.heading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    min-width: 0;
+
+    @include wide {
+        align-items: flex-start;
+    }
+}
+
+// Frame of the title (readability over the circuit); the heading has no
+// padding so the glitch slices line up with the letters (as on About, LOT 3)
+.titleFrame {
+    width: fit-content;
+    max-width: 100%;
+    padding: 1rem 2rem;
+    background: color.change($bg-secondary, $alpha: 0.6);
+    border: 1px solid color.change($neon-cyan, $alpha: 0.1);
+    border-radius: 12px;
 
     h1 {
-        font-family: $font-orbitron;
-        font-size: 3rem;
-        color: $neon-cyan;
-        margin-bottom: 2rem;
-        text-shadow: 0 0 15px rgba($neon-cyan, 0.5);
-        text-transform: uppercase;
+        margin-bottom: 0;
+        // Fixed line height: no shift when Orbitron replaces the fallback font (CLS)
+        line-height: 1.2;
     }
 
-    p {
-        margin-bottom: 1rem;
-        text-align: justify;
-    }
-}
-
-.holoCardWrapper {
-    display: flex;
-    justify-content: center;
-    flex-shrink: 0;
-}
-
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 2rem;
-    width: 100%;
-    max-width: 1200px;
-}
-
-// ═══════════════════════════════════════════════
-// DESKTOP — Side by side layout
-// ═══════════════════════════════════════════════
-// ═══════════════════════════════════════════════
-// SMALL SCREENS — Improve intro readability
-// ═══════════════════════════════════════════════
-@media (max-width: 500px) {
-    .skillsPage {
-        padding: 2rem 1rem 3rem;
-    }
-
-    .intro {
-        max-width: 100%;
-        font-size: 0.95rem;
-        line-height: 1.7;
+    @include mobile {
+        padding: 0.75rem 1rem;
 
         h1 {
             font-size: 2rem;
-            margin-bottom: 1.2rem;
         }
-
-        p {
-            padding: 0 0.25rem;
-            margin-bottom: 0.8rem;
-        }
-    }
-
-    .grid {
-        grid-template-columns: 1fr;
     }
 }
 
-@media (min-width: 1024px) {
-    .heroSection {
-        flex-direction: row;
-        align-items: center;
-        gap: 3rem;
-    }
+.lead {
+    max-width: 60ch;
+    padding: 1.1rem 1.4rem;
+    font-size: clamp(1rem, 0.95rem + 0.25vw, 1.15rem);
+    line-height: 1.7;
+    text-align: center;
+    color: var(--text-primary);
+    background: color.change($bg-secondary, $alpha: 0.82);
+    border: 1px solid color.change($neon-cyan, $alpha: 0.18);
+    border-radius: 8px;
 
-    .intro {
-        flex: 1;
-        text-align: left;
-
-        h1 {
-            // Override the global centering for left-aligned layout
-            display: block !important;
-            margin-inline: 0 !important;
-            text-align: left;
-        }
+    @include wide {
+        text-align: start;
     }
+}
+
+// Right after the short lead on a phone: no long scroll before the card (LOT 6 finding)
+.card {
+    display: flex;
+    justify-content: center;
 }

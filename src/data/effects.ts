@@ -36,8 +36,9 @@ export const nebulaEffects = {
     speed: 0.19,
     distortion: 0.85,
     swirl: 0.25,
-    grainMixer: 0.08,
-    grainOverlay: 0.1,
+    /** No grain: its still grey specks broke the even background (review of 2026-10-08, was 0.08 / 0.1) */
+    grainMixer: 0,
+    grainOverlay: 0,
     /** A soft nebula needs few pixels: never above the device ratio 1, capped in device pixels */
     minPixelRatio: 1,
     maxPixelCount: { fine: 1_500_000, coarse: 600_000 },
@@ -49,19 +50,19 @@ export const nebulaEffects = {
 };
 
 /**
- * Home starfield over the nebula (LOT 2, H4): mid and blurred near layers, shooting stars.
- * The far layer (400 small pale stars per megapixel) was removed after review (2026-10-07):
- * the background reads more even.
+ * Home starfield over the nebula (LOT 2, H4), shooting stars. Reviews: far layer removed
+ * (2026-10-07); grey out-of-focus near layer removed and the coloured layer tripled at three
+ * speeds, slow (the original), medium and fast (2026-10-08).
  */
 export const starEffects = {
     seed: 2035,
-    /** Sprite tints: 0 white, 1 cyan, 2 violet, 3 pink (palette.ts); the near layer uses the soft sprite */
+    /** Sprite tints: 0 white, 1 cyan, 2 violet, 3 pink (palette.ts). Same stars, three drift speeds (px/s);
+     *  the faster a layer, the nearer it feels: a little more parallax */
     layers: [
         { perMegapixel: 110, min: 34, radius: [2.1, 3.9], alpha: [0.5, 0.9], speed: [6, 12], parallax: 11, twinkle: 0.25, tints: [0, 1, 2, 3] },
-        { perMegapixel: 8, min: 5, radius: [6, 15], alpha: [0.05, 0.14], speed: [10, 20], parallax: 28, twinkle: 0, tints: [0] },
+        { perMegapixel: 110, min: 34, radius: [2.1, 3.9], alpha: [0.5, 0.9], speed: [20, 32], parallax: 16, twinkle: 0.25, tints: [0, 1, 2, 3] },
+        { perMegapixel: 110, min: 34, radius: [2.1, 3.9], alpha: [0.5, 0.9], speed: [48, 70], parallax: 22, twinkle: 0.25, tints: [0, 1, 2, 3] },
     ] satisfies StarLayerSpec[],
-    /** Index of the layer drawn with the soft out-of-focus sprite (depth of field) */
-    blurredLayer: 1,
     meteor: {
         max: 2, intervalMs: [4500, 9000], speed: [650, 1000], length: [110, 220], lifeMs: [700, 1100],
         angle: [0.35, 0.7], startBand: 0.35,
@@ -70,7 +71,7 @@ export const starEffects = {
     firstMeteorMs: 2500,
     /** Share of the remaining distance the parallax closes each frame */
     pointerSmoothing: 0.06,
-    sprite: { size: 64, core: 0.25, softCore: 0.6, softEdge: 0.35 },
+    sprite: { size: 64, core: 0.25 },
     trail: { width: 256, height: 8, bright: 0.55, headRadius: 5, thickness: 3.2 },
     pixelRatio: { fine: 2, coarse: 1.5, maxPixels: 8_000_000 } satisfies PixelRatioCaps,
     resizeDebounceMs: 150,
@@ -166,6 +167,64 @@ export const convectorEffects = {
     /** Era text after the landing: each line fades and rises in */
     reveal: { durationS: 0.38, staggerS: 0.09, rise: 10 },
     resizeDebounceMs: 150,
+};
+
+/** Neon tube around the convector and the era text (About, review of 2026-10-08):
+ *  violet → pink → cyan, a third of the cycle each, two pulses per colour */
+export const neonFrameEffects = {
+    cycleMs: 7500,
+};
+
+/**
+ * HoloCard v2 (Skills, LOT 4, S2, direction A "access badge"): a thick card
+ * that tilts under the pointer (the original tilt and spring), its layers in
+ * depth, an iridescent film that slides with the angle, a glare under the
+ * pointer; a press flips it; the button downloads the CV in under a second.
+ */
+export const holoEffects = {
+    perspective: 1200,
+    /** Tilt at the card edge (degrees) and its spring: the original card's */
+    tilt: { max: 15, spring: { stiffness: 200, damping: 20 } },
+    /** Idle sway while nobody points at the card (degrees, one elliptic loop in ms), in CSS */
+    sway: { x: 3, y: 5, periodMs: 8000 },
+    /** Film shift for a full tilt (share of the card), glare travel (share of the card) */
+    film: { shift: 0.22, drift: 0.06 },
+    glare: { travel: 0.5, rest: 0.03 },
+    /** Depth of the layers (px): edge half-thickness, film, print, emblem, glare */
+    depth: { half: 6, film: 1, print: 18, emblem: 34, glare: 44 },
+    /** Edge slices between the two faces (the visible thickness; each is a composited layer) */
+    slices: 3,
+    /** Press, then the flip (a spring on rotateY) */
+    press: 0.97,
+    flip: { type: 'spring', stiffness: 120, damping: 17, mass: 1 } satisfies Transition,
+    /** Download sequence (ms from the press): laser sweep, gauge, stamp, download, back to rest */
+    download: { scanMs: 620, gaugeMs: 760, stampAtMs: 640, stampMs: 180, downloadAtMs: 800, restAtMs: 1700 },
+    /** Name and role decode under the pointer or the focus, then rest before decoding again */
+    decode: { seed: 2049, steps: 16, spread: 0.3, durationMs: 640, pauseMs: 1500 } satisfies DecodeSettings & Record<'durationMs' | 'pauseMs', number>,
+    /** The card mounts at the first idle moment after the page paints (at the latest this late) */
+    mountTimeoutMs: 400,
+    /** Rotating neon border, one turn (ms): the original card's */
+    borderTurnMs: 4000,
+    /** QR canvas density: sharp on every screen, small anyway (~170 CSS px) */
+    qrPixelRatio: { fine: 2, coarse: 2, maxPixels: 400_000 } satisfies PixelRatioCaps,
+};
+
+/** Skill badges and the projects rail (Skills, LOT 4, S3): CSS variables of the sections */
+export const skillEffects = {
+    /** Opacity of what is not linked to the pointed badge or project */
+    dimOpacity: 0.32,
+    /** Light-up of a badge or a project card (transform and opacity only) */
+    transitionMs: 180,
+    /** A lit badge rises by this many px */
+    lift: 2,
+    /** Minimum contrast of a brand colour on the badge background (readableTint) */
+    iconContrast: 3,
+    /** The logos chunk is requested at the first idle moment after iconsAfterMs (never in the
+     *  first frames: bundled, it delayed the page's paint), at the latest iconsTimeoutMs later */
+    iconsAfterMs: 700,
+    iconsTimeoutMs: 1200,
+    /** ...and only once the badges are this close to the screen */
+    iconsMargin: '300px',
 };
 
 /** Navigation bar (LOT 1, C1) */

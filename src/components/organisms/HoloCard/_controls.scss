@@ -1,0 +1,120 @@
+@use 'sass:color';
+@use '../../../styles/variables' as *;
+@use 'face';
+
+// Controls printed on a face of the HoloCard (LOT 4, S2): download gauge,
+// buttons, laser sweep and stamp of the download sequence
+
+@mixin gauge {
+    .gauge {
+        width: 100%;
+        height: 0.25em;
+        margin-top: 0.7em;
+        overflow: hidden;
+        background: $holo-mid;
+        border-radius: 0.125em;
+    }
+
+    .fill {
+        display: block;
+        height: 100%;
+        background: linear-gradient(90deg, $neon-violet, $neon-pink);
+        transform: scaleX(0);
+        transform-origin: left;
+    }
+}
+
+@mixin actions {
+    .actions {
+        display: flex;
+        gap: 0.5em;
+        width: 100%;
+        margin-top: 0.7em;
+        pointer-events: auto;
+    }
+
+    .download,
+    .flip {
+        min-height: 44px;
+        padding: 0 0.9em;
+        font-family: $font-orbitron;
+        font-size: 0.72em;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        border-radius: 0.45em;
+        cursor: pointer;
+    }
+
+    .download {
+        flex: 1;
+        color: $bg-deep;
+        background: $neon-cyan;
+        border: 0;
+
+        &[aria-disabled='true'] {
+            cursor: progress;
+        }
+    }
+
+    .flip {
+        color: $star-cyan;
+        background: transparent;
+        border: 1px solid color.change($neon-cyan, $alpha: 0.45);
+    }
+}
+
+// Download sequence: laser sweep and stamp, over the print
+@mixin scan {
+    // Only composited while the sequence runs
+    .scanLayer {
+        @include face.layer;
+        display: none;
+        overflow: hidden;
+
+        &[data-busy] {
+            display: block;
+        }
+        transform: translateZ(calc(var(--d-glare) - 2px));
+        pointer-events: none;
+    }
+
+    .scan {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        transform: translateY(-100%);
+
+        &::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: $neon-cyan;
+            box-shadow: 0 0 12px 3px color.change($neon-cyan, $alpha: 0.8);
+        }
+    }
+
+    .stampWrap {
+        position: absolute;
+        top: 42%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(-8deg);
+    }
+
+    .stamp {
+        display: block;
+        padding: 0.4em 0.7em;
+        font-family: $font-orbitron;
+        font-size: 0.8em;
+        font-weight: 700;
+        letter-spacing: 0.12em;
+        white-space: nowrap;
+        color: $neon-green;
+        background: color.change($bg-deep, $alpha: 0.85);
+        border: 2px solid $neon-green;
+        border-radius: 0.3em;
+        opacity: 0;
+    }
+}

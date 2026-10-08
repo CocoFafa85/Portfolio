@@ -1,390 +1,98 @@
-@import "../../../styles/variables";
+@use 'sass:color';
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
 
 // ═══════════════════════════════════════════════
-// HOLO CARD — Holographic Identity Card
+// HOLOCARD v2 (LOT 4, S2) — a 3D scene: the card (tilt) holds the flipper
+// (turn), which holds the edge slices and the two faces. Sizes follow the
+// card width (font-size = width / 20): 320 px, less on a narrow phone.
 // ═══════════════════════════════════════════════
-
-.holoCard {
+.scene {
+    --card-w: min(320px, 84vw);
+    --card-r: 1.25em;
     position: relative;
-    width: 320px;
-    height: 460px;
-    border-radius: 20px;
-    cursor: pointer;
-    transform-style: preserve-3d;
-    will-change: transform;
+    width: var(--card-w);
+    aspect-ratio: 320 / 460;
+    font-size: calc(var(--card-w) / 20);
+    perspective: var(--perspective, 1200px);
+    // Vertical scroll stays with the page on a touch screen; a tap flips the card
+    touch-action: pan-y;
     user-select: none;
+}
 
-    // Glassmorphism base
-    background: linear-gradient(135deg,
-            rgba(10, 15, 30, 0.85) 0%,
-            rgba(20, 25, 50, 0.75) 50%,
-            rgba(10, 15, 30, 0.85) 100%);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+// Press feedback (the original card's tap scale), transform only
+.press {
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.12s ease-out;
 
-    overflow: hidden;
-    transition: box-shadow 0.4s ease;
-
-    &:hover {
-        box-shadow:
-            0 0 30px rgba($neon-cyan, 0.3),
-            0 0 60px rgba($neon-cyan, 0.1),
-            0 0 120px rgba($neon-purple, 0.05);
+    &:active {
+        transform: scale(var(--press, 0.97));
     }
 }
 
-// ═══════════════════════════════════════════════
-// ANIMATED BORDER — Conic gradient rotation
-// ═══════════════════════════════════════════════
-.borderGlow {
-    position: absolute;
-    inset: -2px;
-    border-radius: 22px;
-    z-index: 0;
-    background: conic-gradient(from var(--border-angle, 0deg),
-            $neon-cyan,
-            $neon-purple,
-            $neon-pink,
-            $neon-cyan,
-            $neon-purple,
-            $neon-cyan );
-    animation: rotateBorder 4s linear infinite;
+// Idle sway once powered (the original card's life): one slow elliptic loop in CSS,
+// on the compositor, no script per frame; it holds still under the pointer (the tilt
+// takes over) and stops in reduced motion (global rule)
+.sway {
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
 
-    // Inner mask to create the border effect
-    &::after {
-        content: '';
-        position: absolute;
-        inset: 2px;
-        border-radius: 18px;
-        background: linear-gradient(135deg,
-                rgba(10, 15, 30, 0.95) 0%,
-                rgba(20, 25, 50, 0.9) 50%,
-                rgba(10, 15, 30, 0.95) 100%);
+    [data-power='on'] & {
+        animation: sway var(--sway-ms, 8s) ease-in-out infinite;
+    }
+
+    .scene:hover & {
+        animation-play-state: paused;
     }
 }
 
-@property --border-angle {
-    syntax: '<angle>';
-    inherits: false;
-    initial-value: 0deg;
+@keyframes sway {
+    0%, 100% { transform: rotateY(calc(var(--sway-y) * -1)); }
+    25% { transform: rotateX(var(--sway-x)); }
+    50% { transform: rotateY(var(--sway-y)); }
+    75% { transform: rotateX(calc(var(--sway-x) * -1)); }
 }
 
-@keyframes rotateBorder {
-    to {
-        --border-angle: 360deg;
-    }
+.card {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    cursor: pointer;
 }
 
-// ═══════════════════════════════════════════════
-// HOLOGRAPHIC SHINE — Follows cursor
-// ═══════════════════════════════════════════════
-.holoShine {
+.flipper {
     position: absolute;
     inset: 0;
-    border-radius: 20px;
-    z-index: 1;
-    pointer-events: none;
-    mix-blend-mode: screen;
+    transform-style: preserve-3d;
 }
 
-// ═══════════════════════════════════════════════
-// NOISE TEXTURE — Animated grain
-// ═══════════════════════════════════════════════
-.noiseOverlay {
+// Thickness of the card: slices of its edge between the two faces
+.slice {
     position: absolute;
     inset: 0;
-    border-radius: 20px;
-    z-index: 1;
-    pointer-events: none;
-    opacity: 0.04;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-    background-size: 128px 128px;
-    animation: noiseShift 0.5s steps(5) infinite;
-}
+    will-change: transform;
+    background: $holo-edge;
+    border: 1px solid $holo-edge-light;
+    border-radius: var(--card-r);
 
-@keyframes noiseShift {
-    0% {
-        transform: translate(0, 0);
-    }
-
-    20% {
-        transform: translate(-5px, 5px);
-    }
-
-    40% {
-        transform: translate(5px, -5px);
-    }
-
-    60% {
-        transform: translate(-3px, -3px);
-    }
-
-    80% {
-        transform: translate(3px, 3px);
-    }
-
-    100% {
-        transform: translate(0, 0);
+    &:nth-child(2) {
+        background: $holo-edge-light;
+        border-color: color.change($neon-violet, $alpha: 0.7);
     }
 }
 
-// ═══════════════════════════════════════════════
-// CARD INNER — Content container
-// ═══════════════════════════════════════════════
-.cardInner {
-    position: relative;
-    z-index: 2;
-    height: 100%;
-    padding: 1.5rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.8rem;
+// Place of the card before it mounts: its size and its dark glass, nothing else
+.slot {
+    background: linear-gradient(135deg, $holo-deep 0%, $holo-mid 50%, $holo-deep 100%);
+    border: 2px solid $holo-edge;
+    border-radius: var(--card-r);
 }
 
-// Status bar
-.statusBar {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 1px solid rgba($neon-cyan, 0.15);
-}
-
-.statusDot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: $neon-cyan;
-    box-shadow: 0 0 8px $neon-cyan;
-    animation: blink 2s ease-in-out infinite;
-}
-
-@keyframes blink {
-
-    0%,
-    100% {
-        opacity: 1;
-    }
-
-    50% {
-        opacity: 0.3;
-    }
-}
-
-.statusText {
-    font-family: $font-orbitron;
-    font-size: 0.55rem;
-    color: rgba($neon-cyan, 0.6);
-    letter-spacing: 3px;
-    text-transform: uppercase;
-}
-
-// ═══════════════════════════════════════════════
-// AVATAR — Circular with animated ring
-// ═══════════════════════════════════════════════
-.avatarContainer {
-    margin-top: 0.5rem;
-    display: flex;
-    justify-content: center;
-}
-
-.avatarRing {
-    position: relative;
-    width: 110px;
-    height: 110px;
-    border-radius: 50%;
-    padding: 3px;
-    background: conic-gradient(from 0deg,
-            $neon-cyan,
-            $neon-purple,
-            $neon-pink,
-            $neon-cyan );
-    animation: rotateBorder 3s linear infinite;
-}
-
-.avatarInner {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #0a0f1e, #151a30);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-}
-
-.avatarInitials {
-    font-family: $font-orbitron;
-    font-size: 2.2rem;
-    font-weight: 900;
-    background: linear-gradient(135deg, $neon-cyan, $neon-purple);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    text-shadow: none;
-}
-
-// ═══════════════════════════════════════════════
-// IDENTITY — Name + Role
-// ═══════════════════════════════════════════════
-.identityBlock {
-    text-align: center;
-    margin-top: 0.3rem;
-}
-
-.name {
-    font-family: $font-orbitron;
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #fff;
-    margin: 0 0 0.3rem 0;
-    letter-spacing: 2px;
-    text-shadow: 0 0 10px rgba($neon-cyan, 0.3);
-}
-
-.role {
-    font-family: $font-orbitron;
-    font-size: 0.65rem;
-    color: $neon-cyan;
-    letter-spacing: 3px;
-    margin: 0;
-    text-shadow: 0 0 8px rgba($neon-cyan, 0.4);
-}
-
-.glitchText {
-    display: inline-block;
-    font-family: inherit;
-    font-size: inherit;
-    color: inherit;
-    letter-spacing: inherit;
-}
-
-// ═══════════════════════════════════════════════
-// BARCODE — Decorative
-// ═══════════════════════════════════════════════
-.barcode {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 2px;
-    margin-top: 0.8rem;
-    height: 35px;
-}
-
-.bar {
-    height: 100%;
-    background: rgba(255, 255, 255, 0.5);
-    border-radius: 1px;
-
-    &:nth-child(odd) {
-        background: rgba($neon-cyan, 0.7);
-    }
-
-    &:nth-child(3n) {
-        height: 80%;
-    }
-}
-
-.barcodeLabel {
-    font-family: $font-orbitron;
-    font-size: 0.5rem;
-    color: rgba(255, 255, 255, 0.35);
-    letter-spacing: 4px;
-    text-align: center;
-    margin-top: 0.2rem;
-}
-
-// ═══════════════════════════════════════════════
-// DOWNLOAD SEQUENCE
-// ═══════════════════════════════════════════════
-.downloadSequence {
-    width: 100%;
-    margin-top: auto;
-    padding-top: 0.5rem;
-}
-
-.progressBarTrack {
-    width: 100%;
-    height: 4px;
-    background: rgba(255, 255, 255, 0.08);
-    border-radius: 2px;
-    overflow: hidden;
-    margin-bottom: 0.5rem;
-}
-
-.progressBarFill {
-    height: 100%;
-    border-radius: 2px;
-    background: linear-gradient(90deg, $neon-cyan, $neon-purple);
-    box-shadow: 0 0 10px rgba($neon-cyan, 0.6);
-}
-
-.downloadLabel {
-    display: block;
-    font-family: $font-orbitron;
-    font-size: 0.5rem;
-    color: $neon-cyan;
-    letter-spacing: 2px;
-    text-align: center;
-    animation: pulseText 0.8s ease-in-out infinite;
-}
-
-@keyframes pulseText {
-
-    0%,
-    100% {
-        opacity: 0.6;
-    }
-
-    50% {
-        opacity: 1;
-    }
-}
-
-// ═══════════════════════════════════════════════
-// CTA — Download prompt
-// ═══════════════════════════════════════════════
-.ctaBlock {
-    margin-top: auto;
-    text-align: center;
-    padding: 0.6rem 0;
-}
-
-.ctaText {
-    font-family: $font-orbitron;
-    font-size: 0.6rem;
-    color: rgba($neon-cyan, 0.7);
-    letter-spacing: 2px;
-    animation: pulseText 2s ease-in-out infinite;
-    transition: color 0.3s ease;
-
-    .holoCard:hover & {
-        color: $neon-cyan;
-        text-shadow: 0 0 10px rgba($neon-cyan, 0.5);
-    }
-}
-
-// ═══════════════════════════════════════════════
-// RESPONSIVE
-// ═══════════════════════════════════════════════
-@media (max-width: 768px) {
-    .holoCard {
-        width: 280px;
-        height: 400px;
-    }
-
-    .avatarRing {
-        width: 90px;
-        height: 90px;
-    }
-
-    .avatarInitials {
-        font-size: 1.8rem;
-    }
-
-    .name {
-        font-size: 0.95rem;
-    }
+// Announces the download to screen readers
+.status {
+    @include visually-hidden;
 }

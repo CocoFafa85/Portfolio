@@ -3,6 +3,8 @@ $neon-pink: #ff0080;
 $neon-magenta: #ff0080;
 $neon-cyan: #00f3ff;
 $neon-blue: #007bff;
+// Era title of the present (About, review of 2026-10-08): a lighter neon blue, 5.6:1 on the text panels
+$neon-azure: #2f8dff;
 $neon-violet: #bc13fe;
 $neon-purple: #bc13fe;
 $neon-yellow: $neon-cyan; // FORCE CYAN SUPREMACY
@@ -94,3 +96,19 @@ $hud-height-mobile: 52px;
 // Typography Key
 $font-orbitron: 'Orbitron', sans-serif;
 $font-montserrat: 'Montserrat Alternates', sans-serif;
+// HoloCard v2 (Skills, LOT 4): the original card's dark blue glass, a gold
+// contact chip, foil tints, edge slices, magnetic stripe, QR plate
+$holo-deep: #0a0f1e;
+$holo-mid: #151a32;
+$holo-chip-light: #f2dc9a;
+$holo-chip: #c9a24d;
+$holo-chip-dark: #6d5420;
+$holo-indigo: #7a5cff;
+$holo-amber: #ffb36b;
+$holo-mint: #9dffcf;
+$holo-print: #d8d8e6;
+$holo-edge-light: #4a3a78;
+$holo-edge: #2a2440;
+$holo-stripe: #050508;
+$holo-qr-light: #ffffff;
+$holo-qr-dark: #0a0a1c;

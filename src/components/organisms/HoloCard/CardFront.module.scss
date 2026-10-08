@@ -1,0 +1,113 @@
+@use 'sass:color';
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+@use 'face';
+@use 'marks';
+@use 'controls';
+
+// ═══════════════════════════════════════════════
+// FRONT (LOT 4, S2) — layers in depth: frame (0), film, print, emblem, scan,
+// glare. Sizes in em of the card (font-size = card width / 20)
+// ═══════════════════════════════════════════════
+.face {
+    @include face.face;
+}
+
+.front {
+    transform: translateZ(var(--d-half));
+}
+
+.frame {
+    @include face.frame;
+}
+
+.spin {
+    @include face.spin;
+}
+
+.base {
+    @include face.base;
+}
+
+.print {
+    @include face.layer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.3em 1.4em 1.2em;
+    transform: translateZ(var(--d-print));
+    pointer-events: none;
+}
+
+@include marks.marks;
+
+// Room of the floating emblem (its own layer, higher in depth)
+.emblemSlot {
+    flex: none;
+    height: 6em;
+    margin-top: 3.3em;
+}
+
+.emblem {
+    position: absolute;
+    top: 5.9em;
+    left: calc(50% - 3em);
+    display: grid;
+    place-items: center;
+    width: 6em;
+    height: 6em;
+    font-family: $font-orbitron;
+    font-size: 1em;
+    font-weight: 900;
+    color: $bg-deep;
+    background: linear-gradient(135deg, $neon-violet, $neon-pink);
+    clip-path: polygon(1.5em 0, 100% 0, 100% calc(100% - 1.5em), calc(100% - 1.5em) 100%, 0 100%, 0 1.5em);
+    transform: translateZ(var(--d-emblem));
+    backface-visibility: hidden;
+    will-change: transform;
+    pointer-events: none;
+}
+
+// The monogram of the navigation bar badge, enlarged
+.monogram {
+    font-size: 2.3em;
+}
+
+.name {
+    margin-top: 1em;
+    font-family: $font-orbitron;
+    font-size: 1.1em;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    color: $star-white;
+}
+
+.role {
+    margin-top: 0.35em;
+    font-family: $font-orbitron;
+    font-size: 0.68em;
+    letter-spacing: 0.22em;
+    color: $neon-cyan;
+}
+
+@include face.glitch;
+
+.barcode {
+    width: 11.5em;
+    height: 2.4em;
+    margin-top: auto;
+    background: $holo-print;
+    mask: var(--barcode) center / 100% 100% no-repeat;
+}
+
+.serial {
+    margin-top: 0.35em;
+    font-family: $font-orbitron;
+    font-size: 0.55em;
+    letter-spacing: 0.35em;
+    color: $text-dim;
+}
+
+@include controls.gauge;
+@include controls.actions;
+@include controls.scan;

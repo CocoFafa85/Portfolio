@@ -1,0 +1,63 @@
+@use 'sass:color';
+@use '../../../styles/variables' as *;
+
+// Printed marks of the HoloCard front (LOT 4, S2): status line, gold chip,
+// holographic seal
+@mixin marks {
+    .status {
+        display: flex;
+        align-items: center;
+        gap: 0.5em;
+        width: 100%;
+        padding-bottom: 0.55em;
+        font-family: $font-orbitron;
+        font-size: 0.6em;
+        letter-spacing: 0.25em;
+        color: $neon-cyan;
+        border-bottom: 1px solid color.change($neon-cyan, $alpha: 0.2);
+    }
+
+    .dot {
+        width: 0.6em;
+        height: 0.6em;
+        background: $neon-cyan;
+        border-radius: 50%;
+        animation: blink 2s ease-in-out infinite;
+    }
+
+    @keyframes blink {
+        50% { opacity: 0.3; }
+    }
+
+    // Gold contact chip and holographic seal, printed on the card
+    .chip {
+        position: absolute;
+        top: 3.4em;
+        left: 1.5em;
+        width: 2.6em;
+        height: 2em;
+        background: linear-gradient(135deg, $holo-chip-light, $holo-chip 55%, $holo-chip-light);
+        border: 1px solid $holo-chip-dark;
+        border-radius: 0.35em;
+    }
+
+    .seal {
+        position: absolute;
+        top: 3.2em;
+        right: 1.5em;
+        width: 2.6em;
+        height: 2.6em;
+        overflow: hidden;
+        border-radius: 50%;
+        background: $holo-mid;
+        border: 1px solid color.change($neon-cyan, $alpha: 0.35);
+    }
+
+    // Its foil: the conic rainbow, sliding with the film once the card powers on
+    .sealFilm {
+        position: absolute;
+        inset: -25%;
+        background: conic-gradient($neon-cyan, $neon-violet, $neon-pink, $holo-amber, $holo-mint, $neon-cyan);
+        opacity: 0.85;
+    }
+}

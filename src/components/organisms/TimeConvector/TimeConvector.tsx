@@ -3,6 +3,7 @@ import { useReducedMotion } from 'motion/react';
 import { content } from '../../../data/content';
 import { convectorEffects as fx } from '../../../data/effects';
 import { useIdleReady } from '../../../hooks/useIdleReady';
+import NeonFrame from '../../atoms/NeonFrame/NeonFrame';
 import type { TimelineStep, TimeState } from '../../../types/models';
 import { nextTabIndex } from '../../../utils/tabs';
 import { describeDate, formatCircuitTime, parseLocalDateTime } from '../../../utils/timeCircuits/time';
@@ -125,6 +126,7 @@ const TimeConvector: React.FC = () => {
                         <Speedometer unit={labels.speedUnit} digitsRef={digitsRef} />
                     </div>
                     {bolts && <JumpEffects bolts={bolts} />}
+                    <NeonFrame lit={powered} />
                 </div>
             </div>
             <EpochStory
@@ -134,6 +136,7 @@ const TimeConvector: React.FC = () => {
                 tabId={tabId}
                 revealed={jump.revealed}
                 animate={jump.id > 0 && !reducedMotion}
+                powered={powered}
             />
         </div>
     );

@@ -1,0 +1,82 @@
+@use 'sass:color';
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+// Rules shared by both faces of the HoloCard (LOT 4, S2)
+
+@mixin face {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
+}
+
+// A layer of a face, in its own composited layer (will-change: fixed raster scale,
+// never re-rasterised while the card tilts)
+@mixin layer {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--card-r);
+    backface-visibility: hidden;
+    will-change: transform;
+}
+
+// Rotating neon border of the original card: a conic layer turning behind the
+// base (transform only, compositor), running once the card powers on
+@mixin frame {
+    @include layer;
+    overflow: hidden;
+}
+
+// A square the size of the card diagonal (35em): it covers the card at any angle
+// with half the pixels of a 200 % layer
+@mixin spin {
+    position: absolute;
+    top: calc(50% - 17.5em);
+    left: calc(50% - 17.5em);
+    width: 35em;
+    height: 35em;
+    background: conic-gradient($neon-cyan, $neon-violet, $neon-pink, $neon-cyan, $neon-violet, $neon-cyan);
+    animation: border-turn var(--border-turn, 4s) linear infinite paused;
+
+    [data-power='on'] & {
+        animation-play-state: running;
+    }
+
+    @keyframes border-turn {
+        to { transform: rotate(1turn); }
+    }
+}
+
+// The original card's dark blue glass, opaque (no backdrop blur on a 3D layer)
+@mixin base {
+    position: absolute;
+    inset: 2px;
+    border-radius: calc(var(--card-r) - 2px);
+    background:
+        radial-gradient(ellipse at 50% 38%, color.change($neon-violet, $alpha: 0.28), transparent 62%),
+        linear-gradient(135deg, $holo-deep 0%, $holo-mid 50%, $holo-deep 100%);
+}
+
+// Letters of a decoding line: each keeps its width, the glyph is laid over it
+@mixin glitch {
+    .char {
+        position: relative;
+        display: inline-block;
+        white-space: pre;
+    }
+
+    .pending {
+        color: transparent;
+    }
+
+    .noise {
+        position: absolute;
+        inset: 0;
+        text-align: center;
+        color: $neon-cyan;
+    }
+
+    .srOnly {
+        @include visually-hidden;
+    }
+}

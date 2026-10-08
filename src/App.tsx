@@ -3,10 +3,13 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { MotionConfig } from 'motion/react';
 import MainLayout from './components/templates/MainLayout';
 import Home from './pages/Home/Home';
-import About from './pages/About/About';
-import Skills from './pages/Skills/Skills';
-import Projects from './pages/Projects/Projects';
 import NotFound from './pages/NotFound/NotFound';
+import { lazyPages } from './pages/lazyPages';
+
+// Inner pages load in their own chunk (LOT 4, A0): the home page no longer carries their code
+const About = lazyPages['/about'].Page;
+const Skills = lazyPages['/skills'].Page;
+const Projects = lazyPages['/projects'].Page;
 
 const router = createBrowserRouter([
     {

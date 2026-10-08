@@ -16,8 +16,8 @@ interface Scene {
     height: number;
     ratio: number;
     layers: StarLayer[];
-    /** Sprite picker of each layer, made once (no closure per frame) */
-    images: ((tint: number) => HTMLCanvasElement)[];
+    /** Sprite picker, made once (no closure per frame) */
+    image: (tint: number) => HTMLCanvasElement;
     pool: MeteorPool;
     random: Random;
     nextMeteor: number;
@@ -28,10 +28,10 @@ interface Scene {
 }
 
 /**
- * Home starfield (LOT 2, H4), over the nebula: twinkling mid stars and a
- * few large out-of-focus near ones (no far layer since the review of
- * 2026-10-07: a more even background), each layer shifted by its
- * own parallax with a fine pointer; rare shooting stars with a tapered tail.
+ * Home starfield (LOT 2, H4), over the nebula: three layers of the same
+ * twinkling coloured stars drifting at three speeds (review of 2026-10-08:
+ * no far layer, no grey out-of-focus layer, an even background), each
+ * shifted by its own parallax with a fine pointer; rare shooting stars with a tapered tail.
  * Typed arrays, sprites drawn once, no allocation per frame; paused when the
  * tab is hidden or the canvas off screen; reduced motion: one still frame.
  */
@@ -45,7 +45,7 @@ const StarField: React.FC = () => {
         ctx.clearRect(0, 0, width, height);
         for (let i = 0; i < scene.layers.length; i++) {
             const spec = fx.layers[i];
-            drawLayer(ctx, scene.layers[i], scene.images[i], width, height,
+            drawLayer(ctx, scene.layers[i], scene.image, width, height,
                 -pointer.x * spec.parallax, -pointer.y * spec.parallax, spec.twinkle, time);
         }
         drawMeteors(ctx, scene.pool, scene.sprites, ratio, scene.pose);
@@ -56,9 +56,7 @@ const StarField: React.FC = () => {
         const ctx = canvas?.getContext('2d');
         if (!canvas || !ctx) return;
         const sprites = createStarSprites(readStarPalette());
-        const tinted = (tint: number) => sprites.tints[tint];
-        const soft = () => sprites.soft;
-        const images = fx.layers.map((_, i) => (i === fx.blurredLayer ? soft : tinted));
+        const image = (tint: number) => sprites.tints[tint];
         const coarse = window.matchMedia('(pointer: coarse)').matches;
         const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
 
@@ -70,7 +68,7 @@ const StarField: React.FC = () => {
             canvas.height = Math.round(height * ratio);
             const random = createRandom(fx.seed);
             const scene: Scene = {
-                ctx, width, height, ratio, random, pointer, sprites, images,
+                ctx, width, height, ratio, random, pointer, sprites, image,
                 layers: fx.layers.map((spec) => createStarLayer(spec, width, height, random)),
                 pool: createMeteorPool(fx.meteor.max),
                 nextMeteor: performance.now() + fx.firstMeteorMs,
