@@ -25,6 +25,9 @@ export const content: PortfolioContent = {
         { id: "skills", label: "Skills", path: "/skills" },
         { id: "projects", label: "Projects", path: "/projects" }
     ],
+    profiles: {
+        linkedin: "https://www.linkedin.com/in/corentin-fanic-832630293"
+    },
     cv: {
         file: "cv_resume.pdf",
         downloadName: "Corentin_FANIC_CV.pdf"

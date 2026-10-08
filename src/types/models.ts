@@ -143,6 +143,8 @@ export interface PortfolioContent {
         decodeGlyphs: string;
         timeCircuits: TimeCircuitLabels;
     };
+    /** Public profiles (the HoloCard back: its QR code is generated from this URL) */
+    profiles: { linkedin: string };
     cv: CvFile;
     home: {
         title: string;
