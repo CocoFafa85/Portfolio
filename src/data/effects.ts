@@ -169,6 +169,12 @@ export const convectorEffects = {
     resizeDebounceMs: 150,
 };
 
+/** Neon tube around the convector and the era text (About, review of 2026-10-08):
+ *  violet → pink → cyan, a third of the cycle each, two pulses per colour */
+export const neonFrameEffects = {
+    cycleMs: 7500,
+};
+
 /** Navigation bar (LOT 1, C1) */
 export const navEffects = {
     /** Glide of the active-page indicator along the luminous line */

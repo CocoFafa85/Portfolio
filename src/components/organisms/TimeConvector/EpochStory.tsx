@@ -3,6 +3,7 @@ import { animate, stagger } from 'motion/react';
 import { convectorEffects as fx } from '../../../data/effects';
 import type { TimelineStep, TimeState } from '../../../types/models';
 import { parseInlineLinks, splitParagraphs } from '../../../utils/story';
+import NeonFrame from '../../atoms/NeonFrame/NeonFrame';
 import styles from './EpochStory.module.scss';
 
 export interface EpochStoryProps {
@@ -14,6 +15,8 @@ export interface EpochStoryProps {
     revealed: boolean;
     /** Reveals the text line after line; false on first display (painted at once, LCP) and in reduced motion */
     animate: boolean;
+    /** The convector powered on: the neon frame lights up (never in the first paint) */
+    powered: boolean;
 }
 
 /** One era's text, rendered once: its lines are laid out at load, never on a jump */
@@ -39,7 +42,7 @@ const EraText: React.FC<{ step: TimelineStep }> = React.memo(({ step }) => (
  * frame). The chosen panel switches at once for screen readers; on screen
  * its text waits for the landing, then rises in line after line (motion).
  */
-const EpochStory: React.FC<EpochStoryProps> = ({ steps, selected, panelId, tabId, revealed, animate: reveal }) => {
+const EpochStory: React.FC<EpochStoryProps> = ({ steps, selected, panelId, tabId, revealed, animate: reveal, powered }) => {
     const panels = useRef<Partial<Record<TimeState, HTMLDivElement | null>>>({});
     const [heights, setHeights] = useState<Partial<Record<TimeState, number>>>({});
 
@@ -69,24 +72,28 @@ const EpochStory: React.FC<EpochStoryProps> = ({ steps, selected, panelId, tabId
     }, [selected, revealed, reveal]);
 
     return (
-        <div className={styles.stack} data-measured={height ? '' : undefined} style={height ? { height } : undefined}>
-            {steps.map((step) => {
-                const active = step.id === selected;
-                return (
-                    <div
-                        key={step.id}
-                        ref={(panel) => { panels.current[step.id] = panel; }}
-                        role="tabpanel"
-                        id={panelId(step.id)}
-                        aria-labelledby={tabId(step.id)}
-                        tabIndex={active ? 0 : -1}
-                        className={active ? styles.panel : `${styles.panel} ${styles.idle}`}
-                        style={{ '--accent': step.accent } as React.CSSProperties}
-                    >
-                        <EraText step={step} />
-                    </div>
-                );
-            })}
+        <div className={styles.framed}>
+            <div className={styles.stack} data-measured={height ? '' : undefined} style={height ? { height } : undefined}>
+                {steps.map((step) => {
+                    const active = step.id === selected;
+                    return (
+                        <div
+                            key={step.id}
+                            ref={(panel) => { panels.current[step.id] = panel; }}
+                            role="tabpanel"
+                            id={panelId(step.id)}
+                            aria-labelledby={tabId(step.id)}
+                            tabIndex={active ? 0 : -1}
+                            className={active ? styles.panel : `${styles.panel} ${styles.idle}`}
+                            style={{ '--accent': step.accent } as React.CSSProperties}
+                        >
+                            <EraText step={step} />
+                        </div>
+                    );
+                })}
+            </div>
+            {/* Outside the stack, which clips: the tube's glow overflows the panel */}
+            <NeonFrame lit={powered} />
         </div>
     );
 };

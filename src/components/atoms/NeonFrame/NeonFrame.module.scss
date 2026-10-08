@@ -1,0 +1,69 @@
+@use 'sass:color';
+@use '../../../styles/variables' as *;
+
+// ═══════════════════════════════════════════════
+// NEON FRAME — a tube along the whole border (About, review of 2026-10-08).
+// Each colour is its own tube with its glow painted once; the cycle only
+// crossfades their opacity: violet, then pink, then cyan, two pulses each.
+// ═══════════════════════════════════════════════
+.frame {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: none;
+    border-radius: var(--neon-radius, 10px);
+    pointer-events: none;
+
+    &[data-lit] {
+        display: block;
+    }
+}
+
+.tube {
+    position: absolute;
+    inset: 0;
+    border: 2px solid var(--tube);
+    border-radius: inherit;
+    box-shadow: 0 0 10px 1px var(--tube-glow), inset 0 0 8px var(--tube-glow);
+    opacity: 0;
+    animation: neon-cycle var(--neon-cycle, 7.5s) linear infinite;
+}
+
+.violet {
+    --tube: #{$neon-violet};
+    --tube-glow: #{color.change($neon-violet, $alpha: 0.75)};
+}
+
+.pink {
+    --tube: #{$neon-pink};
+    --tube-glow: #{color.change($neon-pink, $alpha: 0.75)};
+    animation-delay: calc(var(--neon-cycle, 7.5s) / -3 * 2);
+}
+
+.cyan {
+    --tube: #{$neon-cyan};
+    --tube-glow: #{color.change($neon-cyan, $alpha: 0.75)};
+    animation-delay: calc(var(--neon-cycle, 7.5s) / -3);
+}
+
+// A third of the cycle each: fade in, two pulses, then hand over to the next colour
+@keyframes neon-cycle {
+    0% { opacity: 0; }
+    8% { opacity: 1; }
+    14% { opacity: 0.55; }
+    20% { opacity: 1; }
+    26% { opacity: 0.55; }
+    33% { opacity: 1; }
+    41% { opacity: 0; }
+    100% { opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tube {
+        animation: none;
+    }
+
+    .violet {
+        opacity: 1;
+    }
+}

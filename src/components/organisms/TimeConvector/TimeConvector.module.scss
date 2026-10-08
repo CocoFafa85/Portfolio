@@ -51,16 +51,8 @@
     border-top-color: #34363f;
     border-radius: 10px;
     box-shadow: 0 0 0 1px #000, 0 18px 40px -14px rgba($neon-violet, 0.35);
-    // Neon edge (cyberpunk)
-    &::before {
-        content: '';
-        position: absolute;
-        top: -1px;
-        right: 14px;
-        left: 14px;
-        height: 2px;
-        background: linear-gradient(90deg, transparent, $neon-violet, $neon-pink 45%, $neon-cyan 80%, transparent);
-    }
+    // Neon tube along the whole border (NeonFrame, review of 2026-10-08), lit at power-on
+    --neon-radius: 10px;
 }
 
 .screw {

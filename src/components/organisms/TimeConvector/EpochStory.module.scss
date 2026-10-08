@@ -8,6 +8,12 @@
 // are measured, the chosen one leaves the flow as well and the stack takes
 // its height: switching eras is a visibility and a height, no text layout.
 // ═══════════════════════════════════════════════
+// Holds the neon frame (review of 2026-10-08) around the clipped stack
+.framed {
+    position: relative;
+    --neon-radius: 8px;
+}
+
 .stack {
     position: relative;
     overflow: hidden;
