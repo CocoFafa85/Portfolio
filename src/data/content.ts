@@ -82,6 +82,12 @@ Mon objectif à long terme est de gérer un SI complet ou d'être responsable de
             uploading: "UPLOADING TO NEURAL LINK...",
             cta: "[ CLICK TO DOWNLOAD CV ]"
         },
+        labels: {
+            railTitle: "Projets",
+            railHint: "Survolez une technologie\u00a0: ses projets s'allument.",
+            usedIn: "Utilisé dans\u00a0:",
+            noProject: "Pas encore de projet public"
+        },
         lead: "Au cours de ma formation et de mes projets récents, j'ai forgé une base technique solide en alliant théorie et mise en pratique intensive.",
         // Skills of the CV of 2026-09-17 only (F3), grouped as validated on 2026-10-08;
         // intro: the author's text validated on 2026-10-08 (S1), keywords **like this**;

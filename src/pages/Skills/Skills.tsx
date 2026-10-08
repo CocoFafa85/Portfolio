@@ -30,7 +30,7 @@ const Skills: React.FC = () => {
                     <HoloCard />
                 </div>
             </header>
-            <SkillSections groups={GROUPS} projects={skills.projects} />
+            <SkillSections groups={GROUPS} projects={skills.projects} labels={skills.labels} />
         </div>
     );
 };

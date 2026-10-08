@@ -1,0 +1,36 @@
+@use '../../../styles/variables' as *;
+
+// Logo of a technology (Skills, LOT 4): monochrome at rest, brand colour
+// when its badge lights up (the badge sets `data-lit` or is hovered / focused)
+.icon {
+    flex: none;
+    width: 18px;
+    height: 18px;
+    fill: $star-cyan;
+}
+
+// Generic logo for the entries Simple Icons does not have: a small chip
+.generic {
+    position: relative;
+    flex: none;
+    width: 16px;
+    height: 16px;
+    margin: 1px;
+    border: 1.5px solid $text-dim;
+    border-radius: 3px;
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 3px;
+        background: $text-dim;
+        border-radius: 1px;
+    }
+}
+
+// Room of a logo still loading (its chunk comes after the first frames)
+.slot {
+    flex: none;
+    width: 18px;
+    height: 18px;
+}

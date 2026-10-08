@@ -1,0 +1,106 @@
+@use 'sass:color';
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+// ═══════════════════════════════════════════════
+// PROJECTS RAIL (LOT 4, S3) — sticks under the top of the page while the
+// groups scroll (≥ 768 px), so a lit project stays in view
+// ═══════════════════════════════════════════════
+.rail {
+    position: relative;
+    z-index: 2;
+    margin-bottom: 1.5rem;
+    padding: 1rem 1.2rem 1.1rem;
+    background: $bg-deep;
+    border: 1px solid color.change($neon-violet, $alpha: 0.45);
+    border-radius: 10px;
+
+    @media (min-width: 768px) {
+        position: sticky;
+        top: 0.75rem;
+    }
+}
+
+.head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.35rem 1rem;
+    margin-bottom: 0.8rem;
+}
+
+.title {
+    font-size: 1rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: $neon-violet;
+}
+
+.note {
+    min-height: 1.4em;
+    font-size: 0.9rem;
+    color: $text-dim;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.75rem;
+    list-style: none;
+
+    @include tablet {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+.card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 64px;
+    padding: 0.75rem;
+    font-family: $font-orbitron;
+    font-size: clamp(0.85rem, 0.8rem + 0.3vw, 1.05rem);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-align: center;
+    color: var(--text-primary);
+    background: $bg-secondary;
+    border: 1px solid color.change($neon-pink, $alpha: 0.55);
+    border-radius: 8px;
+    transition: transform var(--skill-ms, 180ms) ease-out, opacity var(--skill-ms, 180ms) ease-out;
+
+    // Neon glow of a lit project, painted once and faded in
+    &::after {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        border: 2px solid $neon-pink;
+        border-radius: inherit;
+        box-shadow: 0 0 16px color.change($neon-pink, $alpha: 0.5);
+        opacity: 0;
+        transition: opacity var(--skill-ms, 180ms) ease-out;
+        pointer-events: none;
+    }
+
+    &:hover,
+    &[data-light='lit'] {
+        transform: translateY(calc(var(--skill-lift, 2px) * -1));
+
+        &::after {
+            opacity: 1;
+        }
+    }
+
+    &[data-light='dim'] {
+        opacity: var(--skill-dim, 0.32);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .card,
+    .card::after {
+        transition: none;
+    }
+}

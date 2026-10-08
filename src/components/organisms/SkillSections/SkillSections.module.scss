@@ -47,14 +47,6 @@
 .badges {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.55rem;
+    gap: 0.6rem;
     list-style: none;
-}
-
-.badge {
-    padding: 0.4rem 0.75rem;
-    font-size: 0.9rem;
-    background: $bg-deep;
-    border: 1px solid #2a2a44;
-    border-radius: 6px;
 }

@@ -1,0 +1,86 @@
+@use 'sass:color';
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
+// ═══════════════════════════════════════════════
+// SKILL BADGE (LOT 4, S3) — a button; lighting up only moves transform and
+// opacity (the glow is a pseudo-element painted once, faded in)
+// ═══════════════════════════════════════════════
+.item {
+    display: flex;
+}
+
+.badge {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 44px;
+    padding: 0 0.85rem 0 0.7rem;
+    font: inherit;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    background: $bg-deep;
+    border: 1px solid #2a2a44;
+    border-radius: 6px;
+    cursor: default;
+    transition: transform var(--skill-ms, 180ms) ease-out, opacity var(--skill-ms, 180ms) ease-out;
+
+    // Neon outline of a lit badge
+    &::after {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        border: 1px solid $neon-cyan;
+        border-radius: inherit;
+        box-shadow: 0 0 10px color.change($neon-cyan, $alpha: 0.35);
+        opacity: 0;
+        transition: opacity var(--skill-ms, 180ms) ease-out;
+        pointer-events: none;
+    }
+
+    &:hover,
+    &:focus-visible,
+    &[data-light='lit'],
+    &[aria-pressed='true'] {
+        transform: translateY(calc(var(--skill-lift, 2px) * -1));
+
+        &::after {
+            opacity: 1;
+        }
+
+        svg {
+            fill: var(--brand);
+        }
+    }
+
+    &[data-light='dim'] {
+        opacity: var(--skill-dim, 0.32);
+    }
+}
+
+// One LED per project that uses the technology
+.leds {
+    display: inline-flex;
+    gap: 3px;
+    margin-left: 0.15rem;
+}
+
+.led {
+    width: 5px;
+    height: 5px;
+    background: $neon-pink;
+    border-radius: 50%;
+}
+
+// The projects of the badge, for screen readers (aria-describedby)
+.description {
+    @include visually-hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .badge,
+    .badge::after {
+        transition: none;
+    }
+}

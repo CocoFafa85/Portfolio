@@ -175,6 +175,22 @@ export const neonFrameEffects = {
     cycleMs: 7500,
 };
 
+/** Skill badges and the projects rail (Skills, LOT 4, S3): CSS variables of the sections */
+export const skillEffects = {
+    /** Opacity of what is not linked to the pointed badge or project */
+    dimOpacity: 0.32,
+    /** Light-up of a badge or a project card (transform and opacity only) */
+    transitionMs: 180,
+    /** A lit badge rises by this many px */
+    lift: 2,
+    /** Minimum contrast of a brand colour on the badge background (readableTint) */
+    iconContrast: 3,
+    /** The logos chunk is requested at the first idle moment after iconsAfterMs (never in the
+     *  first frames: bundled, it delayed the page's paint), at the latest iconsTimeoutMs later */
+    iconsAfterMs: 700,
+    iconsTimeoutMs: 1200,
+};
+
 /** Navigation bar (LOT 1, C1) */
 export const navEffects = {
     /** Glide of the active-page indicator along the luminous line */

@@ -71,6 +71,16 @@ export interface SkillGroup {
     skills: SkillEntry[];
 }
 
+/** Texts of the badges and of the projects rail (Skills, LOT 4, S3) */
+export interface SkillLabels {
+    railTitle: string;
+    /** Invites to point at a technology (shown while nothing is lit) */
+    railHint: string;
+    /** Before the projects of a badge (its description for screen readers too) */
+    usedIn: string;
+    noProject: string;
+}
+
 /** A Simple Icons logo, generated into src/data/generated/skillIcons.ts */
 export interface SkillIcon {
     title: string;
@@ -152,6 +162,8 @@ export interface PortfolioContent {
     };
     skills: {
         title: string;
+        /** Rail of the projects and badge descriptions (S3) */
+        labels: SkillLabels;
         /** Short lead above the groups (S1) */
         lead: string;
         /** Skills of the CV (F3), by group */

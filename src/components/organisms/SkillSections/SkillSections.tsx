@@ -1,6 +1,10 @@
-import React from 'react';
-import type { ProjectRef } from '../../../types/models';
-import type { LinkedGroup } from '../../../utils/skills';
+import React, { useCallback, useMemo, useState, type CSSProperties } from 'react';
+import { skillEffects as fx } from '../../../data/effects';
+import type { ProjectRef, SkillLabels } from '../../../types/models';
+import { skillKeysOf, type LinkedGroup } from '../../../utils/skills';
+import { SkillIconsContext, useSkillIcons } from '../../atoms/TechIcon/skillIconsStore';
+import type { BadgeLight } from './SkillBadge';
+import ProjectRail from './ProjectRail';
 import SkillSection from './SkillSection';
 import styles from './SkillSections.module.scss';
 
@@ -9,16 +13,59 @@ export interface SkillSectionsProps {
     groups: LinkedGroup[];
     /** Projects F4, in rail order */
     projects: ProjectRef[];
+    labels: SkillLabels;
 }
 
+type Pointed = { skill: string } | { project: string } | null;
+
+const VARS = { '--skill-dim': fx.dimOpacity, '--skill-ms': `${fx.transitionMs}ms`, '--skill-lift': `${fx.lift}px` } as CSSProperties;
+
 /**
- * The skills of the Skills page (LOT 4, layout B "merged sections"): each
- * group under its own short intro, in the author's voice.
+ * The skills of the Skills page (LOT 4, layout B "merged sections", badges B
+ * "projects lit"): the projects rail, then each group under its intro.
+ * Pointing at (or focusing) a badge lights the projects that use it;
+ * pointing at a project lights its badges; pressing a badge pins its
+ * projects (the touch path). Everything else dims.
  */
-const SkillSections: React.FC<SkillSectionsProps> = ({ groups }) => (
-    <div className={styles.sections}>
-        {groups.map((group) => <SkillSection key={group.id} group={group} />)}
-    </div>
-);
+const SkillSections: React.FC<SkillSectionsProps> = ({ groups, projects, labels }) => {
+    const [pointed, setPointed] = useState<Pointed>(null);
+    const [pinned, setPinned] = useState<string | null>(null);
+    const icons = useSkillIcons();
+    const onPointSkill = useCallback((key: string | null) => setPointed(key ? { skill: key } : null), []);
+    const onPointProject = useCallback((id: string | null) => setPointed(id ? { project: id } : null), []);
+    const onPin = useCallback((key: string) => setPinned((current) => (current === key ? null : key)), []);
+
+    const skills = useMemo(() => new Map(groups.flatMap((group) => group.skills).map((skill) => [skill.key, skill])), [groups]);
+    const skillKey = pointed && 'skill' in pointed ? pointed.skill : pointed ? null : pinned;
+    const project = pointed && 'project' in pointed ? projects.find((p) => p.id === pointed.project) ?? null : null;
+
+    const { litProjects, litSkills, note } = useMemo(() => {
+        if (project) {
+            return { litProjects: new Set([project.id]), litSkills: skillKeysOf(project), note: project.title };
+        }
+        const skill = skillKey ? skills.get(skillKey) : undefined;
+        if (!skill) return { litProjects: null, litSkills: null, note: null };
+        const used = skill.projects.map((p) => p.title).join(' · ');
+        return {
+            litProjects: new Set(skill.projects.map((p) => p.id)),
+            litSkills: new Set([skill.key]),
+            note: `${skill.name} — ${used ? `${labels.usedIn} ${used}` : labels.noProject}`,
+        };
+    }, [project, skillKey, skills, labels]);
+
+    const lightOf = useCallback((key: string): BadgeLight => (litSkills ? (litSkills.has(key) ? 'lit' : 'dim') : 'rest'), [litSkills]);
+
+    return (
+        <SkillIconsContext.Provider value={icons}>
+            <div className={styles.sections} style={VARS}>
+                <ProjectRail projects={projects} labels={labels} lit={litProjects} note={note} onPoint={onPointProject} />
+                {groups.map((group) => (
+                    <SkillSection key={group.id} group={group} labels={labels} lightOf={lightOf} pinned={pinned}
+                        onPoint={onPointSkill} onPin={onPin} />
+                ))}
+            </div>
+        </SkillIconsContext.Provider>
+    );
+};
 
 export default SkillSections;
