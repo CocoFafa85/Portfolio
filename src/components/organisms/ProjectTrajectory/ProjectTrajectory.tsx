@@ -1,12 +1,11 @@
-import React, { type CSSProperties } from 'react';
+import React, { useEffect, useRef, useState, type ComponentType, type CSSProperties } from 'react';
 import { trajectoryEffects as fx } from '../../../data/effects';
 import { useIdleReady } from '../../../hooks/useIdleReady';
 import type { Project } from '../../../types/models';
 import { sideOf, yearDigits } from '../../../utils/trajectory';
 import ProjectCard from '../../molecules/ProjectCard/ProjectCard';
-import TrajectoryAxis from './TrajectoryAxis';
+import type { TrajectoryFlameProps } from './TrajectoryFlame';
 import TrajectoryNode from './TrajectoryNode';
-import { useTrajectory } from './useTrajectory';
 import styles from './ProjectTrajectory.module.scss';
 
 export interface ProjectTrajectoryProps {
@@ -26,15 +25,29 @@ const IGNITION_VARS = {
  * validated order, staggered around a central axis from 1024 px, beside an axis on the left below. A
  * fire trail burns down the axis with the scroll; as its flame passes a point, the point ignites, its
  * year lights up at once, its link runs to the card and the card powers on (its neon border). The decor
- * powers on at the first idle moment after the first frames, never in the first paint; the visuals of
- * the cards below the first wait for it too (the first one is the page's LCP).
+ * powers on at the first idle moment after the first frames, never in the first paint: its points and
+ * links then, its scroll engine (TrajectoryFlame, its own chunk) right after; the visuals of the cards
+ * below the first wait for it too (the first one is the page's LCP).
  */
 const ProjectTrajectory: React.FC<ProjectTrajectoryProps> = ({ projects }) => {
+    const rootRef = useRef<HTMLDivElement>(null);
     const powered = useIdleReady(fx.powerOnTimeoutMs, fx.powerOnAfterMs);
-    const { rootRef, axisRef, progress, lit, still } = useTrajectory(projects.length, powered);
+    const [Flame, setFlame] = useState<ComponentType<TrajectoryFlameProps> | null>(null);
+    const [lit, setLit] = useState(0);
+    useEffect(() => {
+        if (!powered) return;
+        let live = true;
+        import('./TrajectoryFlame').then(
+            (module) => { if (live) setFlame(() => module.default); },
+            // Engine unavailable (offline chunk): the points and cards simply show lit
+            () => { if (live) setLit(projects.length); }
+        );
+        return () => { live = false; };
+    }, [powered, projects.length]);
+
     return (
         <div ref={rootRef} className={styles.trajectory} style={IGNITION_VARS}>
-            <TrajectoryAxis axisRef={axisRef} progress={progress} powered={powered} still={still} />
+            {Flame && <Flame rootRef={rootRef} count={projects.length} onLit={setLit} />}
             <ol className={styles.items}>
                 {projects.map((project, index) => {
                     const ignited = powered && index < lit;
