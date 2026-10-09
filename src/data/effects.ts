@@ -251,10 +251,15 @@ export const skillEffects = {
 /** Project cards (Projects, LOT 5): their accent colours text (year, tags) at AA contrast on the panel */
 export const projectEffects = {
     accentContrast: 4.5,
-    /** The visuals of the cards below the first are requested at the first idle moment after this
-     *  (never alongside the first card's, the page's LCP), at the latest visualsTimeoutMs later */
-    visualsAfterMs: 700,
-    visualsTimeoutMs: 1200,
+};
+
+/** Trajectory of the Projects page (LOT 5, decision T1 "time trajectory") */
+export const trajectoryEffects = {
+    /** The decor (axis, points, years) and the visuals of the cards below the first power on at the
+     *  first idle moment after powerOnAfterMs (never in the first paint, nor alongside the first card's
+     *  visual, the page's LCP), at the latest powerOnTimeoutMs later */
+    powerOnAfterMs: 700,
+    powerOnTimeoutMs: 1200,
 };
 
 /** Navigation bar (LOT 1, C1) */

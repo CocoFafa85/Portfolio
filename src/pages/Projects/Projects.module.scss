@@ -1,60 +1,44 @@
-@use 'sass:color';
+@use '../../styles/mixins' as *;
 @use '../../styles/variables' as *;
 
-.projectsPage {
-    padding: 3rem 2rem 5rem;
+// PROJECTS PAGE (LOT 5): the title block, then the trajectory of the projects
+.page {
+    width: 100%;
     min-height: 100%;
-    background: transparent;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    padding: 3rem 2rem 6rem;
+
+    @include mobile {
+        padding: 2rem 1rem 4rem;
+    }
 }
 
 .header {
+    @include block-panel;
     --neon-radius: 12px;
-    position: relative;
-    margin-bottom: 4rem;
-    text-align: center;
     width: fit-content;
-    margin-inline: auto;
-
-    // Readability
+    margin: 0 auto 4rem;
     padding: 1rem 2rem;
-    background: color.change($bg-secondary, $alpha: 0.6);
-    backdrop-filter: blur(4px);
-    border-radius: 12px;
-    border: 1px solid color.change($neon-cyan, $alpha: 0.1);
 
-    h1 {
-        font-family: $font-orbitron;
+    @include mobile {
+        margin-bottom: 2.5rem;
+        padding: 0.75rem 1.25rem;
+    }
+
+    // No padding on the heading: the glitch slices line up with the letters; they take the block colour.
+    // Fixed line height: no shift when Orbitron replaces the fallback font (CLS)
+    :global(.glitch-title) {
+        margin-bottom: 0;
         font-size: 3.5rem;
-        color: $neon-cyan;
-        text-transform: uppercase;
+        line-height: 1.2;
         letter-spacing: 4px;
-        text-shadow: 0 0 20px color.change($neon-cyan, $alpha: 0.4);
-        margin: 0;
-        width: fit-content;
-        margin-inline: auto;
-    }
-}
 
-.grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 380px));
-    gap: 3rem;
-    width: 100%;
-    max-width: 1400px;
-    padding: 0 1rem;
-    justify-content: center;
-}
+        &::before,
+        &::after {
+            background: $block-bg;
+        }
 
-@media (max-width: 768px) {
-    .header h1 {
-        font-size: 2.5rem;
-    }
-
-    .grid {
-        grid-template-columns: 1fr;
-        max-width: 420px;
+        @media (max-width: 768px) {
+            font-size: 2.5rem;
+        }
     }
 }
