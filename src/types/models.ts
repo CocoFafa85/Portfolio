@@ -139,6 +139,22 @@ export interface ProjectEntry extends ProjectRef {
     year: string;
 }
 
+/** One file of a card visual: its URL (a Vite asset, never inlined in a bundle) and its width */
+export interface VisualSource {
+    src: string;
+    width: number;
+}
+
+/** The visual of a card (P1): one 16:10 picture in several widths (scripts/capture-demos.mjs) */
+export interface ProjectVisual {
+    sources: VisualSource[];
+    /** Intrinsic size of the largest file: the space reserved before it loads (CLS) */
+    width: number;
+    height: number;
+    /** Describes what the picture shows (a capture of the demo, or the themed illustration) */
+    alt: string;
+}
+
 /** What only the Projects page shows (src/data/projectDetails.ts, loaded with the Projects chunk) */
 export interface ProjectDetails {
     pitch: string;
@@ -149,6 +165,7 @@ export interface ProjectDetails {
     frame: string;
     /** Accent of the card (CSS colour, made readable on the panel where it colours text) */
     color: string;
+    visual: ProjectVisual;
     demoLink?: string;
     repoLink?: string;
 }

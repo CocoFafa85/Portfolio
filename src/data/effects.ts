@@ -251,6 +251,10 @@ export const skillEffects = {
 /** Project cards (Projects, LOT 5): their accent colours text (year, tags) at AA contrast on the panel */
 export const projectEffects = {
     accentContrast: 4.5,
+    /** The visuals of the cards below the first are requested at the first idle moment after this
+     *  (never alongside the first card's, the page's LCP), at the latest visualsTimeoutMs later */
+    visualsAfterMs: 700,
+    visualsTimeoutMs: 1200,
 };
 
 /** Navigation bar (LOT 1, C1) */

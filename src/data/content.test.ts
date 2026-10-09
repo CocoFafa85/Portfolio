@@ -5,6 +5,10 @@ import { skillIcons } from './generated/skillIcons';
 import { linkSkills, normalizeTag, withProfessional } from '../utils/skills';
 import { isInProgress, withDetails } from '../utils/projects';
 import { projectDetails } from './projectDetails';
+import visuals from './projectVisuals.json';
+
+// The visual files on disk (paths only, nothing loaded)
+const visualFiles = new Set(Object.keys(import.meta.glob('../assets/projects/*.webp')));
 
 describe('content.about (LOT 3, data F1)', () => {
     it('gives each row of the time circuits one era, each era once', () => {
@@ -132,6 +136,22 @@ describe('projects (F4, F5, LOT 5)', () => {
         // Assert
         expect(cards.every((card) => card.goals.length > 0 && card.team.length > 0)).toBe(true);
         expect(written.every((card) => card.pitch.endsWith('.'))).toBe(true);
+    });
+});
+
+describe('project visuals (P1)', () => {
+    it('has every width of every visual on disk, and a descriptive alternative text for each', () => {
+        // Arrange
+        const ids = content.projects.list.map((project) => project.id);
+
+        // Act
+        const missing = ids.flatMap((id) => visuals.widths.map((width) => `../assets/projects/${id}-${width}.webp`)).filter((file) => !visualFiles.has(file));
+        const alts = Object.values(projectDetails).map((details) => details.visual.alt);
+
+        // Assert
+        expect(visuals.dir).toBe('src/assets/projects');
+        expect(missing).toEqual([]);
+        expect(alts.every((alt) => alt.length > 60)).toBe(true);
     });
 });
 

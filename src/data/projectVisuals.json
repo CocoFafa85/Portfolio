@@ -1,0 +1,8 @@
+{
+    "dir": "src/assets/projects",
+    "widths": [640, 960],
+    "width": 960,
+    "height": 600,
+    "quality": 72,
+    "sizes": "(min-width: 1024px) 480px, calc(100vw - 120px)"
+}

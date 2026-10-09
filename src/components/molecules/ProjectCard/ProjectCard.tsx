@@ -15,6 +15,10 @@ const labels = content.projects.labels;
 
 export interface ProjectCardProps {
     project: Project;
+    /** The first card of the page: its picture is fetched at once */
+    priority?: boolean;
+    /** False until the card's picture may be requested */
+    load?: boolean;
 }
 
 /**
@@ -22,7 +26,7 @@ export interface ProjectCardProps {
  * neon border of every block turns over it. `project-card` is the global hook the window's hover
  * and focus effects read (a CSS module cannot name another module's classes).
  */
-const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => (
+const ProjectCard: React.FC<ProjectCardProps> = ({ project, priority, load }) => (
     <article
         className={`project-card ${styles.card}`}
         style={{ '--accent': accentOf(project.color) } as React.CSSProperties}
@@ -31,6 +35,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => (
         <ProjectWindow
             project={project}
             labels={labels}
+            priority={priority}
+            load={load}
             overlay={isInProgress(project) && <ProjectRibbon label={fillTemplate(labels.inProgress, { year: project.year })} />}
         >
             <ProjectActions project={project} labels={labels} />
