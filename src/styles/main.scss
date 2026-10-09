@@ -67,6 +67,9 @@
   --font-orbitron: 'Orbitron', sans-serif;
   --font-montserrat: #{$font-montserrat};
 
+  // Read by the project cards to make their accent readable on the panel (ProjectCard/accent.ts)
+  --block-bg: #{$block-bg};
+
   --hud-height: #{$hud-height};
 
   @include mobile {

@@ -20,6 +20,17 @@ const channels = (hex: string): number[] => {
 const toHex = (rgb: number[]): string =>
     `#${rgb.map((c) => Math.round(Math.min(1, Math.max(0, c)) * 255).toString(16).padStart(2, '0')).join('')}`;
 
+/**
+ * A CSS colour as `#rrggbb`: hex (`#rgb`, `#rrggbb`) or `rgb()` / `rgba()` with fractional
+ * channels (how Sass writes a mixed token such as $block-bg), alpha ignored; null otherwise.
+ */
+export function cssColorToHex(value: string): string | null {
+    const text = value.trim();
+    if (/^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(text)) return toHex(channels(text));
+    const rgb = /^rgba?\(\s*([\d.]+)[\s,]+([\d.]+)[\s,]+([\d.]+)/i.exec(text);
+    return rgb ? toHex(rgb.slice(1, 4).map((channel) => Number(channel) / 255)) : null;
+}
+
 /** WCAG relative luminance of a `#rrggbb` colour. */
 export function relativeLuminance(hex: string): number {
     const [r, g, b] = channels(hex).map((c) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4));

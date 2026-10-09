@@ -204,6 +204,10 @@ Mon objectif à long terme est de gérer un SI complet ou d'être responsable de
             code: "Code",
             linkSuffix: " de {title} (nouvel onglet)",
             plannedYear: "Sortie prévue en {year}",
+            year: "Année",
+            team: "Équipe",
+            goals: "Objectifs",
+            online: "En ligne",
             wipRibbon: "EN TRAVAUX",
             wipBadge: "🚧 WIP"
         },

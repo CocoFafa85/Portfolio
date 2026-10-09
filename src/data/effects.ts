@@ -248,6 +248,11 @@ export const skillEffects = {
     iconsMargin: '300px',
 };
 
+/** Project cards (Projects, LOT 5): their accent colours text (year, tags) at AA contrast on the panel */
+export const projectEffects = {
+    accentContrast: 4.5,
+};
+
 /** Navigation bar (LOT 1, C1) */
 export const navEffects = {
     /** Glide of the active-page indicator along the luminous line */

@@ -99,6 +99,8 @@ $hud-height-mobile: 52px;
 $font-orbitron: 'Orbitron', sans-serif;
 // Its fallback has the same widths (main.scss): the text wraps the same before and after the web font (CLS)
 $font-montserrat: 'Montserrat Alternates', 'Montserrat Alternates Fallback', sans-serif;
+// System monospace (no web font): the address bar of a project card (LOT 5)
+$font-mono: ui-monospace, 'Cascadia Mono', Consolas, 'Liberation Mono', monospace;
 // HoloCard v2 (Skills, LOT 4): the original card's dark blue glass, a gold
 // contact chip, foil tints, edge slices, magnetic stripe, QR plate
 $holo-deep: #0a0f1e;

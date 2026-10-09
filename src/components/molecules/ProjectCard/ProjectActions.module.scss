@@ -57,9 +57,9 @@
 
         &:hover {
             background: rgba(255, 255, 255, 0.08);
-            border-color: var(--card-color);
-            color: var(--card-color);
-            box-shadow: 0 0 15px color-mix(in srgb, var(--card-color) 30%, transparent);
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 0 15px color-mix(in srgb, var(--accent) 30%, transparent);
             transform: translateY(-2px);
         }
     }

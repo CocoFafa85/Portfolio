@@ -70,6 +70,12 @@ export interface ProjectLabels {
     linkSuffix: string;
     /** Year line of a project in progress, "{year}" replaced */
     plannedYear: string;
+    /** Hidden terms of the year · team line (screen readers) */
+    year: string;
+    team: string;
+    goals: string;
+    /** Status chip of the window bar when the demo is online */
+    online: string;
     wipRibbon: string;
     wipBadge: string;
 }
