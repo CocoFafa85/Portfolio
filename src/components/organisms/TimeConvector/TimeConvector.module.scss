@@ -51,7 +51,7 @@
     border-top-color: #34363f;
     border-radius: 10px;
     box-shadow: 0 0 0 1px #000, 0 18px 40px -14px rgba($neon-violet, 0.35);
-    // Neon tube along the whole border (NeonFrame, review of 2026-10-08), lit at power-on
+    // The default turning neon border (NeonFrame, review of 2026-10-09), lit at power-on
     --neon-radius: 10px;
 }
 

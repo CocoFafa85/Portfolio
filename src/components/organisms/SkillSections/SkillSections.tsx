@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useRef, useState, type CSSProperties } fro
 import { skillEffects as fx } from '../../../data/effects';
 import type { ProjectRef, SkillLabels } from '../../../types/models';
 import { skillAliases, skillKeysOf, type LinkedGroup } from '../../../utils/skills';
+import NeonFrame from '../../atoms/NeonFrame/NeonFrame';
 import { SkillIconsContext, useSkillIcons } from '../../atoms/TechIcon/skillIconsStore';
 import type { BadgeLight } from './SkillBadge';
 import ProjectRail from './ProjectRail';
@@ -61,6 +62,7 @@ const SkillSections: React.FC<SkillSectionsProps> = ({ groups, projects, labels 
     return (
         <SkillIconsContext.Provider value={icons}>
             <div ref={badgesRef} className={styles.sections} style={VARS}>
+                <NeonFrame />
                 <ProjectRail projects={projects} labels={labels} lit={litProjects} note={note} onPoint={onPointProject} />
                 {groups.map((group) => (
                     <SkillSection key={group.id} group={group} labels={labels} lightOf={lightOf} pinned={pinned}

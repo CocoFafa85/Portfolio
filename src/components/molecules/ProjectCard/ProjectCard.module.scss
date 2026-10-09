@@ -5,6 +5,8 @@
 // ═══════════════════════════════════════════════
 .card {
     --card-color: #{$neon-cyan}; // fallback
+    // The default neon border of every block turns over this one (review of 2026-10-09)
+    --neon-radius: 16px;
 
     display: flex;
     flex-direction: column;
@@ -21,7 +23,7 @@
 
     transition: box-shadow 0.4s ease, border-color 0.4s ease;
 
-    animation: float 5s ease-in-out infinite, neonPulse 3s ease-in-out infinite;
+    animation: float 5s ease-in-out infinite;
 
     &:nth-child(2) {
         animation-delay: 0.5s;
@@ -233,22 +235,6 @@
         transform: translateY(-8px);
     }
 }
-
-@keyframes neonPulse {
-
-    0%,
-    100% {
-        border-color: color-mix(in srgb, var(--card-color) 50%, transparent);
-        box-shadow: 0 0 6px color-mix(in srgb, var(--card-color) 10%, transparent);
-    }
-
-    50% {
-        border-color: var(--card-color);
-        box-shadow: 0 0 18px color-mix(in srgb, var(--card-color) 35%, transparent);
-    }
-}
-
-
 
 // ═══════════════════════════════════════════════
 // WORK IN PROGRESS — Hazard ribbon

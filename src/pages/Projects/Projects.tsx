@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import styles from './Projects.module.scss';
 import { content } from '../../data/content';
 import ProjectCard from '../../components/molecules/ProjectCard/ProjectCard';
+import NeonFrame from '../../components/atoms/NeonFrame/NeonFrame';
 import { motion, useInView } from 'motion/react';
 import { usePageMeta } from '../../hooks/usePageMeta';
 
@@ -18,6 +19,7 @@ const Projects: React.FC = () => {
                 animate={isInView ? { opacity: 1, y: 0 } : {}}
                 transition={{ duration: 0.8 }}
             >
+                <NeonFrame />
                 <h1 className="glitch-title" data-text={content.projects.title}>{content.projects.title}</h1>
             </motion.div>
 

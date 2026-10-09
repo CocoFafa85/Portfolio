@@ -183,10 +183,16 @@ export const convectorEffects = {
     resizeDebounceMs: 150,
 };
 
-/** Neon tube around the convector and the era text (About, review of 2026-10-08):
- *  violet → pink → cyan, a third of the cycle each, two pulses per colour */
+/** Default border of every block (review of 2026-10-09): the HoloCard's turning neon border,
+ *  ×2.5 slower (holoEffects.borderTurnMs 4 000); it replaces About's pulsing tube (2026-10-08) */
 export const neonFrameEffects = {
-    cycleMs: 7500,
+    /** One turn of the gradient (ms) */
+    turnMs: 10_000,
+    /** Side of the canvas painted once (px): a smooth gradient, scaled by the compositor */
+    texture: 128,
+    /** Powers on at the first idle moment after powerOnAfterMs (never in the first frames), at the latest powerOnTimeoutMs later */
+    powerOnAfterMs: 700,
+    powerOnTimeoutMs: 1200,
 };
 
 /**

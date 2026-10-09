@@ -1,4 +1,5 @@
 import React from 'react';
+import NeonFrame from '../../components/atoms/NeonFrame/NeonFrame';
 import HoloCard from '../../components/organisms/HoloCard/HoloCard';
 import SkillIntro from '../../components/organisms/SkillSections/SkillIntro';
 import SkillSections from '../../components/organisms/SkillSections/SkillSections';
@@ -25,6 +26,7 @@ const Skills: React.FC = () => {
         <div className={styles.page}>
             <div className={styles.top}>
                 <header className={styles.intro}>
+                    <NeonFrame />
                     <h1 className="glitch-title" data-text={skills.title}>{skills.title}</h1>
                     <SkillIntro lead={skills.lead} groups={skills.groups} />
                 </header>

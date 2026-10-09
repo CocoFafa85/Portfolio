@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './ProjectCard.module.scss';
 import { content } from '../../../data/content';
 import { Project } from '../../../types/models';
+import NeonFrame from '../../atoms/NeonFrame/NeonFrame';
 
 const labels = content.projects.labels;
 
@@ -20,6 +21,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
             data-ribbon={labels.wipRibbon}
             data-badge={labels.wipBadge}
         >
+            <NeonFrame />
             {/* Background layer: image or cyberpunk placeholder */}
             <div className={styles.cardBackground}>
                 {hasImage ? (

@@ -9,6 +9,8 @@
 
 .panel {
     @include glass-panel;
+    --neon-radius: 12px;
+    position: relative;
     max-width: 640px;
     width: 100%;
     padding: 2.5rem 2rem;

@@ -1,69 +1,42 @@
-@use 'sass:color';
-@use '../../../styles/variables' as *;
-
 // ═══════════════════════════════════════════════
-// NEON FRAME — a tube along the whole border (About, review of 2026-10-08).
-// Each colour is its own tube with its glow painted once; the cycle only
-// crossfades their opacity: violet, then pink, then cyan, two pulses each.
+// NEON FRAME — the default border of every block (review of 2026-10-09): the
+// HoloCard's turning conic border. The frame is a size container laid over
+// its block; a mask keeps only its padding ring (2 px, rounded like the
+// block); inside, a canvas painted once turns on the compositor. Its square
+// side, 142 % of the block's longer side, covers the block at every angle.
 // ═══════════════════════════════════════════════
 .frame {
     position: absolute;
     inset: 0;
     z-index: 2;
     display: none;
+    padding: 2px;
+    overflow: hidden;
     border-radius: var(--neon-radius, 10px);
+    container-type: size;
     pointer-events: none;
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
 
     &[data-lit] {
         display: block;
     }
 }
 
-.tube {
+.turn {
     position: absolute;
-    inset: 0;
-    border: 2px solid var(--tube);
-    border-radius: inherit;
-    box-shadow: 0 0 10px 1px var(--tube-glow), inset 0 0 8px var(--tube-glow);
-    opacity: 0;
-    animation: neon-cycle var(--neon-cycle, 7.5s) linear infinite;
+    top: 50%;
+    left: 50%;
+    width: 142cqmax;
+    height: 142cqmax;
+    margin: -71cqmax 0 0 -71cqmax;
+    will-change: transform;
+    animation: neon-turn var(--neon-turn, 10s) linear infinite;
 }
 
-.violet {
-    --tube: #{$neon-violet};
-    --tube-glow: #{color.change($neon-violet, $alpha: 0.75)};
-}
-
-.pink {
-    --tube: #{$neon-pink};
-    --tube-glow: #{color.change($neon-pink, $alpha: 0.75)};
-    animation-delay: calc(var(--neon-cycle, 7.5s) / -3 * 2);
-}
-
-.cyan {
-    --tube: #{$neon-cyan};
-    --tube-glow: #{color.change($neon-cyan, $alpha: 0.75)};
-    animation-delay: calc(var(--neon-cycle, 7.5s) / -3);
-}
-
-// A third of the cycle each: fade in, two pulses, then hand over to the next colour
-@keyframes neon-cycle {
-    0% { opacity: 0; }
-    8% { opacity: 1; }
-    14% { opacity: 0.55; }
-    20% { opacity: 1; }
-    26% { opacity: 0.55; }
-    33% { opacity: 1; }
-    41% { opacity: 0; }
-    100% { opacity: 0; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .tube {
-        animation: none;
-    }
-
-    .violet {
-        opacity: 1;
+@keyframes neon-turn {
+    to {
+        transform: rotate(1turn);
     }
 }
