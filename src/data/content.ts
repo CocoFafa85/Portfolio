@@ -55,7 +55,7 @@ Après avoir obtenu un baccalauréat général scientifique, j'ai exploré diver
             {
                 id: "present",
                 label: "Présent",
-                accent: "var(--neon-azure)",
+                accent: "var(--neon-cyan)",
                 date: null,
                 title: "Qui je suis",
                 content: `Actuellement, je suis détenteur d'un bachelor informatique délivré par le CNAM et je collabore au sein d'une petite ESN. Je consacre la majeure partie de mon temps à travailler et à acquérir un maximum de compétences dans ce domaine. Je partage ma vie avec ma compagne, qui me soutient énormément dans mes projets. Retrouvez mon parcours sur [LinkedIn](https://www.linkedin.com/in/corentin-fanic-832630293).`
