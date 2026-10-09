@@ -44,6 +44,7 @@ const ProjectWindow: React.FC<ProjectWindowProps> = ({ project, labels, priority
             />}
             <span className={styles.veil} aria-hidden="true" />
             <span className={styles.sweep} aria-hidden="true" />
+            <span className={styles.boot} aria-hidden="true" />
             {overlay}
         </div>
         {children}

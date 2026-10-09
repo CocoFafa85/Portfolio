@@ -99,7 +99,8 @@
     transition: opacity 0.45s;
 }
 
-.sweep {
+.sweep,
+.boot {
     position: absolute;
     left: 0;
     right: 0;
@@ -123,6 +124,11 @@
     to { transform: translateY(340%); }
 }
 
+// Power-on of the card once the trajectory's flame reaches it (data-ignited on its item): one sweep
+[data-ignited] .boot {
+    animation: sweep var(--boot-ms) cubic-bezier(0.3, 0.6, 0.4, 1) var(--boot-delay) both;
+}
+
 // Narrow screens: the address keeps the room (the dots go, "En ligne" keeps its LED)
 @include mobile {
     .dots { display: none; }
@@ -131,5 +137,5 @@
 
 @media (prefers-reduced-motion: reduce) {
     .picture { transition: none; }
-    .sweep { display: none; }
+    .sweep, .boot { display: none; }
 }

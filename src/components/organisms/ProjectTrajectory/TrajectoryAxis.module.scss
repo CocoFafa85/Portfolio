@@ -1,0 +1,121 @@
+@use 'sass:color';
+@use '../../../styles/variables' as *;
+
+// The axis box: as tall as the trajectory (plus a margin), no paint of its own (useScroll's target)
+.axis {
+    position: absolute;
+    top: -24px;
+    bottom: -24px;
+    left: var(--axis-x);
+    width: 0;
+    pointer-events: none;
+}
+
+.rail {
+    position: absolute;
+    left: -1px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: color.change(#fff, $alpha: 0.07);
+}
+
+// Twin fire trail, hottest at the flame (its bottom), cooling to violet behind; scaled from the top
+.trail {
+    position: absolute;
+    left: -14px;
+    top: 0;
+    bottom: 0;
+    width: 28px;
+    transform-origin: 50% 0;
+
+    &::before,
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 3px;
+        border-radius: 2px;
+        background: linear-gradient(color.change($neon-violet, $alpha: 0.15), $neon-pink 55%, $fire-orange 88%, #ffe9c7);
+    }
+
+    &::before { left: 7px; }
+    &::after { right: 7px; }
+}
+
+.glow {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, color.change($fire-orange, $alpha: 0.16) 30%, color.change($neon-pink, $alpha: 0.12) 70%, transparent);
+}
+
+// The carriage is the axis's height; the head sits at its bottom edge
+.carriage {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 100%;
+    z-index: 4;
+}
+
+.head {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 0;
+}
+
+.core {
+    position: absolute;
+    left: -7px;
+    top: -7px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 0 10px 3px #ffd29a, 0 0 26px 8px color.change($fire-orange, $alpha: 0.75);
+}
+
+.halo {
+    position: absolute;
+    left: -60px;
+    top: -60px;
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, rgba(255, 170, 90, 0.45), color.change($neon-pink, $alpha: 0.12) 55%, transparent);
+    animation: throb 1.3s ease-in-out infinite;
+}
+
+.flare {
+    position: absolute;
+    left: -90px;
+    top: -1px;
+    width: 180px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(255, 220, 180, 0.9), transparent);
+    animation: throb 1.3s ease-in-out infinite reverse;
+}
+
+.ember {
+    position: absolute;
+    left: -2px;
+    top: -2px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #ffd29a;
+    animation: ember var(--d) ease-out var(--dl) infinite;
+}
+
+@keyframes throb {
+    50% { transform: scale(0.82); opacity: 0.75; }
+}
+
+@keyframes ember {
+    from { transform: translate(0, 0) scale(1); opacity: 1; }
+    to { transform: translate(var(--x), var(--y)) scale(0.2); opacity: 0; }
+}

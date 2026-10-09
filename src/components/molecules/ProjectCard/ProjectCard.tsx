@@ -19,6 +19,8 @@ export interface ProjectCardProps {
     priority?: boolean;
     /** False until the card's picture may be requested */
     load?: boolean;
+    /** Powers its neon border on (the trajectory's flame reached it); by default at the first idle moment */
+    lit?: boolean;
 }
 
 /**
@@ -26,12 +28,12 @@ export interface ProjectCardProps {
  * neon border of every block turns over it. `project-card` is the global hook the window's hover
  * and focus effects read (a CSS module cannot name another module's classes).
  */
-const ProjectCard: React.FC<ProjectCardProps> = ({ project, priority, load }) => (
+const ProjectCard: React.FC<ProjectCardProps> = ({ project, priority, load, lit }) => (
     <article
         className={`project-card ${styles.card}`}
         style={{ '--accent': accentOf(project.color) } as React.CSSProperties}
     >
-        <NeonFrame />
+        <NeonFrame lit={lit} />
         <ProjectWindow
             project={project}
             labels={labels}

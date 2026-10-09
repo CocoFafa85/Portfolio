@@ -260,6 +260,15 @@ export const trajectoryEffects = {
      *  visual, the page's LCP), at the latest powerOnTimeoutMs later */
     powerOnAfterMs: 700,
     powerOnTimeoutMs: 1200,
+    /** The flame sits on this line of the viewport (share of its height from the top): a point lights
+     *  up as it crosses it (useScroll offset "start 0.6" → "end 0.6") */
+    triggerLine: 0.6,
+    /** Ignition of a point, then of its card (CSS animations, transform and opacity only) */
+    ignition: { flashMs: 380, bloomMs: 900, coreMs: 500, waveMs: 700, sparkMs: 550, linkMs: 320, bootMs: 900, bootDelayMs: 300 },
+    /** Sparks thrown all around a point as it ignites (reach in px) */
+    sparks: { count: 6, reach: 32 },
+    /** Embers rising from the flame's head, left and right in turn: drift and rise (px), one rise (ms) */
+    embers: { count: 6, drift: [6, 18], rise: [30, 62], durationMs: [1200, 2050] },
 };
 
 /** Navigation bar (LOT 1, C1) */

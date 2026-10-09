@@ -1,4 +1,6 @@
-import React from 'react';
+import React, { type CSSProperties } from 'react';
+import { trajectoryEffects as fx } from '../../../data/effects';
+import { sparkPaths } from '../../../utils/trajectory';
 import { FULL_DIGIT } from '../TimeConvector/dseg';
 import styles from './TrajectoryNode.module.scss';
 
@@ -8,20 +10,30 @@ export interface TrajectoryNodeProps {
 }
 
 const GHOST = FULL_DIGIT.repeat(4);
+const SPARKS = sparkPaths(fx.sparks.count, fx.sparks.reach);
 
 /**
  * A point of the trajectory (decision T1): a dot on the axis and, beside it, the project's year on a
- * small time-circuit display (7 segments, neon green, no plate). Decorative: the card says the year.
+ * small time-circuit display (7 segments, neon green, no plate). Dark until the flame passes it (its
+ * item gets data-ignited): the dot ignites (shock waves, sparks), the year lights up at once with a
+ * flash. Decorative: the card says the year. `data-node` is its box for the flame's thresholds.
  */
 const TrajectoryNode: React.FC<TrajectoryNodeProps> = ({ year }) => (
-    <span className={styles.node} aria-hidden="true">
+    <span className={styles.node} data-node="" aria-hidden="true">
         <span className={styles.dot}>
             <span className={styles.core} />
+            <span className={styles.wave} />
+            <span className={styles.wave} />
+            {SPARKS.map(({ x, y }) => (
+                <i key={`${x},${y}`} className={styles.spark} style={{ '--sx': `${x}px`, '--sy': `${y}px` } as CSSProperties} />
+            ))}
         </span>
         <span className={styles.display}>
+            <span className={styles.bloom} />
             <span className={styles.digits}>
                 <span className={styles.ghost}>{GHOST}</span>
                 {year && <span className={styles.value}>{year}</span>}
+                {year && <span className={styles.flash}>{year}</span>}
             </span>
         </span>
     </span>
