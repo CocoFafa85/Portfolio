@@ -1,7 +1,7 @@
 import React, { useCallback, useMemo, useRef, useState, type CSSProperties } from 'react';
 import { skillEffects as fx } from '../../../data/effects';
 import type { ProjectRef, SkillLabels } from '../../../types/models';
-import { skillKeysOf, type LinkedGroup } from '../../../utils/skills';
+import { skillAliases, skillKeysOf, type LinkedGroup } from '../../../utils/skills';
 import { SkillIconsContext, useSkillIcons } from '../../atoms/TechIcon/skillIconsStore';
 import type { BadgeLight } from './SkillBadge';
 import ProjectRail from './ProjectRail';
@@ -11,7 +11,7 @@ import styles from './SkillSections.module.scss';
 export interface SkillSectionsProps {
     /** Groups of the CV, each skill linked to its projects (linkSkills) */
     groups: LinkedGroup[];
-    /** Projects F4, in rail order */
+    /** Projects F4 then "Professionnel", in rail order */
     projects: ProjectRef[];
     labels: SkillLabels;
 }
@@ -38,12 +38,13 @@ const SkillSections: React.FC<SkillSectionsProps> = ({ groups, projects, labels 
     const onPin = useCallback((key: string) => setPinned((current) => (current === key ? null : key)), []);
 
     const skills = useMemo(() => new Map(groups.flatMap((group) => group.skills).map((skill) => [skill.key, skill])), [groups]);
+    const aliases = useMemo(() => skillAliases(groups), [groups]);
     const skillKey = pointed && 'skill' in pointed ? pointed.skill : pointed ? null : pinned;
     const project = pointed && 'project' in pointed ? projects.find((p) => p.id === pointed.project) ?? null : null;
 
     const { litProjects, litSkills, note } = useMemo(() => {
         if (project) {
-            return { litProjects: new Set([project.id]), litSkills: skillKeysOf(project), note: project.title };
+            return { litProjects: new Set([project.id]), litSkills: skillKeysOf(project, aliases), note: project.title };
         }
         const skill = skillKey ? skills.get(skillKey) : undefined;
         if (!skill) return { litProjects: null, litSkills: null, note: null };
@@ -53,7 +54,7 @@ const SkillSections: React.FC<SkillSectionsProps> = ({ groups, projects, labels 
             litSkills: new Set([skill.key]),
             note: `${skill.name} — ${used ? `${labels.usedIn} ${used}` : labels.noProject}`,
         };
-    }, [project, skillKey, skills, labels]);
+    }, [project, skillKey, skills, aliases, labels]);
 
     const lightOf = useCallback((key: string): BadgeLight => (litSkills ? (litSkills.has(key) ? 'lit' : 'dim') : 'rest'), [litSkills]);
 

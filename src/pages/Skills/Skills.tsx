@@ -4,12 +4,13 @@ import SkillIntro from '../../components/organisms/SkillSections/SkillIntro';
 import SkillSections from '../../components/organisms/SkillSections/SkillSections';
 import { content } from '../../data/content';
 import { usePageMeta } from '../../hooks/usePageMeta';
-import { linkSkills } from '../../utils/skills';
+import { linkSkills, withProfessional } from '../../utils/skills';
 import styles from './Skills.module.scss';
 
 const { skills } = content;
-// Static data: linked once, at load (skills of the CV ↔ projects F4)
-const GROUPS = linkSkills(skills.groups, skills.projects);
+// Static data: linked once, at load (skills of the CV ↔ projects F4, then "Professionnel" for the rest)
+const RAIL = withProfessional(skills.groups, skills.projects, skills.labels.professional);
+const GROUPS = linkSkills(skills.groups, RAIL);
 
 /**
  * Skills page (LOT 4; two blocks since the review of 2026-10-09): the first
@@ -31,7 +32,7 @@ const Skills: React.FC = () => {
                     <HoloCard />
                 </div>
             </div>
-            <SkillSections groups={GROUPS} projects={skills.projects} labels={skills.labels} />
+            <SkillSections groups={GROUPS} projects={RAIL} labels={skills.labels} />
         </div>
     );
 };
