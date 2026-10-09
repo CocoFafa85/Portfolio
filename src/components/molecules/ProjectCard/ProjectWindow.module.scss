@@ -1,4 +1,5 @@
 @use 'sass:color';
+@use '../../../styles/mixins' as *;
 @use '../../../styles/variables' as *;
 
 // The demo window of a card (LOT 5, decision A): bar + 16:10 screen
@@ -116,6 +117,12 @@
 
 @keyframes sweep {
     to { transform: translateY(340%); }
+}
+
+// Narrow screens: the address keeps the room (the dots go, "En ligne" keeps its LED)
+@include mobile {
+    .dots { display: none; }
+    .online { gap: 0; font-size: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -30,9 +30,10 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => (
         data-badge={labels.wipBadge}
     >
         <NeonFrame />
-        <ProjectWindow project={project} labels={labels} />
+        <ProjectWindow project={project} labels={labels}>
+            <ProjectActions project={project} labels={labels} />
+        </ProjectWindow>
         <ProjectBody project={project} labels={labels} />
-        <ProjectActions project={project} labels={labels} />
     </article>
 );
 

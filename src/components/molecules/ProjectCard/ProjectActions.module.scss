@@ -1,66 +1,85 @@
 @use 'sass:color';
+@use '../../../styles/mixins' as *;
 @use '../../../styles/variables' as *;
 
-// ═══════════════════════════════════════════════
-// OVERLAY — Action buttons, shown while the card sets --reveal (hover, keyboard focus)
-// ═══════════════════════════════════════════════
-.overlay {
+// Demo / Code bar (P2), over the bottom of the screen; hidden below it until hover or keyboard focus
+.actions {
     position: absolute;
-    inset: 0;
-    z-index: 3;
-    background: linear-gradient(to top,
-            rgba(0, 0, 0, 0.92) 0%,
-            rgba(0, 0, 0, 0.7) 50%,
-            rgba(0, 0, 0, 0.3) 100%);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 4;
     display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 14px;
+    background: linear-gradient(transparent, color.change($bg-deep, $alpha: 0.94) 55%);
+    transform: translateY(101%);
+    transition: transform 0.32s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+// The card's global hook (a CSS module cannot name another module's classes)
+:global(.project-card):hover .actions,
+:global(.project-card):focus-within .actions {
+    transform: none;
+}
+
+// Touch screens have no hover: the bar always shows, under the screen
+@media (hover: none) {
+    .actions {
+        position: static;
+        transform: none;
+        background: none;
+        padding: 12px;
+    }
+}
+
+.link {
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
-    opacity: var(--reveal, 0);
-    transition: opacity 0.4s ease;
-}
-
-.links {
-    display: flex;
-    gap: 1.2rem;
-    transform: translateY(var(--reveal-lift, 10px));
-    transition: transform 0.4s 0.1s ease;
-}
-
-.linkButton {
-    padding: 0.7rem 1.5rem;
-    border-radius: 6px;
-    font-family: $font-orbitron;
-    text-decoration: none;
-    font-size: 0.8rem;
-    transition: all 0.25s ease;
-    font-weight: bold;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 16px;
+    border-radius: 8px;
+    font: 700 0.8125rem/1 $font-orbitron;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    text-decoration: none;
+    transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+}
 
-    &.demo {
-        background: $neon-pink;
-        color: #fff;
-        box-shadow: 0 0 12px color.change($neon-pink, $alpha: 0.4);
-        border: 1px solid $neon-pink;
+.icon {
+    width: 15px;
+    height: 15px;
+    flex: none;
+}
 
-        &:hover {
-            background: color.adjust($neon-pink, $lightness: 8%);
-            box-shadow: 0 0 25px color.change($neon-pink, $alpha: 0.7);
-            transform: translateY(-2px);
-        }
+// Dark text on the neon pink: 5.2:1 (white text there is 3.8:1)
+.demo {
+    background: $neon-pink;
+    color: $bg-deep;
+    border: 1px solid $neon-pink;
+
+    &:hover {
+        background: color.adjust($neon-pink, $lightness: 8%);
     }
+}
 
-    &.repo {
-        background: transparent;
-        border: 1px solid rgba(255, 255, 255, 0.6);
-        color: #fff;
+.code {
+    background: color.change($bg-deep, $alpha: 0.7);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.7);
 
-        &:hover {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: var(--accent);
-            color: var(--accent);
-            box-shadow: 0 0 15px color-mix(in srgb, var(--accent) 30%, transparent);
-            transform: translateY(-2px);
-        }
+    &:hover {
+        border-color: $neon-cyan;
+        color: $neon-cyan;
     }
+}
+
+.hidden {
+    @include visually-hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .actions { transition: none; }
 }

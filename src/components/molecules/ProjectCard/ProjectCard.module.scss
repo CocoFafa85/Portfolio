@@ -9,11 +9,4 @@
     min-width: 0;
     width: 100%;
     overflow: hidden;
-
-    // Read by ProjectActions: the Demo / Code overlay shows on hover and on keyboard focus
-    &:hover,
-    &:focus-within {
-        --reveal: 1;
-        --reveal-lift: 0px;
-    }
 }
