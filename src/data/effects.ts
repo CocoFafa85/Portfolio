@@ -22,9 +22,10 @@ export const heroEffects = {
     /** Title decoded from glyph noise, then the neon tube lights up */
     decode: { seed: 1985, steps: 22, spread: 0.28, durationMs: 700 } satisfies DecodeSettings & { durationMs: number },
     igniteMs: 360,
-    /** Subtitle: the first role decodes from noise with the title, then each role decodes into the next */
+    /** Subtitle: the first role decodes from noise with the title, then each role decodes into the next;
+     *  decodes twice as long since the review of 2026-10-09 (were 900 and 480 ms), same hold */
     roles: {
-        seed: 7, steps: 20, spread: 0.3, introMs: 900, morphMs: 480, holdMs: 2200,
+        seed: 7, steps: 20, spread: 0.3, introMs: 1800, morphMs: 960, holdMs: 2200,
     } satisfies DecodeSettings & Record<'introMs' | 'morphMs' | 'holdMs', number>,
 };
 

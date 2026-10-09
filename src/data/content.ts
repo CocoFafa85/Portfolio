@@ -34,7 +34,7 @@ export const content: PortfolioContent = {
     },
     home: {
         title: "Corentin FANIC",
-        roles: ["Développeur Full Stack", "Expert SI", "DevOps"],
+        roles: ["Full Stack", "Génie logiciel", "DevOps"],
         rolesSeparator: " · "
     },
     about: {
