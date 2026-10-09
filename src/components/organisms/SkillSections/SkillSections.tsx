@@ -21,8 +21,9 @@ type Pointed = { skill: string } | { project: string } | null;
 const VARS = { '--skill-dim': fx.dimOpacity, '--skill-ms': `${fx.transitionMs}ms`, '--skill-lift': `${fx.lift}px` } as CSSProperties;
 
 /**
- * The skills of the Skills page (LOT 4, layout B "merged sections", badges B
- * "projects lit"): the projects rail, then each group under its intro.
+ * The skills of the Skills page (LOT 4, badges B "projects lit"; the second
+ * block since the review of 2026-10-09): the projects rail, then the badges
+ * of each family (their intros are in the first block, SkillIntro).
  * Pointing at (or focusing) a badge lights the projects that use it;
  * pointing at a project lights its badges; pressing a badge pins its
  * projects (the touch path). Everything else dims.
