@@ -25,10 +25,11 @@
     gap: 1.5rem;
     margin-bottom: 1.5rem;
 
+    // The card grew towards the text (review of 2026-10-09): 400 px, half the gap
     @include wide {
         grid-template-columns: minmax(0, 1fr) auto;
         align-items: start;
-        gap: 3rem;
+        gap: 1.5rem;
     }
 }
 

@@ -45,11 +45,13 @@
     justify-content: flex-end;
     padding: 1.3em 1.4em 1.2em;
     transform: translateZ(var(--d-print));
+    pointer-events: none;
 }
 
 // White plate, dark modules: the contrast scanners need
 .qrLink {
     display: block;
+    pointer-events: auto;
     padding: 0.2em;
     line-height: 0;
     background: $holo-qr-light;

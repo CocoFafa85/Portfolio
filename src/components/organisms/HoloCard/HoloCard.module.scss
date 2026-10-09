@@ -5,10 +5,13 @@
 // ═══════════════════════════════════════════════
 // HOLOCARD v2 (LOT 4, S2) — a 3D scene: the card (tilt) holds the flipper
 // (turn), which holds the edge slices and the two faces. Sizes follow the
-// card width (font-size = width / 20): 320 px, less on a narrow phone.
+// card width (font-size = width / 20): 400 px since the review of 2026-10-09
+// (was 320), less on a narrow phone. Only the faces catch the pointer: the
+// wrappers' own planes (empty, at depth 0) would swallow a click on the half
+// of a tilted card that goes behind them.
 // ═══════════════════════════════════════════════
 .scene {
-    --card-w: min(320px, 84vw);
+    --card-w: min(400px, 84vw);
     --card-r: 1.25em;
     position: relative;
     width: var(--card-w);
@@ -20,14 +23,16 @@
     user-select: none;
 }
 
-// Press feedback (the original card's tap scale), transform only
+// Press feedback (the original card's tap scale), transform only; never while a button is
+// pressed: the button would shrink away from the pointer before its click
 .press {
     width: 100%;
     height: 100%;
     transform-style: preserve-3d;
     transition: transform 0.12s ease-out;
+    pointer-events: none;
 
-    &:active {
+    &:active:not(:has(button:active, a:active)) {
         transform: scale(var(--press, 0.97));
     }
 }
@@ -39,6 +44,7 @@
     width: 100%;
     height: 100%;
     transform-style: preserve-3d;
+    pointer-events: none;
 
     [data-power='on'] & {
         animation: sway var(--sway-ms, 8s) ease-in-out infinite;
@@ -61,13 +67,14 @@
     width: 100%;
     height: 100%;
     transform-style: preserve-3d;
-    cursor: pointer;
+    pointer-events: none;
 }
 
 .flipper {
     position: absolute;
     inset: 0;
     transform-style: preserve-3d;
+    pointer-events: none;
 }
 
 // Thickness of the card: slices of its edge between the two faces
@@ -75,6 +82,7 @@
     position: absolute;
     inset: 0;
     will-change: transform;
+    pointer-events: none;
     background: $holo-edge;
     border: 1px solid $holo-edge-light;
     border-radius: var(--card-r);

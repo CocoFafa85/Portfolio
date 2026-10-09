@@ -15,6 +15,8 @@ export interface CardTilt {
     hover: MotionValue<number>;
     onPointerMove(event: PointerEvent<HTMLElement>): void;
     onPointerLeave(event: PointerEvent<HTMLElement>): void;
+    /** Holds the card still while a button of it is pressed: it never slides away under the pointer */
+    hold(on: boolean): void;
 }
 
 const percent = (value: number) => `${(value * 100).toFixed(2)}%`;
@@ -41,9 +43,10 @@ export function useCardTilt(sceneRef: RefObject<HTMLElement | null>): CardTilt {
     const glareX = useTransform(pointerX, (x) => percent((Number.isNaN(x) ? 0 : x) * fx.glare.travel));
     const glareY = useTransform(pointerY, (y) => percent(y * fx.glare.travel));
     const bounds = useRef<DOMRect | null>(null);
+    const held = useRef(false);
 
     const onPointerMove = useCallback((event: PointerEvent<HTMLElement>) => {
-        if (event.pointerType === 'touch' || reducedMotion) return;
+        if (event.pointerType === 'touch' || reducedMotion || held.current) return;
         bounds.current ??= sceneRef.current?.getBoundingClientRect() ?? null;
         const box = bounds.current;
         if (!box) return;
@@ -65,7 +68,14 @@ export function useCardTilt(sceneRef: RefObject<HTMLElement | null>): CardTilt {
         hover.set(0);
     }, [pointerX, pointerY, targetX, targetY, hover]);
 
+    const hold = useCallback((on: boolean) => {
+        held.current = on;
+        if (!on) return;
+        rotateX.jump(rotateX.get());
+        rotateY.jump(rotateY.get());
+    }, [rotateX, rotateY]);
+
     // One stable object: the faces are memoised and only re-render when their own state changes
-    return useMemo(() => ({ rotateX, rotateY, filmX, filmY, glareX, glareY, hover, onPointerMove, onPointerLeave }),
-        [rotateX, rotateY, filmX, filmY, glareX, glareY, hover, onPointerMove, onPointerLeave]);
+    return useMemo(() => ({ rotateX, rotateY, filmX, filmY, glareX, glareY, hover, onPointerMove, onPointerLeave, hold }),
+        [rotateX, rotateY, filmX, filmY, glareX, glareY, hover, onPointerMove, onPointerLeave, hold]);
 }
