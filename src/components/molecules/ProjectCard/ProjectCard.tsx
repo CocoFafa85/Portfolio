@@ -1,13 +1,14 @@
 import React from 'react';
 import styles from './ProjectCard.module.scss';
-import wip from './WorkInProgress.module.scss';
 import { content } from '../../../data/content';
 import type { Project } from '../../../types/models';
 import NeonFrame from '../../atoms/NeonFrame/NeonFrame';
+import { fillTemplate } from '../../../utils/format';
 import { isInProgress } from '../../../utils/projects';
 import { accentOf } from './accent';
 import ProjectActions from './ProjectActions';
 import ProjectBody from './ProjectBody';
+import ProjectRibbon from './ProjectRibbon';
 import ProjectWindow from './ProjectWindow';
 
 const labels = content.projects.labels;
@@ -23,14 +24,15 @@ export interface ProjectCardProps {
  */
 const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => (
     <article
-        className={`project-card ${styles.card} ${isInProgress(project) ? wip.workInProgress : ''}`}
+        className={`project-card ${styles.card}`}
         style={{ '--accent': accentOf(project.color) } as React.CSSProperties}
-        // Read by the CSS ribbon and badge (content: attr(...))
-        data-ribbon={labels.wipRibbon}
-        data-badge={labels.wipBadge}
     >
         <NeonFrame />
-        <ProjectWindow project={project} labels={labels}>
+        <ProjectWindow
+            project={project}
+            labels={labels}
+            overlay={isInProgress(project) && <ProjectRibbon label={fillTemplate(labels.inProgress, { year: project.year })} />}
+        >
             <ProjectActions project={project} labels={labels} />
         </ProjectWindow>
         <ProjectBody project={project} labels={labels} />

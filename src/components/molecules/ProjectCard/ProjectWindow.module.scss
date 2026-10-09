@@ -5,6 +5,8 @@
 // The demo window of a card (LOT 5, decision A): bar + 16:10 screen
 .window {
     position: relative;
+    // The ribbon's text scales with the window (cqi)
+    container-type: inline-size;
     margin: 12px 12px 0;
     border-radius: 10px;
     overflow: hidden;

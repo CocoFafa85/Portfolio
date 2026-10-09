@@ -208,8 +208,7 @@ Mon objectif à long terme est de gérer un SI complet ou d'être responsable de
             team: "Équipe",
             goals: "Objectifs",
             online: "En ligne",
-            wipRibbon: "EN TRAVAUX",
-            wipBadge: "🚧 WIP"
+            inProgress: "En développement — sortie prévue en {year}"
         },
         // The single list of the projects (F4, LOT 5), in the validated order: read by the Projects page
         // (with its details, src/data/projectDetails.ts) and by the skills (rail and badges of Skills).

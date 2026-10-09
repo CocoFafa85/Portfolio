@@ -76,8 +76,8 @@ export interface ProjectLabels {
     goals: string;
     /** Status chip of the window bar when the demo is online */
     online: string;
-    wipRibbon: string;
-    wipBadge: string;
+    /** Construction tape of a project in progress, "{year}" replaced */
+    inProgress: string;
 }
 
 /** A skill of the CV (F3): no level, no percentage (LOT 4) */

@@ -1,0 +1,56 @@
+@use 'sass:color';
+@use '../../../styles/variables' as *;
+
+// Construction tape (P4): wider than the screen, tilted, clipped by the window's rounded edges
+.tape {
+    position: absolute;
+    left: -8%;
+    right: -8%;
+    top: 60%;
+    z-index: 3;
+    margin: 0;
+    transform: rotate(-7deg);
+    pointer-events: none;
+}
+
+$stripes: repeating-linear-gradient(-45deg, $tape-black 0 11px, $tape-yellow 11px 22px);
+
+.band {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    min-height: 38px;
+    padding: 4px 17%;
+    font: 700 clamp(0.5625rem, 1.25cqi, 0.78rem) / 1.25 $font-orbitron;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-align: center;
+    color: $tape-black;
+    // Folds (ends shaded where the tape wraps the window edge), stripes at both ends, the yellow face
+    background:
+        linear-gradient(90deg, color.change($tape-black, $alpha: 0.35), transparent 4%, transparent 96%, color.change($tape-black, $alpha: 0.35)),
+        $stripes left / 17% 100% no-repeat,
+        $stripes right / 17% 100% no-repeat,
+        linear-gradient($tape-yellow-light, $tape-yellow 45%, $tape-yellow-dark);
+    box-shadow: 0 10px 16px -4px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.65), inset 0 -2px 0 rgba(0, 0, 0, 0.2);
+}
+
+.beacon {
+    flex: none;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: $tape-beacon;
+    box-shadow: 0 0 8px 2px color.change($tape-beacon, $alpha: 0.85);
+    animation: beacon 1.8s ease-in-out infinite;
+}
+
+@keyframes beacon {
+    50% { opacity: 0.3; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .beacon { animation: none; }
+}
