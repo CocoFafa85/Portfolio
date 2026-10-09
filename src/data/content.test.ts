@@ -136,19 +136,24 @@ describe('projects (F4, F5, LOT 5)', () => {
 });
 
 describe('projects rail of Skills (review of 2026-10-09)', () => {
-    it('lists the projects in the reviewed order, PouceStop fifth', () => {
-        // Arrange / Act
-        const titles = content.skills.projects.map((project) => project.title);
+    it('reads the list of the Projects page: same ids, same titles, same order, then "Professionnel" (CÂBLAGE, LOT 5)', () => {
+        // Arrange
+        const { groups, labels } = content.skills;
+        const cards = withDetails(content.projects.list, projectDetails);
+
+        // Act
+        const rail = withProfessional(groups, content.projects.list, labels.professional);
 
         // Assert
-        expect(titles).toEqual(['MemoryGame', 'First Portfolio', 'SolarSystem', 'SoulSweeper', 'PouceStop']);
+        expect(rail.slice(0, -1).map((entry) => [entry.id, entry.title])).toEqual(cards.map((card) => [card.id, card.title]));
+        expect(rail.map((entry) => entry.title)).toEqual(['MemoryGame', 'First Portfolio', 'SolarSystem', 'SoulSweeper', 'PouceStop', labels.professional]);
     });
 
     it('resolves every alias to a project tag, never to another skill name', () => {
         // Arrange
         const skills = content.skills.groups.flatMap((group) => group.skills);
         const names = new Set(skills.map((skill) => normalizeTag(skill.name)));
-        const tags = new Set(content.skills.projects.flatMap((project) => project.tags).map(normalizeTag));
+        const tags = new Set(content.projects.list.flatMap((project) => project.tags).map(normalizeTag));
 
         // Act
         const aliases = skills.flatMap((skill) => skill.aliases ?? []).map(normalizeTag);
@@ -160,7 +165,8 @@ describe('projects rail of Skills (review of 2026-10-09)', () => {
 
     it('lights at least one rail entry from every badge once "Professionnel" closes the rail', () => {
         // Arrange
-        const { groups, projects, labels } = content.skills;
+        const { groups, labels } = content.skills;
+        const projects = content.projects.list;
 
         // Act
         const linked = linkSkills(groups, withProfessional(groups, projects, labels.professional)).flatMap((group) => group.skills);

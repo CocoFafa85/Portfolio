@@ -194,15 +194,6 @@ Mon objectif à long terme est de gérer un SI complet ou d'être responsable de
                     { name: "PlanetHoster", icon: null }
                 ]
             }
-        ],
-        // F4 projects as Skills links them, by their tags (merged with projects.list in LOT 5);
-        // order and PouceStop: review of 2026-10-09 (the rail then ends with "Professionnel")
-        projects: [
-            { id: "memory", title: "MemoryGame", tags: ["JavaScript", "CSS", "DOM"] },
-            { id: "first-portfolio", title: "First Portfolio", tags: ["CSS", "JavaScript", "Legacy"] },
-            { id: "solar", title: "SolarSystem", tags: ["JavaScript", "Three.js", "CSS"] },
-            { id: "soulsweeper", title: "SoulSweeper", tags: ["C#", "Unity"] },
-            { id: "poucestop", title: "PouceStop", tags: ["Kotlin", "Android Studio"] }
         ]
     },
 

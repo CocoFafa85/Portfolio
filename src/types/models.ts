@@ -209,8 +209,6 @@ export interface PortfolioContent {
         lead: string;
         /** Skills of the CV (F3), by group */
         groups: SkillGroup[];
-        /** F4 projects linked to the skills by their tags (until LOT 5 merges them with projects.list) */
-        projects: ProjectRef[];
         holoCard: HoloCardLabels;
     };
     projects: {
