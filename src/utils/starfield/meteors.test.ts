@@ -33,6 +33,27 @@ describe('spawnMeteor', () => {
         expect(Math.hypot(pose[2], pose[3])).toBeCloseTo(1, 5);
         expect(pose[4]).toBe(150);
     });
+
+    it('enters from the side it comes from when an entry span is set (the comet crosses the screen)', () => {
+        // Arrange: draws below 0.5 head left, from 0.5 right
+        const comet: MeteorSettings = { ...SETTINGS, entrySpan: [0.1, 0.3] };
+        const leftward = createMeteorPool(1);
+        const rightward = createMeteorPool(1);
+        const left = new Float32Array(5);
+        const right = new Float32Array(5);
+
+        // Act
+        spawnMeteor(leftward, 1000, 800, comet, always(0.25));
+        spawnMeteor(rightward, 1000, 800, comet, always(0.75));
+        meteorPose(leftward, 0, left);
+        meteorPose(rightward, 0, right);
+
+        // Assert: heading left it starts in the right part, heading right in the left part
+        expect(left[2]).toBeLessThan(0);
+        expect(left[0]).toBeCloseTo(1000 * (1 - 0.15), 3);
+        expect(right[2]).toBeGreaterThan(0);
+        expect(right[0]).toBeCloseTo(1000 * 0.25, 3);
+    });
 });
 
 describe('advanceMeteors', () => {

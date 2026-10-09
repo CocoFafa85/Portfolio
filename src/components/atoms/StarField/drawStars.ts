@@ -2,20 +2,16 @@ import { starEffects as fx } from '../../../data/effects';
 import { STAR_STRIDE, starAlpha, type StarLayer } from '../../../utils/starfield/layers';
 import { meteorAlpha, meteorPose, type MeteorPool } from '../../../utils/starfield/meteors';
 import type { GateOccluder } from '../../../utils/stargate/occluder';
+import { createCometSprites, type CometSprites } from './drawComet';
 import type { StarPalette } from './palette';
+import { canvas } from './sprite';
 
-/** Pre-rendered images: one per tint, the meteor trail, the disc erased behind the gate. Built once. */
+/** Pre-rendered images: one per tint, the meteor trail, the comet, the disc erased behind the gate. Built once. */
 export interface StarSprites {
     tints: HTMLCanvasElement[];
     trail: HTMLCanvasElement;
+    comet: CometSprites;
     hole: HTMLCanvasElement;
-}
-
-function canvas(width: number, height: number): [HTMLCanvasElement, CanvasRenderingContext2D | null] {
-    const element = document.createElement('canvas');
-    element.width = width;
-    element.height = height;
-    return [element, element.getContext('2d')];
 }
 
 /** White alpha mask (a radial falloff), then tinted: the colour keeps the mask's alpha. */
@@ -77,6 +73,7 @@ export function createStarSprites(palette: StarPalette): StarSprites {
     return {
         tints: palette.tints.map((colour) => disc(colour, fx.sprite.core, 1)),
         trail: trail(palette.trail),
+        comet: createCometSprites(palette),
         hole: hole(),
     };
 }

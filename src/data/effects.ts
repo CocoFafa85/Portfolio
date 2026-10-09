@@ -70,6 +70,16 @@ export const starEffects = {
     } satisfies MeteorSettings & { max: number },
     /** First shooting star, after the title has lit up */
     firstMeteorMs: 2500,
+    /** A comet every 10 s (review of 2026-10-09): ~4× slower than a shooting star and bigger, it
+     *  crosses the screen from the side it comes from, behind the gate like the rest of the sky */
+    comet: {
+        max: 1, intervalMs: [10_000, 10_000], speed: [170, 220], length: [340, 440], lifeMs: [5200, 6000],
+        angle: [0.2, 0.38], startBand: 0.28, entrySpan: [0.04, 0.3],
+    } satisfies MeteorSettings & { max: number },
+    firstCometMs: 5000,
+    /** Comet sprites: glowing head (radius px), ion tail (cyan, straight) and dust tail (violet,
+     *  fainter, a little apart: radians), tail thickness at the head (px) */
+    cometLook: { headSize: 96, headRadius: 24, tailWidth: 512, tailHeight: 32, ionThickness: 9, dustThickness: 15, dustAngle: 0.07, dustAlpha: 0.38 },
     /** Share of the remaining distance the parallax closes each frame */
     pointerSmoothing: 0.06,
     sprite: { size: 64, core: 0.25 },
