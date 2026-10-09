@@ -1,10 +1,15 @@
 import React, { useRef } from 'react';
 import styles from './Projects.module.scss';
 import { content } from '../../data/content';
+import { projectDetails } from '../../data/projectDetails';
+import { withDetails } from '../../utils/projects';
 import ProjectCard from '../../components/molecules/ProjectCard/ProjectCard';
 import NeonFrame from '../../components/atoms/NeonFrame/NeonFrame';
 import { motion, useInView } from 'motion/react';
 import { usePageMeta } from '../../hooks/usePageMeta';
+
+// The cards: the single list of the projects (also read by Skills) with what only this page shows
+const PROJECTS = withDetails(content.projects.list, projectDetails);
 
 const Projects: React.FC = () => {
     usePageMeta('projects');
@@ -24,7 +29,7 @@ const Projects: React.FC = () => {
             </motion.div>
 
             <div className={styles.grid}>
-                {content.projects.list.map((project) => (
+                {PROJECTS.map((project) => (
                     <ProjectCard key={project.id} project={project} />
                 ))}
             </div>

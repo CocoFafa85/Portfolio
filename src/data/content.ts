@@ -209,56 +209,22 @@ Mon objectif à long terme est de gérer un SI complet ou d'être responsable de
     projects: {
         title: "Projets",
         labels: {
-            demo: "Demo",
+            demo: "Démo",
             code: "Code",
+            linkSuffix: " de {title} (nouvel onglet)",
+            plannedYear: "Sortie prévue en {year}",
             wipRibbon: "EN TRAVAUX",
             wipBadge: "🚧 WIP"
         },
+        // The single list of the projects (F4, LOT 5), in the validated order: read by the Projects page
+        // (with its details, src/data/projectDetails.ts) and by the skills (rail and badges of Skills).
+        // PouceStop: data asked on 2026-10-09, not provided yet
         list: [
-            {
-                id: "ifto",
-                title: "Site IFTO",
-                description: "Refonte complète du site de l'Institut de Formation en Thérapies Manuelles. Gestion de contenu dynamique et administration.",
-                demoLink: "https://www.ifto.fr/",
-                tags: ["Wordpress", "PHP", "MySQL", "Bootstrap"],
-                featured: true,
-                color: "#ffaa00"
-            },
-            {
-                id: "memory",
-                title: "MemoryGame",
-                description: "Jeu de mémoire classique développé en JavaScript. Travail sur la logique DOM et les animations CSS.",
-                demoLink: "https://cocofafa85.github.io/EnglishMemory/Memory.html",
-                tags: ["JavaScript", "CSS", "DOM"],
-                repoLink: "https://github.com/cocofafa85/EnglishMemory",
-                color: "#bc13fe"
-            },
-            {
-                id: "solar",
-                title: "SolarSystem",
-                description: "Simulation à l'échelle du temps et de l'espace du système solaire en CSS et Three.JS .",
-                demoLink: "https://cocofafa85.github.io/SolarSystem/index.html",
-                repoLink: "https://github.com/CocoFafa85/SolarSystem",
-                tags: ["CSS", "JavaScript"],
-                color: "#0aff0a"
-            },
-            {
-                id: "first-portfolio",
-                title: "First Portfolio",
-                description: "Mon premier portfolio homemade. Une archive sentimentale.",
-                demoLink: "https://cocofafa85.github.io/PortfolioFirst/index.html",
-                repoLink: "https://github.com/CocoFafa85/PortfolioFirst",
-                tags: ["CSS", "JavaScript", "Legacy"],
-                color: "#2962ff"
-            },
-            {
-                id: "demineur",
-                title: "Démineur 2.0",
-                description: "Réinterprétation moderne du célèbre jeu Démineur avec des niveaux de difficulté progressifs.",
-                tags: ["React", "TypeScript", "Vite", "SQLite"],
-                featured: true,
-                color: "#ff0055"
-            }
+            { id: "memory", title: "MemoryGame", tags: ["JavaScript", "CSS", "DOM"], status: "done", year: "2024" },
+            { id: "first-portfolio", title: "First Portfolio", tags: ["CSS", "JavaScript", "Legacy"], status: "done", year: "2025" },
+            { id: "solar", title: "SolarSystem", tags: ["JavaScript", "Three.js", "CSS"], status: "done", year: "2025" },
+            { id: "soulsweeper", title: "SoulSweeper", tags: ["C#", "Unity"], status: "in-progress", year: "2026" },
+            { id: "poucestop", title: "PouceStop", tags: ["Kotlin", "Android Studio"], status: "done", year: "[À FOURNIR : année]" }
         ]
     },
     notFound: {

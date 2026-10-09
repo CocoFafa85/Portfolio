@@ -66,6 +66,10 @@ export interface HoloCardLabels {
 export interface ProjectLabels {
     demo: string;
     code: string;
+    /** Hidden end of a Demo / Code link's accessible name, "{title}" replaced (the visible text comes first) */
+    linkSuffix: string;
+    /** Year line of a project in progress, "{year}" replaced */
+    plannedYear: string;
     wipRibbon: string;
     wipBadge: string;
 }
@@ -116,17 +120,35 @@ export interface ProjectRef {
     tags: string[];
 }
 
-export interface Project {
-    id: string;
-    title: string;
-    description: string;
-    imageUrl?: string;
-    tags: string[];
+/** The projects of the site (F4, LOT 5): one list, read by Projects and by the skills */
+export type ProjectId = 'memory' | 'first-portfolio' | 'solar' | 'soulsweeper' | 'poucestop';
+
+export type ProjectStatus = 'done' | 'in-progress';
+
+/** A project of the single list (content.projects.list): what every page reads */
+export interface ProjectEntry extends ProjectRef {
+    id: ProjectId;
+    status: ProjectStatus;
+    /** Year it was finished; while in progress, its planned release year */
+    year: string;
+}
+
+/** What only the Projects page shows (src/data/projectDetails.ts, loaded with the Projects chunk) */
+export interface ProjectDetails {
+    pitch: string;
+    team: string;
+    /** Learning goals, one line each */
+    goals: string[];
+    /** Label of the card's window bar: the demo address, or "project · platform" */
+    frame: string;
+    /** Accent of the card (CSS colour, made readable on the panel where it colours text) */
+    color: string;
     demoLink?: string;
     repoLink?: string;
-    featured?: boolean;
-    color?: string;
 }
+
+/** A card of the Projects page: its entry of the list and its details */
+export interface Project extends ProjectEntry, ProjectDetails {}
 
 export interface UiLabels {
     /** Accessible name of the site navigation bar */
@@ -194,7 +216,8 @@ export interface PortfolioContent {
     projects: {
         title: string;
         labels: ProjectLabels;
-        list: Project[];
+        /** The single list of the projects, in the validated order (their details: projectDetails.ts) */
+        list: ProjectEntry[];
     };
     notFound: {
         code: string;

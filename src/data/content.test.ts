@@ -3,6 +3,8 @@ import { parseLocalDateTime } from '../utils/timeCircuits/time';
 import { content } from './content';
 import { skillIcons } from './generated/skillIcons';
 import { linkSkills, normalizeTag, withProfessional } from '../utils/skills';
+import { isInProgress, withDetails } from '../utils/projects';
+import { projectDetails } from './projectDetails';
 
 describe('content.about (LOT 3, data F1)', () => {
     it('gives each row of the time circuits one era, each era once', () => {
@@ -77,6 +79,59 @@ describe('skills of the CV (F3, LOT 4)', () => {
 
         // Assert
         expect(duplicates).toEqual([]);
+    });
+});
+
+describe('projects (F4, F5, LOT 5)', () => {
+    it('lists the five projects once, in the validated order, without Site IFTO nor Démineur 2.0', () => {
+        // Arrange / Act
+        const titles = content.projects.list.map((project) => project.title);
+
+        // Assert
+        expect(titles).toEqual(['MemoryGame', 'First Portfolio', 'SolarSystem', 'SoulSweeper', 'PouceStop']);
+        expect(new Set(content.projects.list.map((project) => project.id)).size).toBe(5);
+    });
+
+    it('gives every project of the list its details, and no details to another', () => {
+        // Arrange
+        const ids = content.projects.list.map((project) => project.id);
+
+        // Act
+        const detailed = Object.keys(projectDetails);
+
+        // Assert
+        expect(detailed).toEqual(ids);
+    });
+
+    it('marks SoulSweeper alone in progress, released in 2026, in C# and Unity', () => {
+        // Arrange / Act
+        const inProgress = content.projects.list.filter(isInProgress);
+
+        // Assert
+        expect(inProgress.map((project) => [project.title, project.year, project.tags])).toEqual([['SoulSweeper', '2026', ['C#', 'Unity']]]);
+    });
+
+    it('links a demo and a repository for the finished web projects only (F5: none for SoulSweeper)', () => {
+        // Arrange
+        const cards = withDetails(content.projects.list, projectDetails);
+
+        // Act
+        const linked = cards.filter((card) => 'demoLink' in card && 'repoLink' in card).map((card) => card.id);
+
+        // Assert
+        expect(linked).toEqual(['memory', 'first-portfolio', 'solar']);
+    });
+
+    it('keeps the validated polish: one pitch and at least one goal per project, pitches as sentences', () => {
+        // Arrange
+        const cards = withDetails(content.projects.list, projectDetails);
+
+        // Act
+        const written = cards.filter((card) => !card.pitch.startsWith('['));
+
+        // Assert
+        expect(cards.every((card) => card.goals.length > 0 && card.team.length > 0)).toBe(true);
+        expect(written.every((card) => card.pitch.endsWith('.'))).toBe(true);
     });
 });
 

@@ -23,10 +23,6 @@
     &:nth-child(3) { animation-delay: 1s; }
     &:nth-child(4) { animation-delay: 1.5s; }
 
-    &.featured {
-        border-width: 2px;
-    }
-
     // Read by ProjectActions: the Demo / Code overlay shows on hover and on keyboard focus
     &:hover,
     &:focus-within {
