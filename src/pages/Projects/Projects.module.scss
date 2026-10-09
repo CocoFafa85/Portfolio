@@ -1,9 +1,9 @@
-@import "../../styles/variables";
+@use 'sass:color';
+@use '../../styles/variables' as *;
 
 .projectsPage {
     padding: 3rem 2rem 5rem;
     min-height: 100%;
-    // background: linear-gradient(135deg, $bg-primary, $bg-deep, $bg-secondary);
     background: transparent;
     display: flex;
     flex-direction: column;
@@ -20,10 +20,10 @@
 
     // Readability
     padding: 1rem 2rem;
-    background: rgba($bg-secondary, 0.6);
+    background: color.change($bg-secondary, $alpha: 0.6);
     backdrop-filter: blur(4px);
     border-radius: 12px;
-    border: 1px solid rgba($neon-cyan, 0.1);
+    border: 1px solid color.change($neon-cyan, $alpha: 0.1);
 
     h1 {
         font-family: $font-orbitron;
@@ -31,7 +31,7 @@
         color: $neon-cyan;
         text-transform: uppercase;
         letter-spacing: 4px;
-        text-shadow: 0 0 20px rgba($neon-cyan, 0.4);
+        text-shadow: 0 0 20px color.change($neon-cyan, $alpha: 0.4);
         margin: 0;
         width: fit-content;
         margin-inline: auto;

@@ -1,0 +1,66 @@
+@use 'sass:color';
+@use '../../../styles/variables' as *;
+
+// ═══════════════════════════════════════════════
+// OVERLAY — Action buttons, shown while the card sets --reveal (hover, keyboard focus)
+// ═══════════════════════════════════════════════
+.overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    background: linear-gradient(to top,
+            rgba(0, 0, 0, 0.92) 0%,
+            rgba(0, 0, 0, 0.7) 50%,
+            rgba(0, 0, 0, 0.3) 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: var(--reveal, 0);
+    transition: opacity 0.4s ease;
+}
+
+.links {
+    display: flex;
+    gap: 1.2rem;
+    transform: translateY(var(--reveal-lift, 10px));
+    transition: transform 0.4s 0.1s ease;
+}
+
+.linkButton {
+    padding: 0.7rem 1.5rem;
+    border-radius: 6px;
+    font-family: $font-orbitron;
+    text-decoration: none;
+    font-size: 0.8rem;
+    transition: all 0.25s ease;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+
+    &.demo {
+        background: $neon-pink;
+        color: #fff;
+        box-shadow: 0 0 12px color.change($neon-pink, $alpha: 0.4);
+        border: 1px solid $neon-pink;
+
+        &:hover {
+            background: color.adjust($neon-pink, $lightness: 8%);
+            box-shadow: 0 0 25px color.change($neon-pink, $alpha: 0.7);
+            transform: translateY(-2px);
+        }
+    }
+
+    &.repo {
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.6);
+        color: #fff;
+
+        &:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--card-color);
+            color: var(--card-color);
+            box-shadow: 0 0 15px color-mix(in srgb, var(--card-color) 30%, transparent);
+            transform: translateY(-2px);
+        }
+    }
+}
