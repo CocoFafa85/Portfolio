@@ -3,8 +3,6 @@ $neon-pink: #ff0080;
 $neon-magenta: #ff0080;
 $neon-cyan: #00f3ff;
 $neon-blue: #007bff;
-// Era title of the present (About, review of 2026-10-08): a lighter neon blue, 5.6:1 on the text panels
-$neon-azure: #2f8dff;
 $neon-violet: #bc13fe;
 $neon-purple: #bc13fe;
 $neon-yellow: $neon-cyan; // FORCE CYAN SUPREMACY
@@ -89,13 +87,18 @@ $tc-metal-dark: #23252b;
 $tc-flux-light: #ebfcff;
 $tc-flux-glow: #50beff;
 
+// Section titles (h2) of a page: one size for all (review of 2026-10-09); never under 19.2 px
+// bold, large text for WCAG (the violet of the Skills rail reads at 4.47:1, AA for large text)
+$section-title-size: clamp(1.2rem, 1.05rem + 0.6vw, 1.5rem);
+
 // Navigation bar height, the <main> area starts right below it
 $hud-height: 56px;
 $hud-height-mobile: 52px;
 
 // Typography Key
 $font-orbitron: 'Orbitron', sans-serif;
-$font-montserrat: 'Montserrat Alternates', sans-serif;
+// Its fallback has the same widths (main.scss): the text wraps the same before and after the web font (CLS)
+$font-montserrat: 'Montserrat Alternates', 'Montserrat Alternates Fallback', sans-serif;
 // HoloCard v2 (Skills, LOT 4): the original card's dark blue glass, a gold
 // contact chip, foil tints, edge slices, magnetic stripe, QR plate
 $holo-deep: #0a0f1e;

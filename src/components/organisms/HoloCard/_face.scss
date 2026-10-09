@@ -8,6 +8,7 @@
     position: absolute;
     inset: 0;
     transform-style: preserve-3d;
+    pointer-events: none;
 }
 
 // A layer of a face, in its own composited layer (will-change: fixed raster scale,
@@ -22,9 +23,13 @@
 
 // Rotating neon border of the original card: a conic layer turning behind the
 // base (transform only, compositor), running once the card powers on
+// It is the card body too: what a click or a tap flips (with its buttons and links, the only
+// part of a face that catches the pointer)
 @mixin frame {
     @include layer;
     overflow: hidden;
+    pointer-events: auto;
+    cursor: pointer;
 }
 
 // A square the size of the card diagonal (35em): it covers the card at any angle

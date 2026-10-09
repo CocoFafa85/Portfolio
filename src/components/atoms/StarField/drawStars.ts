@@ -1,19 +1,19 @@
 import { starEffects as fx } from '../../../data/effects';
 import { STAR_STRIDE, starAlpha, type StarLayer } from '../../../utils/starfield/layers';
 import { meteorAlpha, meteorPose, type MeteorPool } from '../../../utils/starfield/meteors';
+import type { GateOccluder } from '../../../utils/stargate/occluder';
+import { createCometSprites, type CometSprites } from './drawComet';
 import type { StarPalette } from './palette';
+import { canvas } from './sprite';
 
-/** Pre-rendered images: one per tint, the meteor trail. Built once. */
+/** Pre-rendered images: one per tint, the meteor trail, then — built at their first use, never in
+ *  the first frames — the comet and the disc erased behind the gate. Built once each. */
 export interface StarSprites {
     tints: HTMLCanvasElement[];
     trail: HTMLCanvasElement;
-}
-
-function canvas(width: number, height: number): [HTMLCanvasElement, CanvasRenderingContext2D | null] {
-    const element = document.createElement('canvas');
-    element.width = width;
-    element.height = height;
-    return [element, element.getContext('2d')];
+    palette: StarPalette;
+    comet: CometSprites | null;
+    hole: HTMLCanvasElement | null;
 }
 
 /** White alpha mask (a radial falloff), then tinted: the colour keeps the mask's alpha. */
@@ -57,10 +57,27 @@ function trail(colour: string): HTMLCanvasElement {
     return element;
 }
 
+/** Opaque disc up to the ring, then a soft edge: drawn with destination-out, it erases the sky behind the gate. */
+function hole(): HTMLCanvasElement {
+    const { size, solid, fade } = fx.occlusion;
+    const [element, ctx] = canvas(size, size);
+    if (!ctx) return element;
+    const half = size / 2;
+    const gradient = ctx.createRadialGradient(half, half, 0, half, half, half);
+    gradient.addColorStop(solid / fade, '#000');
+    gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, size, size);
+    return element;
+}
+
 export function createStarSprites(palette: StarPalette): StarSprites {
     return {
         tints: palette.tints.map((colour) => disc(colour, fx.sprite.core, 1)),
         trail: trail(palette.trail),
+        palette,
+        comet: null,
+        hole: null,
     };
 }
 
@@ -98,5 +115,24 @@ export function drawMeteors(ctx: CanvasRenderingContext2D, pool: MeteorPool, spr
         ctx.drawImage(sprites.tints[1], -headRadius, -headRadius, headRadius * 2, headRadius * 2);
     }
     ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    ctx.globalAlpha = 1;
+}
+
+/** The comet sprites, built when the first comet comes (about 5 s after the page). */
+export function cometSprites(sprites: StarSprites): CometSprites {
+    sprites.comet ??= createCometSprites(sprites.palette);
+    return sprites.comet;
+}
+
+/** Erases the sky behind the gate (it stands in front), as solid as the gate is assembled. No allocation. */
+export function eraseBehindGate(ctx: CanvasRenderingContext2D, sprites: StarSprites, occluder: GateOccluder): void {
+    const { disc } = occluder;
+    if (disc[3] <= 0) return;
+    const radius = disc[2] * fx.occlusion.fade;
+    sprites.hole ??= hole();
+    ctx.globalCompositeOperation = 'destination-out';
+    ctx.globalAlpha = Math.min(disc[3], 1);
+    ctx.drawImage(sprites.hole, disc[0] - radius, disc[1] - radius, radius * 2, radius * 2);
+    ctx.globalCompositeOperation = 'source-over';
     ctx.globalAlpha = 1;
 }

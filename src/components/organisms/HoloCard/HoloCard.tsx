@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState, type CSSProperties, type MouseEvent } from 'react';
+import React, { useCallback, useEffect, useRef, useState, type CSSProperties, type MouseEvent, type PointerEvent } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { content } from '../../../data/content';
 import { holoEffects as fx } from '../../../data/effects';
@@ -18,16 +18,21 @@ const SCENE_VARS = {
     '--sway-x': `${fx.sway.x}deg`, '--sway-y': `${fx.sway.y}deg`, '--sway-ms': `${fx.sway.periodMs}ms`,
     '--drift': `${fx.film.drift * 100}%`,
 } as CSSProperties;
+// A button or a link of a face (download, QR code, keyboard flip): pressing it never flips the card
+const isControl = (target: EventTarget | null) => target instanceof Element && Boolean(target.closest('button, a'));
 // Edge slices between the faces, painted once: the thickness seen when the card tilts or turns
 const SLICE_Z = Array.from({ length: fx.slices }, (_, i) => (depth.half - 1) * (1 - (2 * i) / (fx.slices - 1)));
 
 /**
  * HoloCard v2 (LOT 4, S2, direction A "access badge"): a thick holographic ID
  * card. A fine pointer tilts it (the original spring) and shows its depth;
- * a click or a tap on it flips it (back: QR code to LinkedIn); its buttons
- * download the CV and flip it from the keyboard. The hidden face is inert and
- * the focus follows the flip (never lost, never trapped). Reduced motion: no
- * tilt, sway nor sequence.
+ * a click or a tap anywhere on it flips it, both ways (back: QR code to
+ * LinkedIn; review of 2026-10-09: no visible flip button). The download
+ * button downloads the CV; from the keyboard, a flip button shows only while
+ * focused. Only the faces catch the pointer: the empty planes of the 3D
+ * wrappers no longer swallow a click on a tilted card. The hidden face is
+ * inert and the focus follows the flip (never lost, never trapped). Reduced
+ * motion: no tilt, sway nor sequence.
  */
 const Card: React.FC = () => {
     const sceneRef = useRef<HTMLDivElement>(null);
@@ -39,6 +44,8 @@ const Card: React.FC = () => {
     const toBack = useRef<HTMLButtonElement>(null);
     const toFront = useRef<HTMLButtonElement>(null);
     const moveFocus = useRef(false);
+    // The press started on a control: its click, even released beside it, never flips the card
+    const downOnControl = useRef(false);
 
     const flip = useCallback(() => {
         // The focus was on the face that turns away (soon inert): take it to the other face
@@ -52,9 +59,14 @@ const Card: React.FC = () => {
     }, [flipped]);
 
     const onCardClick = (event: MouseEvent<HTMLDivElement>) => {
-        if (event.target instanceof Element && event.target.closest('button, a')) return;
+        if (isControl(event.target) || downOnControl.current) return;
         flip();
     };
+    const onPointerDown = (event: PointerEvent<HTMLDivElement>) => {
+        downOnControl.current = isControl(event.target);
+        tilt.hold(downOnControl.current);
+    };
+    const onPointerUp = () => tilt.hold(false);
 
     return (
         <div
@@ -66,6 +78,9 @@ const Card: React.FC = () => {
             onPointerMove={tilt.onPointerMove}
             onPointerEnter={(event) => { if (event.pointerType !== 'touch') setActive(true); }}
             onPointerLeave={(event) => { tilt.onPointerLeave(event); setActive(false); }}
+            onPointerDown={onPointerDown}
+            onPointerUp={onPointerUp}
+            onPointerCancel={onPointerUp}
             onFocus={() => setActive(true)}
             onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setActive(false); }}
         >

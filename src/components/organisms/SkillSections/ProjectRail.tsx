@@ -1,5 +1,6 @@
 import React from 'react';
 import type { ProjectRef, SkillLabels } from '../../../types/models';
+import { PROFESSIONAL_ID } from '../../../utils/skills';
 import styles from './ProjectRail.module.scss';
 
 export interface ProjectRailProps {
@@ -13,8 +14,9 @@ export interface ProjectRailProps {
 }
 
 /**
- * The F4 projects (LOT 4, S3, decision B "projects lit"): name only, big
- * enough to invite the pointer. A pointed badge lights its projects and dims
+ * The F4 projects (LOT 4, S3, decision B "projects lit"), then
+ * "Professionnel" for the skills no public project uses (review of
+ * 2026-10-09, drawn apart): name only, big enough to invite the pointer. A pointed badge lights its projects and dims
  * the others; pointing at a project lights its badges (mouse only: keyboard
  * and screen reader users get the same link from each badge's description).
  */
@@ -30,6 +32,7 @@ const ProjectRail: React.FC<ProjectRailProps> = ({ projects, labels, lit, note, 
                     key={project.id}
                     className={styles.card}
                     data-light={lit ? (lit.has(project.id) ? 'lit' : 'dim') : 'rest'}
+                    data-kind={project.id === PROFESSIONAL_ID ? 'professional' : undefined}
                     onPointerEnter={(event) => { if (event.pointerType !== 'touch') onPoint(project.id); }}
                     onPointerLeave={(event) => { if (event.pointerType !== 'touch') onPoint(null); }}
                 >

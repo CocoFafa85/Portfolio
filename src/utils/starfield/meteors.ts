@@ -13,6 +13,9 @@ export interface MeteorSettings {
     angle: Range;
     /** Births happen in this top share of the screen */
     startBand: number;
+    /** Births happen in this share of the width, from the side the meteor comes from (the whole
+     *  crossing stays on screen: the slow comet); default anywhere between 10 % and 90 % */
+    entrySpan?: Range;
 }
 
 /** Fields of a meteor: x, y, vx, vy (px/s), tail length, age and life (ms), active flag */
@@ -38,7 +41,8 @@ export function spawnMeteor(pool: MeteorPool, width: number, height: number, set
         const direction = random() < 0.5 ? -1 : 1;
         const angle = inRange(random, settings.angle);
         const speed = inRange(random, settings.speed);
-        pool.data[base] = width * (0.1 + random() * 0.8);
+        const entry = settings.entrySpan ? inRange(random, settings.entrySpan) : 0.1 + random() * 0.8;
+        pool.data[base] = width * (direction > 0 || !settings.entrySpan ? entry : 1 - entry);
         pool.data[base + 1] = height * settings.startBand * random();
         pool.data[base + 2] = Math.cos(angle) * speed * direction;
         pool.data[base + 3] = Math.sin(angle) * speed;

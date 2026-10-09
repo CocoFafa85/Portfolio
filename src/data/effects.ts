@@ -52,7 +52,8 @@ export const nebulaEffects = {
 /**
  * Home starfield over the nebula (LOT 2, H4), shooting stars. Reviews: far layer removed
  * (2026-10-07); grey out-of-focus near layer removed and the coloured layer tripled at three
- * speeds, slow (the original), medium and fast (2026-10-08).
+ * speeds, slow (the original), medium and fast (2026-10-08); the fast layer slowed down, it
+ * tired the eye (2026-10-09, was 48–70 px/s).
  */
 export const starEffects = {
     seed: 2035,
@@ -61,7 +62,7 @@ export const starEffects = {
     layers: [
         { perMegapixel: 110, min: 34, radius: [2.1, 3.9], alpha: [0.5, 0.9], speed: [6, 12], parallax: 11, twinkle: 0.25, tints: [0, 1, 2, 3] },
         { perMegapixel: 110, min: 34, radius: [2.1, 3.9], alpha: [0.5, 0.9], speed: [20, 32], parallax: 16, twinkle: 0.25, tints: [0, 1, 2, 3] },
-        { perMegapixel: 110, min: 34, radius: [2.1, 3.9], alpha: [0.5, 0.9], speed: [48, 70], parallax: 22, twinkle: 0.25, tints: [0, 1, 2, 3] },
+        { perMegapixel: 110, min: 34, radius: [2.1, 3.9], alpha: [0.5, 0.9], speed: [30, 40], parallax: 22, twinkle: 0.25, tints: [0, 1, 2, 3] },
     ] satisfies StarLayerSpec[],
     meteor: {
         max: 2, intervalMs: [4500, 9000], speed: [650, 1000], length: [110, 220], lifeMs: [700, 1100],
@@ -69,10 +70,23 @@ export const starEffects = {
     } satisfies MeteorSettings & { max: number },
     /** First shooting star, after the title has lit up */
     firstMeteorMs: 2500,
+    /** A comet every 10 s (review of 2026-10-09): ~4× slower than a shooting star and bigger, it
+     *  crosses the screen from the side it comes from, behind the gate like the rest of the sky */
+    comet: {
+        max: 1, intervalMs: [10_000, 10_000], speed: [170, 220], length: [340, 440], lifeMs: [5200, 6000],
+        angle: [0.2, 0.38], startBand: 0.28, entrySpan: [0.04, 0.3],
+    } satisfies MeteorSettings & { max: number },
+    firstCometMs: 5000,
+    /** Comet sprites: glowing head (radius px), ion tail (cyan, straight) and dust tail (violet,
+     *  fainter, a little apart: radians), tail thickness at the head (px) */
+    cometLook: { headSize: 96, headRadius: 24, tailWidth: 512, tailHeight: 32, ionThickness: 9, dustThickness: 15, dustAngle: 0.07, dustAlpha: 0.38 },
     /** Share of the remaining distance the parallax closes each frame */
     pointerSmoothing: 0.06,
     sprite: { size: 64, core: 0.25 },
     trail: { width: 256, height: 8, bright: 0.55, headRadius: 5, thickness: 3.2 },
+    /** The gate stands in front of the sky (review of 2026-10-09, whole gate): erased up to the ring
+     *  (gate radius 1), fading out to the chevron tips; sprite size of the erasing disc */
+    occlusion: { solid: 1, fade: 1.12, size: 128 },
     pixelRatio: { fine: 2, coarse: 1.5, maxPixels: 8_000_000 } satisfies PixelRatioCaps,
     resizeDebounceMs: 150,
 };
@@ -169,10 +183,16 @@ export const convectorEffects = {
     resizeDebounceMs: 150,
 };
 
-/** Neon tube around the convector and the era text (About, review of 2026-10-08):
- *  violet → pink → cyan, a third of the cycle each, two pulses per colour */
+/** Default border of every block (review of 2026-10-09): the HoloCard's turning neon border,
+ *  ×2.5 slower (holoEffects.borderTurnMs 4 000); it replaces About's pulsing tube (2026-10-08) */
 export const neonFrameEffects = {
-    cycleMs: 7500,
+    /** One turn of the gradient (ms) */
+    turnMs: 10_000,
+    /** Side of the canvas painted once (px): a smooth gradient, scaled by the compositor */
+    texture: 128,
+    /** Powers on at the first idle moment after powerOnAfterMs (never in the first frames), at the latest powerOnTimeoutMs later */
+    powerOnAfterMs: 700,
+    powerOnTimeoutMs: 1200,
 };
 
 /**

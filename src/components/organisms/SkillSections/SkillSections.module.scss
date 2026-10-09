@@ -3,53 +3,42 @@
 @use '../../../styles/mixins' as *;
 
 // ═══════════════════════════════════════════════
-// SKILL SECTIONS (LOT 4) — each group under its intro; plain panels (few
-// distinct paint effects in the first frame, LOT 3 lesson)
+// SKILL SECTIONS (LOT 4; block 2 since the review of 2026-10-09): the
+// projects rail, then each family of badges, in one panel (few distinct
+// paint effects in the first frame, LOT 3 lesson)
 // ═══════════════════════════════════════════════
 .sections {
+    @include block-panel;
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-}
-
-.section {
-    padding: 1.4rem 1.6rem 1.6rem;
-    background: color.change($bg-secondary, $alpha: 0.82);
-    border: 1px solid color.change($neon-pink, $alpha: 0.28);
-    border-radius: 10px;
+    padding: 1.4rem 1.6rem 1.8rem;
 
     @include mobile {
-        padding: 1.1rem 1rem 1.2rem;
+        padding: 1rem 0.85rem 1.3rem;
     }
 }
 
-// Groups from the third on are laid out and painted only near the screen (below the card on
-// a phone); never the first two, which a large screen shows at once (their estimated size
-// would shift the page when the real one comes in: CLS). The size is remembered once seen.
+// A family: its title and its badges, under a thin rule
+.section {
+    padding-top: 1.25rem;
+    border-top: 1px solid color.change($neon-pink, $alpha: 0.2);
+}
+
+// Families from the third on are laid out and painted only near the screen; never the first
+// two, which a large screen shows at once (their estimated size would shift the page when the
+// real one comes in: CLS). The size is remembered once seen.
 .section:nth-of-type(n + 3) {
     content-visibility: auto;
-    contain-intrinsic-size: auto 18rem;
+    contain-intrinsic-size: auto 9rem;
 }
 
 .title {
     margin-bottom: 0.75rem;
-    font-size: clamp(1.15rem, 1rem + 0.6vw, 1.5rem);
+    font-size: $section-title-size;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: $neon-pink;
-}
-
-.intro {
-    max-width: 75ch;
-    margin-bottom: 1.1rem;
-    font-size: clamp(0.95rem, 0.9rem + 0.2vw, 1.05rem);
-    line-height: 1.7;
-    color: var(--text-primary);
-}
-
-.keyword {
-    font-weight: 700;
-    color: $neon-cyan;
 }
 
 .badges {

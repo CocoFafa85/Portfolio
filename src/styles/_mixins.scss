@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use 'variables' as *;
 
 // Mixins
@@ -55,4 +56,17 @@
   @media (min-width: 1280px) {
     @content;
   }
+}
+
+// A block of a page (review of 2026-10-09): one solid dark panel (the old translucent glass
+// over the near-black circuit, made opaque: a glitch title's slices can match it)
+$block-bg: color.mix($bg-secondary, $pcb-mask, 82%);
+
+// Its default border is the turning neon of NeonFrame, laid over this plain one once powered on
+@mixin block-panel {
+  --neon-radius: 10px;
+  position: relative;
+  background: $block-bg;
+  border: 1px solid color.change($neon-cyan, $alpha: 0.18);
+  border-radius: var(--neon-radius);
 }

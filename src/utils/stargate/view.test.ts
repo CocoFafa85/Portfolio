@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fitGate, projectGatePoint, type FitSettings, type GateView, type Rect } from './view';
+import { fitGate, gateDisc, projectGatePoint, type FitSettings, type GateView, type Rect } from './view';
 
 const FIT: FitSettings = { extent: 1.4, sideExtent: 1.1, margin: 8, camera: 2.6, diveDepth: 2.95 };
 const W = 1440;
@@ -84,5 +84,40 @@ describe('projectGatePoint', () => {
         expect(halfway.visible).toBe(true);
         expect(halfway.y).toBeCloseTo(515, 3);
         expect(through.visible).toBe(false);
+    });
+});
+
+describe('gateDisc', () => {
+    it('matches the projected centre and the unit radius of the gate at rest', () => {
+        // Arrange
+        const view = fitted();
+        const out = new Float32Array(3);
+        const rim = project(1, 0, view);
+
+        // Act
+        gateDisc(view, FIT, W, H, 0, out);
+
+        // Assert
+        expect(out[0]).toBeCloseTo(720, 3);
+        expect(out[1]).toBeCloseTo(580, 3);
+        expect(out[2]).toBeCloseTo(rim.x - 720, 3);
+    });
+
+    it('follows the dive: centred on the screen and larger, then the whole screen once through', () => {
+        // Arrange
+        const view = fitted();
+        const rest = new Float32Array(3);
+        const halfway = new Float32Array(3);
+        const through = new Float32Array(3);
+        gateDisc(view, FIT, W, H, 0, rest);
+
+        // Act
+        gateDisc(view, FIT, W, H, 0.5, halfway);
+        gateDisc(view, FIT, W, H, 1, through);
+
+        // Assert
+        expect(halfway[1]).toBeCloseTo(515, 3);
+        expect(halfway[2]).toBeGreaterThan(rest[2]);
+        expect(through[2]).toBeGreaterThanOrEqual(W + H);
     });
 });

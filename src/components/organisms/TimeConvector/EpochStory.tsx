@@ -92,7 +92,7 @@ const EpochStory: React.FC<EpochStoryProps> = ({ steps, selected, panelId, tabId
                     );
                 })}
             </div>
-            {/* Outside the stack, which clips: the tube's glow overflows the panel */}
+            {/* Outside the stack, which clips its panels: the frame covers the whole stack */}
             <NeonFrame lit={powered} />
         </div>
     );

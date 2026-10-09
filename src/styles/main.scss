@@ -24,7 +24,6 @@
   --neon-yellow: #{$neon-yellow};
   --neon-green: #{$neon-green};
   --neon-fuchsia: #{$neon-fuchsia};
-  --neon-azure: #{$neon-azure};
   --neon-orange: #{$neon-orange};
 
   --text-primary: #ffffff;
@@ -66,13 +65,30 @@
   --gate-horizon: #{$gate-horizon};
 
   --font-orbitron: 'Orbitron', sans-serif;
-  --font-montserrat: 'Montserrat Alternates', sans-serif;
+  --font-montserrat: #{$font-montserrat};
 
   --hud-height: #{$hud-height};
 
   @include mobile {
     --hud-height: #{$hud-height-mobile};
   }
+}
+
+// Fallback of Montserrat Alternates, a wide face: Arial scaled to its widths (measured on the
+// Skills text: 12 % wider in regular, 10.25 % in bold). Until the web font arrives the text
+// wraps on the same words, so its arrival moves nothing below (Skills CLS, review of 2026-10-09)
+@font-face {
+  font-family: 'Montserrat Alternates Fallback';
+  src: local('Arial'), local('ArialMT'), local('Helvetica'), local('Liberation Sans');
+  font-weight: 400;
+  size-adjust: 112%;
+}
+
+@font-face {
+  font-family: 'Montserrat Alternates Fallback';
+  src: local('Arial Bold'), local('Arial-BoldMT'), local('Helvetica Bold'), local('Liberation Sans Bold');
+  font-weight: 700;
+  size-adjust: 110.25%;
 }
 
 body {

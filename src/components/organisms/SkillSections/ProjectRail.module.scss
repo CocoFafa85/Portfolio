@@ -9,7 +9,6 @@
 .rail {
     position: relative;
     z-index: 2;
-    margin-bottom: 1.5rem;
     padding: 1rem 1.2rem 1.1rem;
     background: $bg-deep;
     border: 1px solid color.change($neon-violet, $alpha: 0.45);
@@ -30,10 +29,10 @@
     margin-bottom: 0.8rem;
 }
 
-// Large text (≥ 18.66 px bold): the neon violet reads at 4.47:1 on the rail, AA for large text
+// Same size as the families' titles (one h2 size); large text: the neon violet reads at 4.47:1, AA
 .title {
-    font-size: 1.2rem;
-    letter-spacing: 0.12em;
+    font-size: $section-title-size;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: $neon-violet;
 }
@@ -46,12 +45,17 @@
 
 .cards {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 0.75rem;
     list-style: none;
 
-    @include tablet {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+    // Six entries (review of 2026-10-09): three a row on a tablet, all in one row on a large screen
+    @media (min-width: 768px) {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    @include large {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
     }
 }
 
@@ -97,6 +101,17 @@
 
     &[data-light='dim'] {
         opacity: var(--skill-dim, 0.32);
+    }
+
+    // Not a public project: the skills of the work experience, drawn apart (dashed, cyan)
+    &[data-kind='professional'] {
+        color: $star-cyan;
+        border: 1px dashed color.change($neon-cyan, $alpha: 0.6);
+
+        &::after {
+            border-color: $neon-cyan;
+            box-shadow: 0 0 16px color.change($neon-cyan, $alpha: 0.5);
+        }
     }
 }
 

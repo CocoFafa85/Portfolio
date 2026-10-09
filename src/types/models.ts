@@ -75,6 +75,8 @@ export interface SkillEntry {
     name: string;
     /** Simple Icons slug (src/data/generated/skillIcons.ts); null: generic logo */
     icon: string | null;
+    /** Other names a project tag may give it (Android Studio → IDE classiques & agentiques) */
+    aliases?: string[];
 }
 
 /** A group of skills, headed by its short intro when it has one (S1) */
@@ -94,6 +96,8 @@ export interface SkillLabels {
     /** Before the projects of a badge (its description for screen readers too) */
     usedIn: string;
     noProject: string;
+    /** Last rail entry: the skills no public project uses (review of 2026-10-09) */
+    professional: string;
 }
 
 /** A Simple Icons logo, generated into src/data/generated/skillIcons.ts */

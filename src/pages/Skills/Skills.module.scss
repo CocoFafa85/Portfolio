@@ -1,11 +1,11 @@
-@use 'sass:color';
 @use '../../styles/variables' as *;
 @use '../../styles/mixins' as *;
 
 // ═══════════════════════════════════════════════
-// SKILLS PAGE (LOT 4) — layout B "merged sections": title, lead and HoloCard
-// side by side from 1024 px (card first on narrow screens, never pushed below
-// the text), then the groups of skills
+// SKILLS PAGE (LOT 4; two blocks since the review of 2026-10-09): the text
+// block beside the HoloCard from 1024 px, then the block of the projects
+// rail and the badges. Narrower, the card comes first: the CV stays one
+// glance away, never below the long text (DOM order unchanged: title first)
 // ═══════════════════════════════════════════════
 .page {
     width: 100%;
@@ -19,76 +19,61 @@
     }
 }
 
-.hero {
+.top {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    justify-items: center;
-    gap: 2rem;
-    margin-bottom: 2.5rem;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
 
+    // The card grew towards the text (review of 2026-10-09): 400 px, half the gap
     @include wide {
         grid-template-columns: minmax(0, 1fr) auto;
-        align-items: center;
-        justify-items: start;
-        gap: 3rem;
+        align-items: start;
+        gap: 1.5rem;
     }
 }
 
-.heading {
+// Block 1: the title, the lead and one paragraph per family
+.intro {
+    @include block-panel;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 1.25rem;
+    gap: 1rem;
     min-width: 0;
+    padding: 1.6rem 1.8rem;
 
-    @include wide {
-        align-items: flex-start;
+    @include mobile {
+        padding: 1.2rem 1rem;
     }
-}
 
-// Frame of the title (readability over the circuit); the heading has no
-// padding so the glitch slices line up with the letters (as on About, LOT 3)
-.titleFrame {
-    width: fit-content;
-    max-width: 100%;
-    padding: 1rem 2rem;
-    background: color.change($bg-secondary, $alpha: 0.6);
-    border: 1px solid color.change($neon-cyan, $alpha: 0.1);
-    border-radius: 12px;
-
-    h1 {
+    // The heading has no padding so the glitch slices line up with the letters (as on About,
+    // LOT 3); its slices take the block colour, and it sits left with the text on a wide screen
+    :global(.glitch-title) {
         margin-bottom: 0;
         // Fixed line height: no shift when Orbitron replaces the fallback font (CLS)
         line-height: 1.2;
-    }
 
-    @include mobile {
-        padding: 0.75rem 1rem;
+        &::before,
+        &::after {
+            background: $block-bg;
+        }
 
-        h1 {
+        @include mobile {
             font-size: 2rem;
+        }
+
+        @include wide {
+            margin-inline: 0 !important;
         }
     }
 }
 
-.lead {
-    max-width: 60ch;
-    padding: 1.1rem 1.4rem;
-    font-size: clamp(1rem, 0.95rem + 0.25vw, 1.15rem);
-    line-height: 1.7;
-    text-align: center;
-    color: var(--text-primary);
-    background: color.change($bg-secondary, $alpha: 0.82);
-    border: 1px solid color.change($neon-cyan, $alpha: 0.18);
-    border-radius: 8px;
-
-    @include wide {
-        text-align: start;
-    }
-}
-
-// Right after the short lead on a phone: no long scroll before the card (LOT 6 finding)
 .card {
     display: flex;
     justify-content: center;
+    order: -1;
+
+    @include wide {
+        order: 0;
+    }
 }

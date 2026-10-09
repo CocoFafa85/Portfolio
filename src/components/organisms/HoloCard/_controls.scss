@@ -1,5 +1,6 @@
 @use 'sass:color';
 @use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
 @use 'face';
 
 // Controls printed on a face of the HoloCard (LOT 4, S2): download gauge,
@@ -56,10 +57,16 @@
         }
     }
 
+    // Keyboard only since the review of 2026-10-09 (a click anywhere flips the card): hidden until
+    // it has the focus, then shown in full (its visible text is its accessible name)
     .flip {
         color: $star-cyan;
-        background: transparent;
+        background: $holo-deep;
         border: 1px solid color.change($neon-cyan, $alpha: 0.45);
+
+        &:not(:focus-visible) {
+            @include visually-hidden;
+        }
     }
 }
 

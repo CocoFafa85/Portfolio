@@ -55,7 +55,7 @@ Après avoir obtenu un baccalauréat général scientifique, j'ai exploré diver
             {
                 id: "present",
                 label: "Présent",
-                accent: "var(--neon-azure)",
+                accent: "var(--neon-cyan)",
                 date: null,
                 title: "Qui je suis",
                 content: `Actuellement, je suis détenteur d'un bachelor informatique délivré par le CNAM et je collabore au sein d'une petite ESN. Je consacre la majeure partie de mon temps à travailler et à acquérir un maximum de compétences dans ce domaine. Je partage ma vie avec ma compagne, qui me soutient énormément dans mes projets. Retrouvez mon parcours sur [LinkedIn](https://www.linkedin.com/in/corentin-fanic-832630293).`
@@ -92,7 +92,8 @@ Mon objectif à long terme est de gérer un SI complet ou d'être responsable de
             railTitle: "Projets",
             railHint: "Survolez une technologie\u00a0: ses projets s'allument.",
             usedIn: "Utilisé dans\u00a0:",
-            noProject: "Pas encore de projet public"
+            noProject: "Pas encore de projet public",
+            professional: "Professionnel"
         },
         lead: "Au cours de ma formation et de mes projets récents, j'ai forgé une base technique solide en alliant théorie et mise en pratique intensive.",
         // Skills of the CV of 2026-09-17 only (F3), grouped as validated on 2026-10-08;
@@ -183,7 +184,7 @@ Mon objectif à long terme est de gérer un SI complet ou d'être responsable de
                     { name: "Jira", icon: "jira" },
                     { name: "Trello", icon: "trello" },
                     { name: "Figma", icon: "figma" },
-                    { name: "IDE classiques & agentiques", icon: null },
+                    { name: "IDE classiques & agentiques", icon: null, aliases: ["Android Studio"] },
                     { name: "LLM & MCP", icon: "modelcontextprotocol" },
                     { name: "FileZilla", icon: "filezilla" },
                     { name: "MobaXterm", icon: null },
@@ -194,12 +195,14 @@ Mon objectif à long terme est de gérer un SI complet ou d'être responsable de
                 ]
             }
         ],
-        // F4 projects as Skills links them, by their tags (merged with projects.list in LOT 5)
+        // F4 projects as Skills links them, by their tags (merged with projects.list in LOT 5);
+        // order and PouceStop: review of 2026-10-09 (the rail then ends with "Professionnel")
         projects: [
             { id: "memory", title: "MemoryGame", tags: ["JavaScript", "CSS", "DOM"] },
-            { id: "solar", title: "SolarSystem", tags: ["JavaScript", "Three.js", "CSS"] },
             { id: "first-portfolio", title: "First Portfolio", tags: ["CSS", "JavaScript", "Legacy"] },
-            { id: "soulsweeper", title: "SoulSweeper", tags: ["C#", "Unity"] }
+            { id: "solar", title: "SolarSystem", tags: ["JavaScript", "Three.js", "CSS"] },
+            { id: "soulsweeper", title: "SoulSweeper", tags: ["C#", "Unity"] },
+            { id: "poucestop", title: "PouceStop", tags: ["Kotlin", "Android Studio"] }
         ]
     },
 
