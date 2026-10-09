@@ -52,7 +52,8 @@ export const nebulaEffects = {
 /**
  * Home starfield over the nebula (LOT 2, H4), shooting stars. Reviews: far layer removed
  * (2026-10-07); grey out-of-focus near layer removed and the coloured layer tripled at three
- * speeds, slow (the original), medium and fast (2026-10-08).
+ * speeds, slow (the original), medium and fast (2026-10-08); the fast layer slowed down, it
+ * tired the eye (2026-10-09, was 48–70 px/s).
  */
 export const starEffects = {
     seed: 2035,
@@ -61,7 +62,7 @@ export const starEffects = {
     layers: [
         { perMegapixel: 110, min: 34, radius: [2.1, 3.9], alpha: [0.5, 0.9], speed: [6, 12], parallax: 11, twinkle: 0.25, tints: [0, 1, 2, 3] },
         { perMegapixel: 110, min: 34, radius: [2.1, 3.9], alpha: [0.5, 0.9], speed: [20, 32], parallax: 16, twinkle: 0.25, tints: [0, 1, 2, 3] },
-        { perMegapixel: 110, min: 34, radius: [2.1, 3.9], alpha: [0.5, 0.9], speed: [48, 70], parallax: 22, twinkle: 0.25, tints: [0, 1, 2, 3] },
+        { perMegapixel: 110, min: 34, radius: [2.1, 3.9], alpha: [0.5, 0.9], speed: [30, 40], parallax: 22, twinkle: 0.25, tints: [0, 1, 2, 3] },
     ] satisfies StarLayerSpec[],
     meteor: {
         max: 2, intervalMs: [4500, 9000], speed: [650, 1000], length: [110, 220], lifeMs: [700, 1100],
