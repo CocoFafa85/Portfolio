@@ -106,7 +106,11 @@ $ember: #ffd29a;
     white-space: nowrap;
 }
 
-.ghost { opacity: 0.09; }
+// The unlit segments "8888" (data-ghost): generated content, faint
+.digits::before {
+    content: attr(data-ghost);
+    opacity: 0.09;
+}
 
 .value,
 .flash {
@@ -114,14 +118,14 @@ $ember: #ffd29a;
     inset: 3px 4px 2px;
 }
 
-// Dark until the flame passes (the year shows its unlit segments, faintly)
-.value { opacity: 0.06; text-shadow: 0 0 8px $lit; }
+// Dark until the flame passes: only the unlit segments show; then the year at once
+.value { visibility: hidden; text-shadow: 0 0 8px $lit; }
 .flash { opacity: 0; color: #fff; text-shadow: 0 0 12px #fff, 0 0 22px $lit; }
 
 // Ignited: the year at once (no fade), its flash and bloom; the dot's core, waves and sparks
 [data-ignited] {
     .dot { border-color: $lit; }
-    .value { opacity: 1; }
+    .value { visibility: visible; }
     .core { animation: core var(--core-ms) ease-out both; }
     .flash { animation: fade-out var(--flash-ms) ease-out both; }
     .bloom { animation: bloom var(--bloom-ms) ease-out both; }

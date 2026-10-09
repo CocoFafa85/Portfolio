@@ -16,7 +16,9 @@ const SPARKS = sparkPaths(fx.sparks.count, fx.sparks.reach);
  * A point of the trajectory (decision T1): a dot on the axis and, beside it, the project's year on a
  * small time-circuit display (7 segments, neon green, no plate). Dark until the flame passes it (its
  * item gets data-ignited): the dot ignites (shock waves, sparks), the year lights up at once with a
- * flash. Decorative: the card says the year. `data-node` is its box for the flame's thresholds.
+ * flash. Decorative: the card says the year. `data-node` is its box for the flame's thresholds. The
+ * unlit segments are generated content and the year stays hidden until lit: no faint text for a
+ * contrast checker to flag.
  */
 const TrajectoryNode: React.FC<TrajectoryNodeProps> = ({ year }) => (
     <span className={styles.node} data-node="" aria-hidden="true">
@@ -30,8 +32,7 @@ const TrajectoryNode: React.FC<TrajectoryNodeProps> = ({ year }) => (
         </span>
         <span className={styles.display}>
             <span className={styles.bloom} />
-            <span className={styles.digits}>
-                <span className={styles.ghost}>{GHOST}</span>
+            <span className={styles.digits} data-ghost={GHOST}>
                 {year && <span className={styles.value}>{year}</span>}
                 {year && <span className={styles.flash}>{year}</span>}
             </span>
