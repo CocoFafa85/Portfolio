@@ -87,6 +87,10 @@ $tc-metal-dark: #23252b;
 $tc-flux-light: #ebfcff;
 $tc-flux-glow: #50beff;
 
+// Section titles (h2) of a page: one size for all (review of 2026-10-09); never under 19.2 px
+// bold, large text for WCAG (the violet of the Skills rail reads at 4.47:1, AA for large text)
+$section-title-size: clamp(1.2rem, 1.05rem + 0.6vw, 1.5rem);
+
 // Navigation bar height, the <main> area starts right below it
 $hud-height: 56px;
 $hud-height-mobile: 52px;
