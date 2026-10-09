@@ -7,7 +7,7 @@ import { createStarLayer, driftStars, type StarLayer } from '../../../utils/star
 import { advanceMeteors, createMeteorPool, spawnMeteor, type MeteorPool } from '../../../utils/starfield/meteors';
 import { watchGateOccluder, type GateOccluder } from '../../../utils/stargate/occluder';
 import { drawComets } from './drawComet';
-import { createStarSprites, drawLayer, drawMeteors, eraseBehindGate, type StarSprites } from './drawStars';
+import { cometSprites, createStarSprites, drawLayer, drawMeteors, eraseBehindGate, type StarSprites } from './drawStars';
 import { readStarPalette } from './palette';
 import styles from './StarField.module.scss';
 
@@ -62,7 +62,7 @@ const StarField: React.FC<StarFieldProps> = ({ occluder }) => {
                 -pointer.x * spec.parallax, -pointer.y * spec.parallax, spec.twinkle, time);
         }
         drawMeteors(ctx, scene.pool, scene.sprites, ratio, scene.pose);
-        drawComets(ctx, scene.comets, scene.sprites.comet, ratio, scene.pose);
+        if (scene.sprites.comet) drawComets(ctx, scene.comets, scene.sprites.comet, ratio, scene.pose);
         eraseBehindGate(ctx, scene.sprites, scene.occluder);
     }, []);
 
@@ -132,6 +132,7 @@ const StarField: React.FC<StarFieldProps> = ({ occluder }) => {
             scene.nextMeteor = time + inRange(scene.random, fx.meteor.intervalMs);
         }
         if (time >= scene.nextComet) {
+            cometSprites(scene.sprites);
             spawnMeteor(scene.comets, scene.width, scene.height, fx.comet, scene.random);
             scene.nextComet = time + inRange(scene.random, fx.comet.intervalMs);
         }

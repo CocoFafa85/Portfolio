@@ -6,12 +6,14 @@ import { createCometSprites, type CometSprites } from './drawComet';
 import type { StarPalette } from './palette';
 import { canvas } from './sprite';
 
-/** Pre-rendered images: one per tint, the meteor trail, the comet, the disc erased behind the gate. Built once. */
+/** Pre-rendered images: one per tint, the meteor trail, then — built at their first use, never in
+ *  the first frames — the comet and the disc erased behind the gate. Built once each. */
 export interface StarSprites {
     tints: HTMLCanvasElement[];
     trail: HTMLCanvasElement;
-    comet: CometSprites;
-    hole: HTMLCanvasElement;
+    palette: StarPalette;
+    comet: CometSprites | null;
+    hole: HTMLCanvasElement | null;
 }
 
 /** White alpha mask (a radial falloff), then tinted: the colour keeps the mask's alpha. */
@@ -73,8 +75,9 @@ export function createStarSprites(palette: StarPalette): StarSprites {
     return {
         tints: palette.tints.map((colour) => disc(colour, fx.sprite.core, 1)),
         trail: trail(palette.trail),
-        comet: createCometSprites(palette),
-        hole: hole(),
+        palette,
+        comet: null,
+        hole: null,
     };
 }
 
@@ -115,11 +118,18 @@ export function drawMeteors(ctx: CanvasRenderingContext2D, pool: MeteorPool, spr
     ctx.globalAlpha = 1;
 }
 
+/** The comet sprites, built when the first comet comes (about 5 s after the page). */
+export function cometSprites(sprites: StarSprites): CometSprites {
+    sprites.comet ??= createCometSprites(sprites.palette);
+    return sprites.comet;
+}
+
 /** Erases the sky behind the gate (it stands in front), as solid as the gate is assembled. No allocation. */
 export function eraseBehindGate(ctx: CanvasRenderingContext2D, sprites: StarSprites, occluder: GateOccluder): void {
     const { disc } = occluder;
     if (disc[3] <= 0) return;
     const radius = disc[2] * fx.occlusion.fade;
+    sprites.hole ??= hole();
     ctx.globalCompositeOperation = 'destination-out';
     ctx.globalAlpha = Math.min(disc[3], 1);
     ctx.drawImage(sprites.hole, disc[0] - radius, disc[1] - radius, radius * 2, radius * 2);
