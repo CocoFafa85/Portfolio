@@ -81,3 +81,16 @@ export function projectGatePoint(
     out[1] = ((1 - ndcY) / 2) * viewportHeight;
     return true;
 }
+
+/**
+ * Disc the gate covers on screen, untilted, for a dive (0 at rest): centre x, y
+ * and radius of the unit circle in CSS pixels, written into `out`. The
+ * starfield erases what lies behind it (the gate stands in front of the sky);
+ * once the camera is through the gate plane the disc covers the whole screen.
+ */
+export function gateDisc(view: GateView, fit: FitSettings, viewportWidth: number, viewportHeight: number, dive: number, out: Float32Array): void {
+    const depth = fit.camera - dive * fit.diveDepth;
+    out[0] = ((view.offsetX * (1 - dive) + 1) / 2) * viewportWidth;
+    out[1] = ((1 - view.offsetY * (1 - dive)) / 2) * viewportHeight;
+    out[2] = depth < NEAR ? viewportWidth + viewportHeight : (view.focal / depth) * (viewportHeight / 2);
+}

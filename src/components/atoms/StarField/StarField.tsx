@@ -5,7 +5,8 @@ import { capPixelRatio } from '../../../utils/canvas';
 import { createRandom, inRange, type Random } from '../../../utils/random';
 import { createStarLayer, driftStars, type StarLayer } from '../../../utils/starfield/layers';
 import { advanceMeteors, createMeteorPool, spawnMeteor, type MeteorPool } from '../../../utils/starfield/meteors';
-import { createStarSprites, drawLayer, drawMeteors, type StarSprites } from './drawStars';
+import { watchGateOccluder, type GateOccluder } from '../../../utils/stargate/occluder';
+import { createStarSprites, drawLayer, drawMeteors, eraseBehindGate, type StarSprites } from './drawStars';
 import { readStarPalette } from './palette';
 import styles from './StarField.module.scss';
 
@@ -25,6 +26,12 @@ interface Scene {
     pointer: { x: number; y: number; tx: number; ty: number };
     pose: Float32Array;
     sprites: StarSprites;
+    occluder: GateOccluder;
+}
+
+export interface StarFieldProps {
+    /** Disc of the gate in front of the sky (written by the gate scene): the stars pass behind it */
+    occluder: GateOccluder;
 }
 
 /**
@@ -32,10 +39,11 @@ interface Scene {
  * twinkling coloured stars drifting at three speeds (review of 2026-10-08:
  * no far layer, no grey out-of-focus layer, an even background), each
  * shifted by its own parallax with a fine pointer; rare shooting stars with a tapered tail.
+ * Everything passes behind the gate (review of 2026-10-09): its disc is erased.
  * Typed arrays, sprites drawn once, no allocation per frame; paused when the
  * tab is hidden or the canvas off screen; reduced motion: one still frame.
  */
-const StarField: React.FC = () => {
+const StarField: React.FC<StarFieldProps> = ({ occluder }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const sceneRef = useRef<Scene | null>(null);
 
@@ -49,6 +57,7 @@ const StarField: React.FC = () => {
                 -pointer.x * spec.parallax, -pointer.y * spec.parallax, spec.twinkle, time);
         }
         drawMeteors(ctx, scene.pool, scene.sprites, ratio, scene.pose);
+        eraseBehindGate(ctx, scene.sprites, scene.occluder);
     }, []);
 
     useEffect(() => {
@@ -68,7 +77,7 @@ const StarField: React.FC = () => {
             canvas.height = Math.round(height * ratio);
             const random = createRandom(fx.seed);
             const scene: Scene = {
-                ctx, width, height, ratio, random, pointer, sprites, image,
+                ctx, width, height, ratio, random, pointer, sprites, image, occluder,
                 layers: fx.layers.map((spec) => createStarLayer(spec, width, height, random)),
                 pool: createMeteorPool(fx.meteor.max),
                 nextMeteor: performance.now() + fx.firstMeteorMs,
@@ -78,6 +87,9 @@ const StarField: React.FC = () => {
             draw(scene, 0);
         };
         build();
+        // Reduced motion: no loop, the still sky redraws once the gate shows (or moves)
+        const still = window.matchMedia('(prefers-reduced-motion: reduce)');
+        const unwatch = watchGateOccluder(occluder, () => { if (still.matches && sceneRef.current) draw(sceneRef.current, 0); });
 
         let resizeTimer = 0;
         const onResize = () => {
@@ -95,9 +107,10 @@ const StarField: React.FC = () => {
             window.clearTimeout(resizeTimer);
             window.removeEventListener('resize', onResize);
             window.removeEventListener('pointermove', onPointerMove);
+            unwatch();
             sceneRef.current = null;
         };
-    }, [draw]);
+    }, [draw, occluder]);
 
     const onFrame = useCallback((deltaMs: number, time: number) => {
         const scene = sceneRef.current;

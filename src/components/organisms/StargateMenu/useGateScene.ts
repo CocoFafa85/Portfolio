@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, type RefObject } from 'react';
 import { gateEffects as fx } from '../../../data/effects';
 import { useAnimationLoop } from '../../../hooks/useAnimationLoop';
 import { capPixelRatio } from '../../../utils/canvas';
+import { releaseGateOccluder, type GateOccluder } from '../../../utils/stargate/occluder';
 import { startGateBoot } from './gateBoot';
 import { createGateScene, layoutGateScene, stepGateScene, type GateScene } from './gateScene';
 
@@ -21,11 +22,14 @@ const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)'
  * parallax since the review of 2026-10-07: only an idle sway), survives a
  * WebGL context loss, and runs it in useAnimationLoop
  * (paused when hidden or off screen). Reduced motion: one still frame.
+ * Every frame it tells `occluder` the disc it covers (the starfield erases the
+ * sky behind it), and calls its onChange after a layout or a boot.
  */
 export function useGateScene(
     canvasRef: RefObject<HTMLCanvasElement | null>,
     cellRef: RefObject<HTMLElement | null>,
-    linksRef: RefObject<(HTMLElement | null)[]>
+    linksRef: RefObject<(HTMLElement | null)[]>,
+    occluder: GateOccluder
 ): GateControls {
     const sceneRef = useRef<GateScene | null>(null);
 
@@ -34,7 +38,7 @@ export function useGateScene(
         const cell = cellRef.current;
         const root = canvas?.parentElement;
         if (!canvas || !cell || !root) return;
-        const scene = createGateScene(canvas, linksRef.current);
+        const scene = createGateScene(canvas, linksRef.current, occluder);
         sceneRef.current = scene;
         const coarse = window.matchMedia('(pointer: coarse)').matches;
 
@@ -46,6 +50,7 @@ export function useGateScene(
             layoutGateScene(scene, rect, width, height, ratio);
             stepGateScene(scene, performance.now(), reducedMotion());
             cell.dataset.placed = 'true';
+            occluder.onChange?.();
         };
         layout();
 
@@ -58,6 +63,7 @@ export function useGateScene(
                 scene.start = performance.now();
                 cell.dataset.gl = renderer ? 'on' : 'off';
                 stepGateScene(scene, performance.now(), reducedMotion());
+                occluder.onChange?.();
             });
         };
         boot();
@@ -74,6 +80,7 @@ export function useGateScene(
             cancelBoot();
             scene.renderer = null;
             cell.dataset.gl = 'off';
+            releaseGateOccluder(occluder);
         };
         canvas.addEventListener('webglcontextlost', onLost);
         canvas.addEventListener('webglcontextrestored', boot);
@@ -85,8 +92,9 @@ export function useGateScene(
             cancelBoot();
             scene.renderer?.dispose();
             sceneRef.current = null;
+            releaseGateOccluder(occluder);
         };
-    }, [canvasRef, cellRef, linksRef]);
+    }, [canvasRef, cellRef, linksRef, occluder]);
 
     const onFrame = useCallback((_delta: number, time: number) => {
         const scene = sceneRef.current;

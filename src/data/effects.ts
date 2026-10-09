@@ -73,6 +73,9 @@ export const starEffects = {
     pointerSmoothing: 0.06,
     sprite: { size: 64, core: 0.25 },
     trail: { width: 256, height: 8, bright: 0.55, headRadius: 5, thickness: 3.2 },
+    /** The gate stands in front of the sky (review of 2026-10-09, whole gate): erased up to the ring
+     *  (gate radius 1), fading out to the chevron tips; sprite size of the erasing disc */
+    occlusion: { solid: 1, fade: 1.12, size: 128 },
     pixelRatio: { fine: 2, coarse: 1.5, maxPixels: 8_000_000 } satisfies PixelRatioCaps,
     resizeDebounceMs: 150,
 };

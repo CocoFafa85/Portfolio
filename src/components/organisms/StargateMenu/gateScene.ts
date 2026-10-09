@@ -1,6 +1,7 @@
 import { gateEffects as fx } from '../../../data/effects';
 import { assembleProgress, createDialState, dialState, type DialState } from '../../../utils/stargate/dial';
-import { fitGate, projectGatePoint, type GateView, type Rect } from '../../../utils/stargate/view';
+import type { GateOccluder } from '../../../utils/stargate/occluder';
+import { fitGate, gateDisc, projectGatePoint, type GateView, type Rect } from '../../../utils/stargate/view';
 import { onGate } from '../../../utils/stargate/writer';
 import type { GateFrame, GateRenderer } from './gateRenderer';
 
@@ -26,14 +27,16 @@ export interface GateScene {
     /** Dive the links were last placed for (NaN: to place) */
     placed: Float32Array;
     scratch: Float32Array;
+    /** The disc the gate covers, for the starfield behind it */
+    occluder: GateOccluder;
 }
 
 const IDLE_SPIN = (Math.PI * 2) / 120_000;
 
 /** Scene of the gate; its renderer is attached once the program is ready. */
-export function createGateScene(canvas: HTMLCanvasElement, links: (HTMLElement | null)[]): GateScene {
+export function createGateScene(canvas: HTMLCanvasElement, links: (HTMLElement | null)[], occluder: GateOccluder): GateScene {
     return {
-        canvas, renderer: null, links,
+        canvas, renderer: null, links, occluder,
         view: { focal: 0, aspect: 1, offsetX: 0, offsetY: 0 },
         frame: { time: 0, assemble: 0, spin: 0, vortex: 0, dive: 0, horizon: 0, tiltX: 0, tiltY: 0, pointScale: 1, lit: new Float32Array(9) },
         dial: createDialState(fx.shape.chevrons.count),
@@ -101,4 +104,7 @@ export function stepGateScene(scene: GateScene, now: number, still: boolean): vo
     }
     scene.renderer?.draw(frame, scene.view);
     placeLinks(scene);
+    // The sky behind the gate fades out as the gate assembles, and follows the dive
+    gateDisc(scene.view, fx.fit, scene.width, scene.height, frame.dive, scene.occluder.disc);
+    scene.occluder.disc[3] = scene.renderer ? frame.assemble : 0;
 }

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { content } from '../../../data/content';
 import { gateEffects as fx } from '../../../data/effects';
 import { formatNavIndex } from '../../../utils/format';
+import type { GateOccluder } from '../../../utils/stargate/occluder';
 import { useDialNavigation } from './useDialNavigation';
 import { useGateScene } from './useGateScene';
 import styles from './StargateMenu.module.scss';
@@ -10,6 +11,11 @@ import styles from './StargateMenu.module.scss';
 type CssVars = CSSProperties & Record<`--${string}`, string>;
 // The links fade out when the camera starts its dive
 const DIVE_VARS: CssVars = { '--dive-at': `${fx.dial.diveAtMs}ms` };
+
+export interface StargateMenuProps {
+    /** Shared with the starfield: the gate tells it the disc it covers (it stands in front of the sky) */
+    occluder: GateOccluder;
+}
 
 /**
  * Home orbital menu (LOT 2, H3): a stargate of ~27 000 particles (WebGL,
@@ -21,12 +27,12 @@ const DIVE_VARS: CssVars = { '--dive-at': `${fx.dial.diveAtMs}ms` };
  * the full-screen home: its canvas covers that parent, for the dive.
  * A click plays the dial sequence, then the hyperspace (useDialNavigation).
  */
-const StargateMenu: React.FC = () => {
+const StargateMenu: React.FC<StargateMenuProps> = ({ occluder }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const cellRef = useRef<HTMLElement>(null);
     const linksRef = useRef<(HTMLElement | null)[]>([]);
     const [shown, setShown] = useState<number | null>(null);
-    const gate = useGateScene(canvasRef, cellRef, linksRef);
+    const gate = useGateScene(canvasRef, cellRef, linksRef, occluder);
     const { dialing, activate } = useDialNavigation(gate);
 
     const show = (index: number | null) => {
