@@ -1,5 +1,8 @@
+@use '../../styles/mixins' as *;
+
 // Full screen, never scrolls: the heading block on top, the gate's cell below.
-// On a portrait phone the cell is capped and the pair is centred vertically.
+// On a portrait phone the cell is capped and the pair is centred vertically; a tablet's gate fills the
+// height left under the title (LOT 6, D1).
 .home {
     // Its width sizes the gate's cell below (cqi), not the window's (vw counts a scrollbar)
     container-type: inline-size;
@@ -13,6 +16,9 @@
 
     > nav {
         flex: 1 1 auto;
-        max-height: 118cqi;
+
+        @include mobile {
+            max-height: 118cqi;
+        }
     }
 }

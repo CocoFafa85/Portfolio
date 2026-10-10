@@ -147,6 +147,10 @@ export const gateEffects = {
     /** Height: aura 1.19 + room for the tilt (clear of the title); width: chevron tips 1.08.
      *  Dive: the camera stops just short of the horizon, still full of its dust when the cover lands */
     fit: { extent: 1.26, sideExtent: 1.12, margin: 8, camera: 2.6, diveDepth: 2.5 } satisfies FitSettings,
+    /** Upright tablet (LOT 6, decision A "gate in majesty"): the gate fills the height under the title
+     *  (aura 1.19 + a hair of tilt, still clear of the title); across, only its ring body must fit,
+     *  the side chevrons may leave the screen */
+    fitUpright: { extent: 1.2, sideExtent: 0.92, margin: 8, camera: 2.6, diveDepth: 2.5 } satisfies FitSettings,
     /** Idle camera sway (radians, ms); the pointer tilt was removed after review (2026-10-07) */
     sway: { x: 0.02, y: 0.03, periodX: 2300, periodY: 3100 },
     /** Share of the remaining light a hovered chevron gains each frame */

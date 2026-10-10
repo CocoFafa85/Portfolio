@@ -2,6 +2,7 @@ import React, { useRef, useState, type CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
 import { content } from '../../../data/content';
 import { gateEffects as fx } from '../../../data/effects';
+import { useDevice } from '../../../hooks/useDevice';
 import { formatNavIndex } from '../../../utils/format';
 import type { GateOccluder } from '../../../utils/stargate/occluder';
 import { useDialNavigation } from './useDialNavigation';
@@ -23,7 +24,8 @@ export interface StargateMenuProps {
  * parallax since the review of 2026-10-07). The three
  * destinations are real links, numbered 01, 02, 03 on their chevron; hover or
  * focus lights the chevron and shows the page name at the centre. The gate is
- * fitted to its own cell: it never covers the title. Render it as a child of
+ * fitted to its own cell: it never covers the title (on an upright tablet it fills the height, its side
+ * chevrons may leave the screen; at the finger each number shows its page name). Render it as a child of
  * the full-screen home: its canvas covers that parent, for the dive.
  * A click plays the dial sequence, then the hyperspace (useDialNavigation).
  */
@@ -32,7 +34,9 @@ const StargateMenu: React.FC<StargateMenuProps> = ({ occluder }) => {
     const cellRef = useRef<HTMLElement>(null);
     const linksRef = useRef<(HTMLElement | null)[]>([]);
     const [shown, setShown] = useState<number | null>(null);
-    const gate = useGateScene(canvasRef, cellRef, linksRef, occluder);
+    // An upright tablet: the gate in majesty, filling the height (LOT 6, D1)
+    const { portrait, deviceClass } = useDevice();
+    const gate = useGateScene(canvasRef, cellRef, linksRef, occluder, deviceClass === 'tablet' && portrait);
     const { dialing, activate } = useDialNavigation(gate);
 
     const show = (index: number | null) => {

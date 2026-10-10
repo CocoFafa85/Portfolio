@@ -62,6 +62,30 @@
     @include visually-hidden;
 }
 
+// At the finger nothing hovers (LOT 6, D1): each destination shows its page name under its number,
+// a 64 px target; the tap plays the dial at once
+@include touch {
+    .destination {
+        flex-direction: column;
+        gap: 2px;
+        min-width: 64px;
+        min-height: 64px;
+    }
+
+    .name {
+        position: static;
+        width: auto;
+        height: auto;
+        overflow: visible;
+        clip-path: none;
+        font-size: 0.7rem;
+        letter-spacing: 0.24em;
+        text-transform: uppercase;
+        color: $star-cyan;
+        text-shadow: 0 0 8px color.change($neon-cyan, $alpha: 0.8), 0 0 2px $bg-deep, 0 1px 2px $bg-deep;
+    }
+}
+
 .readout {
     position: absolute;
     top: 50%;
