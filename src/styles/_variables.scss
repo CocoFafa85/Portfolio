@@ -99,6 +99,10 @@ $tape-beacon: $tc-red;
 // bold, large text for WCAG (the violet of the Skills rail reads at 4.47:1, AA for large text)
 $section-title-size: clamp(1.2rem, 1.05rem + 0.6vw, 1.5rem);
 
+// Measure of running text (LOT 6, D3): ~68 characters of Montserrat Alternates a line (its average
+// character is ~0.51 em; 68ch, measured on its wide "0", let ~81 through)
+$measure: 35em;
+
 // Navigation bar height, the <main> area starts right below it
 $hud-height: 56px;
 $hud-height-mobile: 52px;

@@ -67,7 +67,7 @@
 }
 
 .paragraph {
-    max-width: 68ch;
+    max-width: $measure;
     margin-bottom: 0.85rem;
     font-size: clamp(0.95rem, 0.9rem + 0.2vw, 1.05rem);
     line-height: 1.75;
@@ -84,6 +84,12 @@
 
         &:hover {
             color: $neon-pink;
+        }
+
+        // A finger needs a 44 px target: the padding of an inline link grows its hit area without
+        // moving a single line (LOT 6, D3)
+        @include touch {
+            padding-block: 0.85em;
         }
     }
 }
