@@ -339,9 +339,9 @@ export const circuitEffects = {
         busTraces: [3, 6],
         busReach: [60, 240],
     } satisfies BoardConfig,
-    /** Static drawing (once per resize); darker, more even black after the reviews of 2026-10-03 and 2026-10-04 */
+    /** Static drawing (once per resize), over the solder mask (a CSS background, CircuitBackground.module.scss);
+     *  darker, more even black after the reviews of 2026-10-03 and 2026-10-04 */
     style: {
-        maskAlpha: 0.98,
         traceWidth: 2.2,
         traceAlpha: 0.16,
         sheenWidth: 0.8,
@@ -378,6 +378,10 @@ export const circuitEffects = {
     /** Backing store cap in device pixels; the pixel ratio comes from the render budget (deviceBudget) */
     maxPixels: 8_000_000,
     resizeDebounceMs: 150,
+    /** On a page load, the board is drawn at the first idle moment after drawAfterMs since the page started
+     *  (at the latest drawTimeoutMs later): its first write to the GPU waits for the first frames (LOT 6, C1) */
+    drawAfterMs: 700,
+    drawTimeoutMs: 1200,
 } as const;
 
 /** "Voyage" transitions between pages (LOT 1, C2) */
