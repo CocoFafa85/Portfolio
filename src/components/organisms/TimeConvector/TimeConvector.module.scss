@@ -50,7 +50,8 @@
     border: 1px solid $tc-console-edge;
     border-top-color: #34363f;
     border-radius: 10px;
-    box-shadow: 0 0 0 1px #000, 0 18px 40px -14px rgba($neon-violet, 0.35);
+    // No neon glow under the console any more (review of 2026-10-09): its turning border is enough
+    box-shadow: 0 0 0 1px #000;
     // The default turning neon border (NeonFrame, review of 2026-10-09), lit at power-on
     --neon-radius: 10px;
 }

@@ -66,8 +66,18 @@ export interface HoloCardLabels {
 export interface ProjectLabels {
     demo: string;
     code: string;
-    wipRibbon: string;
-    wipBadge: string;
+    /** Hidden end of a Demo / Code link's accessible name, "{title}" replaced (the visible text comes first) */
+    linkSuffix: string;
+    /** Year line of a project in progress, "{year}" replaced */
+    plannedYear: string;
+    /** Hidden terms of the year · team line (screen readers) */
+    year: string;
+    team: string;
+    goals: string;
+    /** Status chip of the window bar when the demo is online */
+    online: string;
+    /** Construction tape of a project in progress, "{year}" replaced */
+    inProgress: string;
 }
 
 /** A skill of the CV (F3): no level, no percentage (LOT 4) */
@@ -116,17 +126,52 @@ export interface ProjectRef {
     tags: string[];
 }
 
-export interface Project {
-    id: string;
-    title: string;
-    description: string;
-    imageUrl?: string;
-    tags: string[];
+/** The projects of the site (F4, LOT 5): one list, read by Projects and by the skills */
+export type ProjectId = 'memory' | 'first-portfolio' | 'solar' | 'soulsweeper' | 'poucestop';
+
+export type ProjectStatus = 'done' | 'in-progress';
+
+/** A project of the single list (content.projects.list): what every page reads */
+export interface ProjectEntry extends ProjectRef {
+    id: ProjectId;
+    status: ProjectStatus;
+    /** Year it was finished; while in progress, its planned release year */
+    year: string;
+}
+
+/** One file of a card visual: its URL (a Vite asset, never inlined in a bundle) and its width */
+export interface VisualSource {
+    src: string;
+    width: number;
+}
+
+/** The visual of a card (P1): one 16:10 picture in several widths (scripts/capture-demos.mjs) */
+export interface ProjectVisual {
+    sources: VisualSource[];
+    /** Intrinsic size of the largest file: the space reserved before it loads (CLS) */
+    width: number;
+    height: number;
+    /** Describes what the picture shows (a capture of the demo, or the themed illustration) */
+    alt: string;
+}
+
+/** What only the Projects page shows (src/data/projectDetails.ts, loaded with the Projects chunk) */
+export interface ProjectDetails {
+    pitch: string;
+    team: string;
+    /** Learning goals, one line each */
+    goals: string[];
+    /** Label of the card's window bar: the demo address, or "project · platform" */
+    frame: string;
+    /** Accent of the card (CSS colour, made readable on the panel where it colours text) */
+    color: string;
+    visual: ProjectVisual;
     demoLink?: string;
     repoLink?: string;
-    featured?: boolean;
-    color?: string;
 }
+
+/** A card of the Projects page: its entry of the list and its details */
+export interface Project extends ProjectEntry, ProjectDetails {}
 
 export interface UiLabels {
     /** Accessible name of the site navigation bar */
@@ -187,14 +232,13 @@ export interface PortfolioContent {
         lead: string;
         /** Skills of the CV (F3), by group */
         groups: SkillGroup[];
-        /** F4 projects linked to the skills by their tags (until LOT 5 merges them with projects.list) */
-        projects: ProjectRef[];
         holoCard: HoloCardLabels;
     };
     projects: {
         title: string;
         labels: ProjectLabels;
-        list: Project[];
+        /** The single list of the projects, in the validated order (their details: projectDetails.ts) */
+        list: ProjectEntry[];
     };
     notFound: {
         code: string;

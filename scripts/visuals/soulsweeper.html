@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>SoulSweeper — visuel à thème</title>
+    <!-- Orbitron (SIL OFL 1.1), the site's display face, from @fontsource/orbitron -->
+    <style>
+        @font-face { font-family: 'Orbitron'; font-weight: 700; src: url('../../node_modules/@fontsource/orbitron/files/orbitron-latin-700-normal.woff2') format('woff2'); }
+        @font-face { font-family: 'Orbitron'; font-weight: 900; src: url('../../node_modules/@fontsource/orbitron/files/orbitron-latin-900-normal.woff2') format('woff2'); }
+        html, body { margin: 0; background: #07060d; overflow: hidden; }
+        canvas { display: block; width: 100vw; height: auto; }
+    </style>
+</head>
+<body>
+    <canvas id="art"></canvas>
+    <script src="art.js"></script>
+    <script>
+        // Fonts load on first use: ask for both weights, then draw
+        Promise.all(['700 20px Orbitron', '900 34px Orbitron'].map((font) => document.fonts.load(font))).then(() => paint(drawSoulSweeper));
+    </script>
+</body>
+</html>

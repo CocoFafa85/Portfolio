@@ -1,0 +1,141 @@
+@use 'sass:color';
+@use '../../../styles/mixins' as *;
+@use '../../../styles/variables' as *;
+
+// The demo window of a card (LOT 5, decision A): bar + 16:10 screen
+.window {
+    position: relative;
+    // The ribbon's text scales with the window (cqi)
+    container-type: inline-size;
+    margin: 12px 12px 0;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid color.mix($neon-violet, $bg-secondary, 18%);
+    background: $bg-primary;
+}
+
+.bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 34px;
+    padding: 0 10px;
+    background: $bg-secondary;
+    border-bottom: 1px solid color.mix($neon-violet, $bg-secondary, 10%);
+}
+
+.dots {
+    display: flex;
+    gap: 6px;
+
+    i {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: $neon-pink;
+    }
+
+    i:nth-child(2) { background: $neon-violet; }
+    i:nth-child(3) { background: $neon-cyan; }
+}
+
+.frame {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font: 12px/1 $font-mono;
+    color: color.mix(#fff, $text-dim, 30%);
+    background: $bg-deep;
+    border: 1px solid color.mix($neon-violet, $bg-secondary, 10%);
+    border-radius: 6px;
+    padding: 6px 9px;
+}
+
+.online {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font: 500 10px/1 $font-orbitron;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: color.mix(#fff, $neon-green, 80%);
+    white-space: nowrap;
+}
+
+.led {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: $neon-green;
+    box-shadow: 0 0 6px $neon-green;
+}
+
+.screen {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: $bg-deep;
+}
+
+.picture {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform-origin: 50% 20%;
+    transition: transform 1.4s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+.veil {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(color.change($bg-deep, $alpha: 0.18), color.change($bg-deep, $alpha: 0.5)),
+        repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0.24) 0 1px, transparent 1px 3px);
+    transition: opacity 0.45s;
+}
+
+.sweep,
+.boot {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 30%;
+    pointer-events: none;
+    background: linear-gradient(transparent, color.change($neon-cyan, $alpha: 0.12) 70%, color.change($star-cyan, $alpha: 0.55) 97%, transparent);
+    transform: translateY(-110%);
+}
+
+// Hover and keyboard focus anywhere in the card, through its global hook class (a CSS module
+// cannot name another module's classes)
+:global(.project-card):hover,
+:global(.project-card):focus-within {
+    .picture { transform: scale(1.045) translateY(-1.2%); }
+    .veil { opacity: 0.12; }
+    .sweep { animation: sweep 1.15s cubic-bezier(0.3, 0.6, 0.4, 1) 1; }
+}
+
+@keyframes sweep {
+    to { transform: translateY(340%); }
+}
+
+// Power-on of the card once the trajectory's flame reaches it (data-ignited on its item): one sweep
+[data-ignited] .boot {
+    animation: sweep var(--boot-ms) cubic-bezier(0.3, 0.6, 0.4, 1) var(--boot-delay) both;
+}
+
+// Narrow screens: the address keeps the room (the dots go, "En ligne" keeps its LED)
+@include mobile {
+    .dots { display: none; }
+    .online { gap: 0; font-size: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .picture { transition: none; }
+    .sweep, .boot { display: none; }
+}

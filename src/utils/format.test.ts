@@ -1,5 +1,29 @@
 import { describe, expect, it } from 'vitest';
-import { formatNavIndex } from './format';
+import { fillTemplate, formatNavIndex } from './format';
+
+describe('fillTemplate', () => {
+    it('replaces every placeholder by its value', () => {
+        // Arrange
+        const template = '{action} de {title} ({title})';
+
+        // Act
+        const text = fillTemplate(template, { action: 'Démo', title: 'SolarSystem' });
+
+        // Assert
+        expect(text).toBe('Démo de SolarSystem (SolarSystem)');
+    });
+
+    it('leaves an unknown placeholder as written', () => {
+        // Arrange
+        const template = 'Sortie prévue en {year}';
+
+        // Act
+        const text = fillTemplate(template, { title: 'X' });
+
+        // Assert
+        expect(text).toBe('Sortie prévue en {year}');
+    });
+});
 
 describe('formatNavIndex', () => {
     it('numbers the first entry 01', () => {

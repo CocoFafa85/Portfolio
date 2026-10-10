@@ -9,8 +9,9 @@ import { linkSkills, withProfessional } from '../../utils/skills';
 import styles from './Skills.module.scss';
 
 const { skills } = content;
-// Static data: linked once, at load (skills of the CV ↔ projects F4, then "Professionnel" for the rest)
-const RAIL = withProfessional(skills.groups, skills.projects, skills.labels.professional);
+// Static data: linked once, at load (skills of the CV ↔ the single list of the projects, the one the
+// Projects page shows, then "Professionnel" for the rest)
+const RAIL = withProfessional(skills.groups, content.projects.list, skills.labels.professional);
 const GROUPS = linkSkills(skills.groups, RAIL);
 
 /**

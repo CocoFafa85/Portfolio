@@ -1,0 +1,85 @@
+@use 'sass:color';
+@use '../../../styles/mixins' as *;
+@use '../../../styles/variables' as *;
+
+// Demo / Code bar (P2), over the bottom of the screen; hidden below it until hover or keyboard focus
+.actions {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 4;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 14px;
+    background: linear-gradient(transparent, color.change($bg-deep, $alpha: 0.94) 55%);
+    transform: translateY(101%);
+    transition: transform 0.32s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+// The card's global hook (a CSS module cannot name another module's classes)
+:global(.project-card):hover .actions,
+:global(.project-card):focus-within .actions {
+    transform: none;
+}
+
+// Touch screens have no hover: the bar always shows, under the screen
+@media (hover: none) {
+    .actions {
+        position: static;
+        transform: none;
+        background: none;
+        padding: 12px;
+    }
+}
+
+.link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 16px;
+    border-radius: 8px;
+    font: 700 0.8125rem/1 $font-orbitron;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+}
+
+.icon {
+    width: 15px;
+    height: 15px;
+    flex: none;
+}
+
+// Dark text on the neon pink: 5.2:1 (white text there is 3.8:1)
+.demo {
+    background: $neon-pink;
+    color: $bg-deep;
+    border: 1px solid $neon-pink;
+
+    &:hover {
+        background: color.adjust($neon-pink, $lightness: 8%);
+    }
+}
+
+.code {
+    background: color.change($bg-deep, $alpha: 0.7);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+
+    &:hover {
+        border-color: $neon-cyan;
+        color: $neon-cyan;
+    }
+}
+
+.hidden {
+    @include visually-hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .actions { transition: none; }
+}

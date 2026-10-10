@@ -87,6 +87,14 @@ $tc-metal-dark: #23252b;
 $tc-flux-light: #ebfcff;
 $tc-flux-glow: #50beff;
 
+// Construction tape of a project in progress (Projects, LOT 5, P4): yellow and black hazard
+// stripes, its beacon red (dark text on the yellow: 13:1)
+$tape-yellow: #ffcc00;
+$tape-yellow-light: #ffe066;
+$tape-yellow-dark: #e2ac00;
+$tape-black: #111111;
+$tape-beacon: $tc-red;
+
 // Section titles (h2) of a page: one size for all (review of 2026-10-09); never under 19.2 px
 // bold, large text for WCAG (the violet of the Skills rail reads at 4.47:1, AA for large text)
 $section-title-size: clamp(1.2rem, 1.05rem + 0.6vw, 1.5rem);
@@ -99,6 +107,8 @@ $hud-height-mobile: 52px;
 $font-orbitron: 'Orbitron', sans-serif;
 // Its fallback has the same widths (main.scss): the text wraps the same before and after the web font (CLS)
 $font-montserrat: 'Montserrat Alternates', 'Montserrat Alternates Fallback', sans-serif;
+// System monospace (no web font): the address bar of a project card (LOT 5)
+$font-mono: ui-monospace, 'Cascadia Mono', Consolas, 'Liberation Mono', monospace;
 // HoloCard v2 (Skills, LOT 4): the original card's dark blue glass, a gold
 // contact chip, foil tints, edge slices, magnetic stripe, QR plate
 $holo-deep: #0a0f1e;

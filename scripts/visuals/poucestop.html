@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>PouceStop — visuel à thème</title>
+    <!-- Orbitron (SIL OFL 1.1), the site's display face, from @fontsource/orbitron -->
+    <style>
+        @font-face { font-family: 'Orbitron'; font-weight: 700; src: url('../../node_modules/@fontsource/orbitron/files/orbitron-latin-700-normal.woff2') format('woff2'); }
+        html, body { margin: 0; background: #05040e; overflow: hidden; }
+        canvas { display: block; width: 100vw; height: auto; }
+    </style>
+</head>
+<body>
+    <canvas id="art"></canvas>
+    <script src="art.js"></script>
+    <script>
+        document.fonts.load('700 15px Orbitron').then(() => paint(drawPouceStop));
+    </script>
+</body>
+</html>

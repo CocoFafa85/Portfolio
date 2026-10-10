@@ -3,6 +3,12 @@ import { parseLocalDateTime } from '../utils/timeCircuits/time';
 import { content } from './content';
 import { skillIcons } from './generated/skillIcons';
 import { linkSkills, normalizeTag, withProfessional } from '../utils/skills';
+import { isInProgress, withDetails } from '../utils/projects';
+import { projectDetails } from './projectDetails';
+import visuals from './projectVisuals.json';
+
+// The visual files on disk (paths only, nothing loaded)
+const visualFiles = new Set(Object.keys(import.meta.glob('../assets/projects/*.webp')));
 
 describe('content.about (LOT 3, data F1)', () => {
     it('gives each row of the time circuits one era, each era once', () => {
@@ -80,20 +86,94 @@ describe('skills of the CV (F3, LOT 4)', () => {
     });
 });
 
-describe('projects rail of Skills (review of 2026-10-09)', () => {
-    it('lists the projects in the reviewed order, PouceStop fifth', () => {
+describe('projects (F4, F5, LOT 5)', () => {
+    it('lists the five projects once, in the validated order, without Site IFTO nor Démineur 2.0', () => {
         // Arrange / Act
-        const titles = content.skills.projects.map((project) => project.title);
+        const titles = content.projects.list.map((project) => project.title);
 
         // Assert
         expect(titles).toEqual(['MemoryGame', 'First Portfolio', 'SolarSystem', 'SoulSweeper', 'PouceStop']);
+        expect(new Set(content.projects.list.map((project) => project.id)).size).toBe(5);
+    });
+
+    it('gives every project of the list its details, and no details to another', () => {
+        // Arrange
+        const ids = content.projects.list.map((project) => project.id);
+
+        // Act
+        const detailed = Object.keys(projectDetails);
+
+        // Assert
+        expect(detailed).toEqual(ids);
+    });
+
+    it('marks SoulSweeper alone in progress, released in 2026, in C# and Unity', () => {
+        // Arrange / Act
+        const inProgress = content.projects.list.filter(isInProgress);
+
+        // Assert
+        expect(inProgress.map((project) => [project.title, project.year, project.tags])).toEqual([['SoulSweeper', '2026', ['C#', 'Unity']]]);
+    });
+
+    it('links a demo and a repository for the finished web projects only (F5: none for SoulSweeper)', () => {
+        // Arrange
+        const cards = withDetails(content.projects.list, projectDetails);
+
+        // Act
+        const linked = cards.filter((card) => 'demoLink' in card && 'repoLink' in card).map((card) => card.id);
+
+        // Assert
+        expect(linked).toEqual(['memory', 'first-portfolio', 'solar']);
+    });
+
+    it('keeps the validated polish: one pitch and at least one goal per project, pitches as sentences', () => {
+        // Arrange
+        const cards = withDetails(content.projects.list, projectDetails);
+
+        // Act
+        const written = cards.filter((card) => !card.pitch.startsWith('['));
+
+        // Assert
+        expect(cards.every((card) => card.goals.length > 0 && card.team.length > 0)).toBe(true);
+        expect(written.every((card) => card.pitch.endsWith('.'))).toBe(true);
+    });
+});
+
+describe('project visuals (P1)', () => {
+    it('has every width of every visual on disk, and a descriptive alternative text for each', () => {
+        // Arrange
+        const ids = content.projects.list.map((project) => project.id);
+
+        // Act
+        const missing = ids.flatMap((id) => visuals.widths.map((width) => `../assets/projects/${id}-${width}.webp`)).filter((file) => !visualFiles.has(file));
+        const alts = Object.values(projectDetails).map((details) => details.visual.alt);
+
+        // Assert
+        expect(visuals.dir).toBe('src/assets/projects');
+        expect(missing).toEqual([]);
+        expect(alts.every((alt) => alt.length > 60)).toBe(true);
+    });
+});
+
+describe('projects rail of Skills (review of 2026-10-09)', () => {
+    it('reads the list of the Projects page: same ids, same titles, same order, then "Professionnel" (CÂBLAGE, LOT 5)', () => {
+        // Arrange
+        const { groups, labels } = content.skills;
+        const cards = withDetails(content.projects.list, projectDetails);
+
+        // Act
+        const rail = withProfessional(groups, content.projects.list, labels.professional);
+
+        // Assert
+        expect(rail.slice(0, -1).map((entry) => [entry.id, entry.title])).toEqual(cards.map((card) => [card.id, card.title]));
+        expect(rail.map((entry) => entry.title)).toEqual(['MemoryGame', 'First Portfolio', 'SolarSystem', 'SoulSweeper', 'PouceStop', labels.professional]);
     });
 
     it('resolves every alias to a project tag, never to another skill name', () => {
         // Arrange
         const skills = content.skills.groups.flatMap((group) => group.skills);
         const names = new Set(skills.map((skill) => normalizeTag(skill.name)));
-        const tags = new Set(content.skills.projects.flatMap((project) => project.tags).map(normalizeTag));
+        const tags = new Set(content.projects.list.flatMap((project) => project.tags).map(normalizeTag));
 
         // Act
         const aliases = skills.flatMap((skill) => skill.aliases ?? []).map(normalizeTag);
@@ -105,7 +185,8 @@ describe('projects rail of Skills (review of 2026-10-09)', () => {
 
     it('lights at least one rail entry from every badge once "Professionnel" closes the rail', () => {
         // Arrange
-        const { groups, projects, labels } = content.skills;
+        const { groups, labels } = content.skills;
+        const projects = content.projects.list;
 
         // Act
         const linked = linkSkills(groups, withProfessional(groups, projects, labels.professional)).flatMap((group) => group.skills);

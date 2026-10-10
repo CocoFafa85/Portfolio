@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { contrastRatio, hexToRgb01, readableTint, relativeLuminance } from './color';
+import { contrastRatio, cssColorToHex, hexToRgb01, readableTint, relativeLuminance } from './color';
 
 describe('hexToRgb01', () => {
     it('converts a six-digit token to 0..1 channels at the given offset', () => {
@@ -77,5 +77,40 @@ describe('readableTint', () => {
         expect(contrastRatio(tint, background)).toBeGreaterThanOrEqual(3);
         expect(contrastRatio(tint, background)).toBeLessThan(3.6);
         expect(relativeLuminance(tint)).toBeGreaterThan(relativeLuminance(angular));
+    });
+});
+
+describe('cssColorToHex', () => {
+    it('rounds the fractional rgb() Sass writes for a mixed token', () => {
+        // Arrange
+        const blockBg = 'rgb(15.48, 15.48, 22.22)';
+
+        // Act
+        const hex = cssColorToHex(blockBg);
+
+        // Assert
+        expect(hex).toBe('#0f0f16');
+    });
+
+    it('keeps hex tokens, expands the short form, ignores alpha', () => {
+        // Arrange
+        const values = ['#00F3FF', '#fff', 'rgba(255, 0, 128, 0.4)', ' rgb(6 6 16) '];
+
+        // Act
+        const hexes = values.map(cssColorToHex);
+
+        // Assert
+        expect(hexes).toEqual(['#00f3ff', '#ffffff', '#ff0080', '#060610']);
+    });
+
+    it('returns null for anything else', () => {
+        // Arrange
+        const values = ['', 'transparent', 'var(--x)', '#12345'];
+
+        // Act
+        const hexes = values.map(cssColorToHex);
+
+        // Assert
+        expect(hexes).toEqual([null, null, null, null]);
     });
 });

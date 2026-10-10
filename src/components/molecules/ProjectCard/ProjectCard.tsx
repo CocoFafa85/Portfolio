@@ -1,74 +1,50 @@
 import React from 'react';
 import styles from './ProjectCard.module.scss';
 import { content } from '../../../data/content';
-import { Project } from '../../../types/models';
+import type { Project } from '../../../types/models';
 import NeonFrame from '../../atoms/NeonFrame/NeonFrame';
+import { fillTemplate } from '../../../utils/format';
+import { isInProgress } from '../../../utils/projects';
+import { accentOf } from './accent';
+import ProjectActions from './ProjectActions';
+import ProjectBody from './ProjectBody';
+import ProjectRibbon from './ProjectRibbon';
+import ProjectWindow from './ProjectWindow';
 
 const labels = content.projects.labels;
 
-interface ProjectCardProps {
+export interface ProjectCardProps {
     project: Project;
+    /** The first card of the page: its picture is fetched at once */
+    priority?: boolean;
+    /** False until the card's picture may be requested */
+    load?: boolean;
+    /** Powers its neon border on (the trajectory's flame reached it); by default at the first idle moment */
+    lit?: boolean;
 }
 
-const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
-    const hasImage = Boolean(project.imageUrl);
-
-    return (
-        <div
-            className={`${styles.card} ${project.featured ? styles.featured : ''} ${project.id === 'demineur' ? styles.workInProgress : ''}`}
-            style={{ '--card-color': project.color || 'var(--neon-cyan)' } as React.CSSProperties}
-            // Read by the CSS ribbon and badge (content: attr(...))
-            data-ribbon={labels.wipRibbon}
-            data-badge={labels.wipBadge}
+/**
+ * A project card (LOT 5, decision A "demo window"): the demo window, then the text. The default
+ * neon border of every block turns over it. `project-card` is the global hook the window's hover
+ * and focus effects read (a CSS module cannot name another module's classes).
+ */
+const ProjectCard: React.FC<ProjectCardProps> = ({ project, priority, load, lit }) => (
+    <article
+        className={`project-card ${styles.card}`}
+        style={{ '--accent': accentOf(project.color) } as React.CSSProperties}
+    >
+        <NeonFrame lit={lit} />
+        <ProjectWindow
+            project={project}
+            labels={labels}
+            priority={priority}
+            load={load}
+            overlay={isInProgress(project) && <ProjectRibbon label={fillTemplate(labels.inProgress, { year: project.year })} />}
         >
-            <NeonFrame />
-            {/* Background layer: image or cyberpunk placeholder */}
-            <div className={styles.cardBackground}>
-                {hasImage ? (
-                    <img src={project.imageUrl} alt={project.title} loading="lazy" />
-                ) : (
-                    <div className={styles.placeholder} />
-                )}
-            </div>
-
-            {/* Always-visible content */}
-            <div className={styles.cardContent}>
-                <h2 className={styles.title}>{project.title}</h2>
-                <p className={styles.description}>{project.description}</p>
-                <div className={styles.tags}>
-                    {project.tags.map(tag => (
-                        <span key={tag} className={styles.tag}>{tag}</span>
-                    ))}
-                </div>
-            </div>
-
-            {/* Hover overlay with action buttons */}
-            <div className={styles.overlay}>
-                <div className={styles.links}>
-                    {project.demoLink && (
-                        <a
-                            href={project.demoLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={`${styles.linkButton} ${styles.demo}`}
-                        >
-                            {labels.demo}
-                        </a>
-                    )}
-                    {project.repoLink && (
-                        <a
-                            href={project.repoLink}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={`${styles.linkButton} ${styles.repo}`}
-                        >
-                            {labels.code}
-                        </a>
-                    )}
-                </div>
-            </div>
-        </div>
-    );
-};
+            <ProjectActions project={project} labels={labels} />
+        </ProjectWindow>
+        <ProjectBody project={project} labels={labels} />
+    </article>
+);
 
 export default ProjectCard;

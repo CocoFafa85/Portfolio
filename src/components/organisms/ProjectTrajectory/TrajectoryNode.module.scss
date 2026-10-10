@@ -1,0 +1,150 @@
+@use 'sass:color';
+@use '../../../styles/variables' as *;
+
+// DSEG7 Classic Bold Italic, © 2017 keshikan, SIL Open Font License 1.1
+// (src/assets/fonts/dseg/DSEG-LICENSE.txt), unmodified ("DSEG" is a reserved font name). Requested only
+// once the decor powers on: the trajectory is not drawn in the first paint.
+@font-face {
+    font-family: 'DSEG7 Classic';
+    src: url('../../../assets/fonts/dseg/DSEG7Classic-BoldItalic.woff2') format('woff2');
+    font-weight: 700;
+    font-style: italic;
+    font-display: block;
+}
+
+$lit: $neon-green;
+$ember: #ffd29a;
+
+// The node is a 2 px box on the axis, centred on its dot (the trigger line crosses it with the flame)
+.node {
+    position: absolute;
+    top: var(--node-y);
+    left: var(--node-x);
+    width: 0;
+    height: 2px;
+    z-index: 3;
+}
+
+.dot {
+    position: absolute;
+    left: -10px;
+    top: -9px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: color.mix($lit, $bg-deep, 6%);
+    border: 2px solid color.mix($lit, $bg-deep, 30%);
+}
+
+.core {
+    position: absolute;
+    inset: 2px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #f4ffe8, $lit 55%, color.mix($lit, #000, 55%));
+    box-shadow: 0 0 10px 3px color.change($lit, $alpha: 0.75);
+    opacity: 0;
+}
+
+// Shock waves (the first one ember-hot, the second neon green) and sparks of the ignition
+.wave {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border-radius: 50%;
+    border: 2px solid $ember;
+    opacity: 0;
+
+    & + & { border-color: $lit; }
+}
+
+.spark {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 4px;
+    height: 4px;
+    margin: -2px 0 0 -2px;
+    border-radius: 50%;
+    background: #fff3d6;
+    opacity: 0;
+}
+
+// The year: beside the dot, away from the card (from 1024 px), above the card on a narrow screen
+.display {
+    position: absolute;
+    top: -18px;
+    left: var(--display-x, 18px);
+    right: var(--display-right, auto);
+    padding: 4px 6px;
+    border-radius: 6px;
+    background: $tc-console;
+    border: 1px solid $tc-console-edge;
+    box-shadow: inset 0 0 0 2px #050508;
+}
+
+.bloom {
+    position: absolute;
+    inset: -20px -26px;
+    border-radius: 50%;
+    background: radial-gradient(closest-side, color.change($lit, $alpha: 0.45), transparent);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.digits {
+    position: relative;
+    display: block;
+    padding: 3px 4px 2px;
+    border-radius: 3px;
+    background: $tc-glass;
+    font: italic 700 1.25rem/1 'DSEG7 Classic', monospace;
+    letter-spacing: 0.06em;
+    color: $lit;
+    white-space: nowrap;
+}
+
+// The unlit segments "8888" (data-ghost): generated content, faint
+.digits::before {
+    content: attr(data-ghost);
+    opacity: 0.09;
+}
+
+.value,
+.flash {
+    position: absolute;
+    inset: 3px 4px 2px;
+}
+
+// Dark until the flame passes: only the unlit segments show; then the year at once
+.value { visibility: hidden; text-shadow: 0 0 8px $lit; }
+.flash { opacity: 0; color: #fff; text-shadow: 0 0 12px #fff, 0 0 22px $lit; }
+
+// Ignited: the year at once (no fade), its flash and bloom; the dot's core, waves and sparks
+[data-ignited] {
+    .dot { border-color: $lit; }
+    .value { visibility: visible; }
+    .core { animation: core var(--core-ms) ease-out both; }
+    .flash { animation: fade-out var(--flash-ms) ease-out both; }
+    .bloom { animation: bloom var(--bloom-ms) ease-out both; }
+    .wave { animation: wave var(--wave-ms) cubic-bezier(0.2, 0.7, 0.3, 1) both; }
+    .wave + .wave { animation-delay: 120ms; }
+    .spark { animation: spark var(--spark-ms) ease-out both; }
+}
+
+@keyframes core { 0% { opacity: 0; transform: scale(0.3); } 35% { opacity: 1; transform: scale(1.35); } 100% { opacity: 1; transform: none; } }
+@keyframes fade-out { from { opacity: 1; } to { opacity: 0; } }
+@keyframes bloom { 0% { opacity: 0; transform: scale(0.6); } 25% { opacity: 1; transform: none; } 100% { opacity: 0.35; transform: none; } }
+@keyframes wave { from { opacity: 0.95; transform: scale(0.6); } to { opacity: 0; transform: scale(3.6); } }
+@keyframes spark { from { opacity: 1; transform: none; } to { opacity: 0; transform: translate(var(--sx), var(--sy)) scale(0.3); } }
+
+// Reduced motion: lit and still (the final state of each animation, no flash nor wave)
+@media (prefers-reduced-motion: reduce) {
+    [data-ignited] {
+        .core { animation: none; opacity: 1; }
+        .bloom { animation: none; opacity: 0.35; }
+        .flash, .wave, .spark { animation: none; }
+    }
+}

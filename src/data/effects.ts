@@ -22,9 +22,10 @@ export const heroEffects = {
     /** Title decoded from glyph noise, then the neon tube lights up */
     decode: { seed: 1985, steps: 22, spread: 0.28, durationMs: 700 } satisfies DecodeSettings & { durationMs: number },
     igniteMs: 360,
-    /** Subtitle: the first role decodes from noise with the title, then each role decodes into the next */
+    /** Subtitle: the first role decodes from noise with the title, then each role decodes into the next;
+     *  decodes twice as long since the review of 2026-10-09 (were 900 and 480 ms), same hold */
     roles: {
-        seed: 7, steps: 20, spread: 0.3, introMs: 900, morphMs: 480, holdMs: 2200,
+        seed: 7, steps: 20, spread: 0.3, introMs: 1800, morphMs: 960, holdMs: 2200,
     } satisfies DecodeSettings & Record<'introMs' | 'morphMs' | 'holdMs', number>,
 };
 
@@ -245,6 +246,29 @@ export const skillEffects = {
     iconsTimeoutMs: 1200,
     /** ...and only once the badges are this close to the screen */
     iconsMargin: '300px',
+};
+
+/** Project cards (Projects, LOT 5): their accent colours text (year, tags) at AA contrast on the panel */
+export const projectEffects = {
+    accentContrast: 4.5,
+};
+
+/** Trajectory of the Projects page (LOT 5, decision T1 "time trajectory") */
+export const trajectoryEffects = {
+    /** The decor (axis, points, years) and the visuals of the cards below the first power on at the
+     *  first idle moment after powerOnAfterMs (never in the first paint, nor alongside the first card's
+     *  visual, the page's LCP), at the latest powerOnTimeoutMs later */
+    powerOnAfterMs: 700,
+    powerOnTimeoutMs: 1200,
+    /** The flame sits on this line of the viewport (share of its height from the top): a point lights
+     *  up as it crosses it (useScroll offset "start 0.6" → "end 0.6") */
+    triggerLine: 0.6,
+    /** Ignition of a point, then of its card (CSS animations, transform and opacity only) */
+    ignition: { flashMs: 380, bloomMs: 900, coreMs: 500, waveMs: 700, sparkMs: 550, linkMs: 320, bootMs: 900, bootDelayMs: 300 },
+    /** Sparks thrown all around a point as it ignites (reach in px) */
+    sparks: { count: 6, reach: 32 },
+    /** Embers rising from the flame's head, left and right in turn: drift and rise (px), one rise (ms) */
+    embers: { count: 6, drift: [6, 18], rise: [30, 62], durationMs: [1200, 2050] },
 };
 
 /** Navigation bar (LOT 1, C1) */
