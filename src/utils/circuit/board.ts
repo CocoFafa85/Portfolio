@@ -73,6 +73,20 @@ export interface Board {
  * buses of parallel traces with 45° bends, passives, buses entering from the
  * edges, a via at the end of every trace. Deterministic for a given `random`.
  */
+/**
+ * The board settings at a share of the full density (render budget, LOT 6): fewer chips, parts and
+ * edge buses per megapixel, so fewer traces; the same object at full density (the same board).
+ */
+export function boardAtDensity(config: BoardConfig, density: number): BoardConfig {
+    if (density >= 1) return config;
+    return {
+        ...config,
+        chipsPerMegapixel: config.chipsPerMegapixel * density,
+        partsPerMegapixel: config.partsPerMegapixel * density,
+        edgeBusesPerMegapixel: config.edgeBusesPerMegapixel * density,
+    };
+}
+
 export function generateBoard(
     width: number,
     height: number,

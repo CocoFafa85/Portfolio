@@ -15,7 +15,12 @@
     transform: perspective(1000px) rotateX(calc(var(--mouse-y, 0) * 10deg)) rotateY(calc(var(--mouse-x, 0) * -10deg));
     transition: transform 0.1s ease-out;
 
+    // No mouse, no tilt: a phone, an upright tablet, or any touch screen
     @include narrow {
+        transform: none;
+    }
+
+    @include touch {
         transform: none;
     }
 }

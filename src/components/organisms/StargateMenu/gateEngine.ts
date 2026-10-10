@@ -1,6 +1,7 @@
 import { gateEffects as fx } from '../../../data/effects';
+import { readRenderBudget } from '../../../hooks/useDevice';
 import { createRandom } from '../../../utils/random';
-import { gateGeometrySteps } from '../../../utils/stargate/geometry';
+import { gateAtDensity, gateGeometrySteps } from '../../../utils/stargate/geometry';
 import type { GateGeometry } from '../../../utils/stargate/writer';
 import { finishProgram, isProgramReady, startProgram, type PendingProgram } from '../../../webgl/program';
 import { createGateRenderer, type GateRenderer } from './gateRenderer';
@@ -42,7 +43,8 @@ export function finishGate(boot: GateBoot): GateRenderer | null | 'waiting' {
         if (!isProgramReady(boot.pending)) return 'waiting';
         boot.program = finishProgram(boot.pending);
         if (!boot.program) return null;
-        boot.steps = gateGeometrySteps(fx.shape, createRandom(fx.seed), fx.geometryChunk);
+        // The device's share of the particles (render budget, LOT 6): the whole gate on a fast device
+        boot.steps = gateGeometrySteps(gateAtDensity(fx.shape, readRenderBudget().density), createRandom(fx.seed), fx.geometryChunk);
         return 'waiting';
     }
     const step = boot.steps.next();

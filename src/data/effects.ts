@@ -1,6 +1,5 @@
 import type { Transition } from 'motion/react';
 import type { BudgetSettings } from '../utils/budget';
-import type { PixelRatioCaps } from '../utils/canvas';
 import type { BoardConfig } from '../utils/circuit/board';
 import type { DecodeSettings } from '../utils/decode';
 import type { StarLayerSpec } from '../utils/starfield/layers';
@@ -60,9 +59,8 @@ export const nebulaEffects = {
     /** No grain: its still grey specks broke the even background (review of 2026-10-08, was 0.08 / 0.1) */
     grainMixer: 0,
     grainOverlay: 0,
-    /** A soft nebula needs few pixels: never above the device ratio 1, capped in device pixels */
-    minPixelRatio: 1,
-    maxPixelCount: { fine: 1_500_000, coarse: 600_000 },
+    /** A soft nebula needs few pixels: one canvas pixel per CSS pixel on every screen */
+    pixelRatio: 1,
     /** The shader fades in over the CSS gradient once its chunk is loaded */
     fadeInMs: 900,
     /** The shader chunk loads at the first idle moment after bootAfterMs (see gateEffects), at the latest idleTimeoutMs later */
@@ -108,7 +106,8 @@ export const starEffects = {
     /** The gate stands in front of the sky (review of 2026-10-09, whole gate): erased up to the ring
      *  (gate radius 1), fading out to the chevron tips; sprite size of the erasing disc */
     occlusion: { solid: 1, fade: 1.12, size: 128 },
-    pixelRatio: { fine: 2, coarse: 1.5, maxPixels: 8_000_000 } satisfies PixelRatioCaps,
+    /** Backing store cap in device pixels; the pixel ratio comes from the render budget (deviceBudget) */
+    maxPixels: 8_000_000,
     resizeDebounceMs: 150,
 };
 
@@ -163,7 +162,8 @@ export const gateEffects = {
         chevronStepMs: 38, flare: 1.6, flareMs: 180, spin: 3.8, spinMs: 460,
         horizonAtMs: 320, vortexMs: 320, brightenMs: 220, diveAtMs: 520, diveMs: 420, navigateAtMs: 760,
     } satisfies DialTimeline,
-    pixelRatio: { fine: 2, coarse: 1.5, maxPixels: 8_000_000 } satisfies PixelRatioCaps,
+    /** Backing store cap in device pixels; the pixel ratio comes from the render budget (deviceBudget) */
+    maxPixels: 8_000_000,
     resizeDebounceMs: 150,
 };
 
@@ -192,7 +192,8 @@ export const convectorEffects = {
     boltSeed: 1955,
     /** Bolts are drawn once per console size on two canvases: halo and core widths (CSS px) */
     boltStroke: { halo: 5, core: 1.4 },
-    pixelRatio: { fine: 2, coarse: 1.5, maxPixels: 8_000_000 } satisfies PixelRatioCaps,
+    /** Backing store cap in device pixels; the pixel ratio comes from the render budget (deviceBudget) */
+    maxPixels: 8_000_000,
     /** The flux capacitor powers on at the first idle moment after powerOnAfterMs (its glows are
      *  the costliest part of the console to paint: never in the first frames), at the latest powerOnTimeoutMs later */
     powerOnAfterMs: 700,
@@ -246,8 +247,9 @@ export const holoEffects = {
     mountTimeoutMs: 400,
     /** Rotating neon border, one turn (ms): the original card's */
     borderTurnMs: 4000,
-    /** QR canvas density: sharp on every screen, small anyway (~170 CSS px) */
-    qrPixelRatio: { fine: 2, coarse: 2, maxPixels: 400_000 } satisfies PixelRatioCaps,
+    /** QR canvas density: sharp on every screen (up to ratio 2, whatever the class), small anyway (~170 CSS px) */
+    qrPixelRatio: 2,
+    qrMaxPixels: 400_000,
 };
 
 /** Skill badges and the projects rail (Skills, LOT 4, S3): CSS variables of the sections */
@@ -362,7 +364,8 @@ export const circuitEffects = {
     hover: { radius: 80, rise: 0.2, decay: 0.92 } satisfies HoverSettings,
     hoverCell: 96,
     glow: { width: 2.4, alpha: 0.55 },
-    pixelRatio: { fine: 2, coarse: 1.5, maxPixels: 8_000_000 } satisfies PixelRatioCaps,
+    /** Backing store cap in device pixels; the pixel ratio comes from the render budget (deviceBudget) */
+    maxPixels: 8_000_000,
     resizeDebounceMs: 150,
 } as const;
 

@@ -11,3 +11,9 @@ export const breakpoints = {
 } as const;
 
 export type Breakpoints = typeof breakpoints;
+
+/** Capability queries read by the scripts (the touch one equals $q-touch, checked by the test) */
+export const mediaQueries = {
+    touch: '(hover: none) and (pointer: coarse)',
+    portrait: '(orientation: portrait)',
+} as const;

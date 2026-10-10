@@ -18,6 +18,16 @@ describe('createStarLayer', () => {
         expect(large.data).toHaveLength(200 * STAR_STRIDE);
     });
 
+    it('draws its share of the stars at a lower density, never under the minimum', () => {
+        // Arrange / Act
+        const half = createStarLayer(SPEC, 2000, 1000, createRandom(1), 0.5);
+        const floor = createStarLayer(SPEC, 100, 100, createRandom(1), 0.5);
+
+        // Assert
+        expect(half.count).toBe(100);
+        expect(floor.count).toBe(20);
+    });
+
     it('keeps every value within its settings and replays the same sky for a seed', () => {
         // Arrange / Act
         const layer = createStarLayer(SPEC, 1000, 1000, createRandom(5));

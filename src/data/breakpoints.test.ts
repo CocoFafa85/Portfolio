@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import scss from '../styles/_breakpoints.scss?raw';
-import { breakpoints } from './breakpoints';
+import { breakpoints, mediaQueries } from './breakpoints';
 
 describe('breakpoints (A1)', () => {
     it('keeps the scripts\' copy equal to the SCSS tokens', () => {
@@ -12,5 +12,16 @@ describe('breakpoints (A1)', () => {
 
         // Assert
         expect(tokens).toEqual({ ...breakpoints });
+    });
+
+    it('reads a finger with the same query as the SCSS', () => {
+        // Arrange
+        const token = /^\$q-touch: '([^']+)';/m.exec(scss)?.[1];
+
+        // Act
+        const query = mediaQueries.touch;
+
+        // Assert
+        expect(query).toBe(token);
     });
 });

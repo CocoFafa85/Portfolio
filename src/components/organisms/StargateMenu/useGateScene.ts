@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, type RefObject } from 'react';
 import { gateEffects as fx } from '../../../data/effects';
 import { useAnimationLoop } from '../../../hooks/useAnimationLoop';
+import { readRenderBudget } from '../../../hooks/useDevice';
 import { capPixelRatio } from '../../../utils/canvas';
 import { releaseGateOccluder, type GateOccluder } from '../../../utils/stargate/occluder';
 import { startGateBoot } from './gateBoot';
@@ -40,12 +41,11 @@ export function useGateScene(
         if (!canvas || !cell || !root) return;
         const scene = createGateScene(canvas, linksRef.current, occluder);
         sceneRef.current = scene;
-        const coarse = window.matchMedia('(pointer: coarse)').matches;
 
         const layout = () => {
             const width = root.clientWidth;
             const height = root.clientHeight;
-            const ratio = capPixelRatio(window.devicePixelRatio, width, height, coarse, fx.pixelRatio);
+            const ratio = capPixelRatio(readRenderBudget().pixelRatio, width, height, fx.maxPixels);
             const rect = { x: cell.offsetLeft, y: cell.offsetTop, width: cell.offsetWidth, height: cell.offsetHeight };
             layoutGateScene(scene, rect, width, height, ratio);
             stepGateScene(scene, performance.now(), reducedMotion());

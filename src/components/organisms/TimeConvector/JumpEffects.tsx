@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { convectorEffects as fx } from '../../../data/effects';
+import { readRenderBudget } from '../../../hooks/useDevice';
 import { capPixelRatio } from '../../../utils/canvas';
 import type { BoltField } from './jumpBolts';
 import styles from './JumpEffects.module.scss';
@@ -17,8 +18,7 @@ const GROUPS = [0, 1];
  * (design tokens), read once per drawing.
  */
 function drawBolts(canvas: HTMLCanvasElement, bolts: BoltField, group: number): void {
-    const coarse = window.matchMedia('(pointer: coarse)').matches;
-    const ratio = capPixelRatio(window.devicePixelRatio, bolts.width, bolts.height, coarse, fx.pixelRatio);
+    const ratio = capPixelRatio(readRenderBudget().pixelRatio, bolts.width, bolts.height, fx.maxPixels);
     canvas.width = Math.round(bolts.width * ratio);
     canvas.height = Math.round(bolts.height * ratio);
     const ctx = canvas.getContext('2d');

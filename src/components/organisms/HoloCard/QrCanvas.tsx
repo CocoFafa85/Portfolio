@@ -29,8 +29,7 @@ const QrCanvas: React.FC<QrCanvasProps> = ({ label }) => {
         const modules = rows.length + QUIET * 2;
         // Layout width: the face is turned and tilted in 3D, its bounding box is not the canvas size
         const css = canvas.offsetWidth;
-        const coarse = window.matchMedia('(pointer: coarse)').matches;
-        const ratio = capPixelRatio(window.devicePixelRatio, css, css, coarse, fx.qrPixelRatio);
+        const ratio = capPixelRatio(Math.min(window.devicePixelRatio || 1, fx.qrPixelRatio), css, css, fx.qrMaxPixels);
         const unit = Math.max(1, Math.floor((css * ratio) / modules));
         canvas.width = canvas.height = unit * modules;
         const style = getComputedStyle(canvas);

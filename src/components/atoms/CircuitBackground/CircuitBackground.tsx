@@ -2,8 +2,9 @@ import React, { useCallback, useEffect, useRef } from 'react';
 import { content } from '../../../data/content';
 import { circuitEffects as fx } from '../../../data/effects';
 import { useAnimationLoop } from '../../../hooks/useAnimationLoop';
+import { readDeviceTraits, readRenderBudget } from '../../../hooks/useDevice';
 import { capPixelRatio } from '../../../utils/canvas';
-import { generateBoard, type Board } from '../../../utils/circuit/board';
+import { boardAtDensity, generateBoard, type Board } from '../../../utils/circuit/board';
 import {
     createGlowState, createHoverIndex, updateGlow, type GlowState, type HoverIndex, type Pointer,
 } from '../../../utils/circuit/hover';
@@ -56,15 +57,16 @@ const CircuitBackground: React.FC = () => {
         const palette = readPalette();
         const grain = boardCtx.createPattern(createGrainTile(fx.style.grainSize, createRandom(fx.seed)), 'repeat');
         const pointer: Pointer = { x: 0, y: 0, active: false };
-        const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
 
         const build = () => {
             const width = window.innerWidth;
             const height = window.innerHeight;
-            const ratio = capPixelRatio(window.devicePixelRatio, width, height, coarsePointer, fx.pixelRatio);
+            // The device's render budget (LOT 6): its pixel ratio cap and its share of the traces
+            const budget = readRenderBudget();
+            const ratio = capPixelRatio(budget.pixelRatio, width, height, fx.maxPixels);
             fitCanvas(boardCanvas, boardCtx, width, height, ratio);
             fitCanvas(liveCanvas, liveCtx, width, height, ratio);
-            const board = generateBoard(width, height, fx.board, content.decor.circuit, createRandom(fx.seed));
+            const board = generateBoard(width, height, boardAtDensity(fx.board, budget.density), content.decor.circuit, createRandom(fx.seed));
             drawBoard(boardCtx, board, palette, grain, fx.style);
             sceneRef.current = {
                 board,
@@ -95,8 +97,12 @@ const CircuitBackground: React.FC = () => {
             if (!event.relatedTarget) pointer.active = false;
         };
         window.addEventListener('resize', onResize);
-        window.addEventListener('pointermove', onPointerMove, { passive: true });
-        window.addEventListener('pointerout', onPointerOut);
+        // The traces light up near a mouse only: no pointer listener on a touch screen
+        const mouse = !readDeviceTraits().coarse;
+        if (mouse) {
+            window.addEventListener('pointermove', onPointerMove, { passive: true });
+            window.addEventListener('pointerout', onPointerOut);
+        }
         return () => {
             window.clearTimeout(resizeTimer);
             window.removeEventListener('resize', onResize);

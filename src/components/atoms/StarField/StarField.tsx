@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { starEffects as fx } from '../../../data/effects';
 import { useAnimationLoop } from '../../../hooks/useAnimationLoop';
+import { readDeviceTraits, readRenderBudget } from '../../../hooks/useDevice';
 import { capPixelRatio } from '../../../utils/canvas';
 import { createRandom, inRange, type Random } from '../../../utils/random';
 import { createStarLayer, driftStars, type StarLayer } from '../../../utils/starfield/layers';
@@ -72,19 +73,20 @@ const StarField: React.FC<StarFieldProps> = ({ occluder }) => {
         if (!canvas || !ctx) return;
         const sprites = createStarSprites(readStarPalette());
         const image = (tint: number) => sprites.tints[tint];
-        const coarse = window.matchMedia('(pointer: coarse)').matches;
         const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
 
         const build = () => {
             const width = window.innerWidth;
             const height = window.innerHeight;
-            const ratio = capPixelRatio(window.devicePixelRatio, width, height, coarse, fx.pixelRatio);
+            // The device's render budget (LOT 6): its pixel ratio cap and its share of the stars
+            const budget = readRenderBudget();
+            const ratio = capPixelRatio(budget.pixelRatio, width, height, fx.maxPixels);
             canvas.width = Math.round(width * ratio);
             canvas.height = Math.round(height * ratio);
             const random = createRandom(fx.seed);
             const scene: Scene = {
                 ctx, width, height, ratio, random, pointer, sprites, image, occluder,
-                layers: fx.layers.map((spec) => createStarLayer(spec, width, height, random)),
+                layers: fx.layers.map((spec) => createStarLayer(spec, width, height, random, budget.density)),
                 pool: createMeteorPool(fx.meteor.max),
                 nextMeteor: performance.now() + fx.firstMeteorMs,
                 comets: createMeteorPool(fx.comet.max),
@@ -110,7 +112,9 @@ const StarField: React.FC<StarFieldProps> = ({ occluder }) => {
             pointer.ty = event.clientY / window.innerHeight - 0.5;
         };
         window.addEventListener('resize', onResize);
-        window.addEventListener('pointermove', onPointerMove, { passive: true });
+        // A finger never moves the parallax: no pointer listener on a touch screen
+        const mouse = !readDeviceTraits().coarse;
+        if (mouse) window.addEventListener('pointermove', onPointerMove, { passive: true });
         return () => {
             window.clearTimeout(resizeTimer);
             window.removeEventListener('resize', onResize);

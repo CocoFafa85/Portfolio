@@ -29,10 +29,13 @@ export interface StarLayer {
     data: Float32Array;
 }
 
-/** Stars of a layer for a screen, packed for allocation-free drawing. Deterministic for `random`. */
-export function createStarLayer(spec: StarLayerSpec, width: number, height: number, random: Random): StarLayer {
+/**
+ * Stars of a layer for a screen, packed for allocation-free drawing. Deterministic for `random`.
+ * `density`: the share of the full count the device draws (render budget, LOT 6), never below `min`.
+ */
+export function createStarLayer(spec: StarLayerSpec, width: number, height: number, random: Random, density = 1): StarLayer {
     const megapixels = (width * height) / 1e6;
-    const count = Math.max(spec.min, Math.round(megapixels * spec.perMegapixel));
+    const count = Math.max(spec.min, Math.round(megapixels * spec.perMegapixel * density));
     const data = new Float32Array(count * STAR_STRIDE);
     for (let i = 0; i < count; i++) {
         const base = i * STAR_STRIDE;

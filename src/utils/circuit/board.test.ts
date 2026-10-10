@@ -1,12 +1,34 @@
 import { describe, expect, it } from 'vitest';
 import { circuitEffects } from '../../data/effects';
 import { createRandom } from '../random';
-import { generateBoard, type Board } from './board';
+import { boardAtDensity, generateBoard, type Board } from './board';
 import { calmHalfWidth } from './density';
 
 const DESIGNATORS = { chip: 'U', resistor: 'R', capacitor: 'C' };
 const build = (width: number, height: number, seed = 1955): Board =>
     generateBoard(width, height, circuitEffects.board, DESIGNATORS, createRandom(seed));
+
+describe('boardAtDensity', () => {
+    it('keeps the same settings at full density, so the same board', () => {
+        // Arrange / Act
+        const config = boardAtDensity(circuitEffects.board, 1);
+
+        // Assert
+        expect(config).toBe(circuitEffects.board);
+    });
+
+    it('lays out fewer components and traces at a lower density', () => {
+        // Arrange
+        const full = build(1440, 900);
+
+        // Act
+        const sparse = generateBoard(1440, 900, boardAtDensity(circuitEffects.board, 0.5), DESIGNATORS, createRandom(1955));
+
+        // Assert
+        expect(sparse.chips.length).toBeLessThan(full.chips.length);
+        expect(sparse.traceCount).toBeLessThan(full.traceCount);
+    });
+});
 
 describe('generateBoard', () => {
     it('is reproducible for the same seed and screen', () => {
