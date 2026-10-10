@@ -2,6 +2,7 @@ import type { Transition } from 'motion/react';
 import type { BudgetSettings } from '../utils/budget';
 import type { BoardConfig } from '../utils/circuit/board';
 import type { DecodeSettings } from '../utils/decode';
+import type { DeviceTiltSettings } from '../utils/deviceTilt';
 import type { StarLayerSpec } from '../utils/starfield/layers';
 import type { MeteorSettings } from '../utils/starfield/meteors';
 import type { DialTimeline } from '../utils/stargate/dial';
@@ -231,6 +232,12 @@ export const holoEffects = {
     perspective: 1200,
     /** Tilt at the card edge (degrees) and its spring: the original card's */
     tilt: { max: 15, spring: { stiffness: 200, damping: 20 } },
+    /** At the finger (LOT 6, D4, decision A): a sideways drag past `slop` px tilts the card, fully
+     *  once the finger crossed half the card / `reach`; the finger's height pitches it `pitch` degrees */
+    touch: { slop: 6, reach: 1.2, pitch: 5 },
+    /** Device tilt (Android, LOT 6, D4): card degrees per device degree, limit, how fast a new hold
+     *  becomes the rest (share per reading, ~60 a second) */
+    gyro: { gain: 0.5, max: 8, recenter: 0.015 } satisfies DeviceTiltSettings,
     /** Idle sway while nobody points at the card (degrees, one elliptic loop in ms), in CSS */
     sway: { x: 3, y: 5, periodMs: 8000 },
     /** Film shift for a full tilt (share of the card), glare travel (share of the card) */
