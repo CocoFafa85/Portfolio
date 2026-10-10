@@ -3,8 +3,7 @@ import styles from './ProjectCard.module.scss';
 import { content } from '../../../data/content';
 import type { Project } from '../../../types/models';
 import NeonFrame from '../../atoms/NeonFrame/NeonFrame';
-import { fillTemplate } from '../../../utils/format';
-import { isInProgress } from '../../../utils/projects';
+import { isInProgress, ribbonLabel } from '../../../utils/projects';
 import { accentOf } from './accent';
 import ProjectActions from './ProjectActions';
 import ProjectBody from './ProjectBody';
@@ -39,7 +38,7 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, priority, load, lit 
             labels={labels}
             priority={priority}
             load={load}
-            overlay={isInProgress(project) && <ProjectRibbon label={fillTemplate(labels.inProgress, { year: project.year })} />}
+            overlay={isInProgress(project) && <ProjectRibbon label={ribbonLabel(project, labels)} />}
         >
             <ProjectActions project={project} labels={labels} />
         </ProjectWindow>

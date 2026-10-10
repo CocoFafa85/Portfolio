@@ -57,7 +57,7 @@ export const projectDetails = {
         demoLink: "https://cocofafa85.github.io/SolarSystem/index.html",
         repoLink: "https://github.com/CocoFafa85/SolarSystem"
     },
-    // No link while it is a work in progress (F5)
+    // No link while they are works in progress (F5; PouceStop, 2026-10-10)
     soulsweeper: {
         pitch: "J'ai toujours aimé le démineur ; j'ai voulu le réinventer sous la forme d'un genre de jeu vidéo que j'affectionne : le roguelike.",
         team: "Solo",
@@ -67,9 +67,9 @@ export const projectDetails = {
         visual: visual(soul640, soul960, "Illustration de SoulSweeper : une grille de démineur dans un donjon éclairé par deux torches, une âme lumineuse au centre, des drapeaux et une mine ; trois cœurs et « Étage 3 » en haut, le titre en bas.")
     },
     poucestop: {
-        pitch: "[À FOURNIR : pitch de PouceStop]",
-        team: "[À FOURNIR : équipe]",
-        goals: ["[À FOURNIR : objectifs d'apprentissage]"],
+        pitch: "Répondre à un besoin que le marché ne couvre pas encore : les solutions existantes sont très mal notées.",
+        team: "Solo",
+        goals: ["Découvrir Kotlin et l'environnement Android", "Découvrir les notions légales", "Créer ma première application mobile"],
         frame: "PouceStop · Android",
         color: "#ffb21a",
         visual: visual(pouce640, pouce960, "Illustration de PouceStop : un téléphone affichant un trajet sur une carte, devant une route de nuit et un panneau marqué d'un pouce levé.")

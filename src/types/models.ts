@@ -78,6 +78,8 @@ export interface ProjectLabels {
     online: string;
     /** Construction tape of a project in progress, "{year}" replaced */
     inProgress: string;
+    /** Tape and year line of a project in progress without a release date */
+    undated: string;
 }
 
 /** A skill of the CV (F3): no level, no percentage (LOT 4) */
@@ -135,8 +137,8 @@ export type ProjectStatus = 'done' | 'in-progress';
 export interface ProjectEntry extends ProjectRef {
     id: ProjectId;
     status: ProjectStatus;
-    /** Year it was finished; while in progress, its planned release year */
-    year: string;
+    /** Year it was finished; while in progress, its planned release year (absent: no date yet) */
+    year?: string;
 }
 
 /** One file of a card visual: its URL (a Vite asset, never inlined in a bundle) and its width */

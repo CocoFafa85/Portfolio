@@ -54,7 +54,7 @@ const ProjectTrajectory: React.FC<ProjectTrajectoryProps> = ({ projects }) => {
                     return (
                         <li key={project.id} className={styles.item} data-side={sideOf(index)} data-ignited={ignited ? '' : undefined}
                             style={{ '--row': index + 1 } as CSSProperties}>
-                            {powered && <TrajectoryNode year={yearDigits(project.year)} />}
+                            {powered && <TrajectoryNode year={yearDigits(project.year ?? '')} />}
                             {powered && <span className={styles.link} aria-hidden="true" />}
                             <ProjectCard project={project} priority={index === 0} load={index === 0 || powered} lit={ignited} />
                         </li>
