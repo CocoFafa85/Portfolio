@@ -4,7 +4,7 @@
 
 // ═══════════════════════════════════════════════
 // PROJECTS RAIL (LOT 4, S3) — sticks under the top of the page while the
-// groups scroll (≥ 768 px), so a lit project stays in view
+// groups scroll (from a tablet), so a lit project stays in view
 // ═══════════════════════════════════════════════
 .rail {
     position: relative;
@@ -14,7 +14,7 @@
     border: 1px solid color.change($neon-violet, $alpha: 0.45);
     border-radius: 10px;
 
-    @media (min-width: 768px) {
+    @include from-tablet {
         position: sticky;
         top: 0.75rem;
     }
@@ -50,7 +50,7 @@
     list-style: none;
 
     // Six entries (review of 2026-10-09): three a row on a tablet, all in one row on a large screen
-    @media (min-width: 768px) {
+    @include from-tablet {
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 

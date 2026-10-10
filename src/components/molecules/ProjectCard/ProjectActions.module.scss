@@ -25,7 +25,7 @@
 }
 
 // Touch screens have no hover: the bar always shows, under the screen
-@media (hover: none) {
+@include no-hover {
     .actions {
         position: static;
         transform: none;

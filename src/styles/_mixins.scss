@@ -1,3 +1,5 @@
+// The device classes and their mixins (mobile, tablet-portrait, wide, touch…) come from here
+@forward 'breakpoints';
 @use 'sass:color';
 @use 'variables' as *;
 
@@ -28,34 +30,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-// Media Queries
-@mixin mobile {
-  @media (max-width: 480px) {
-    @content;
-  }
-}
-
-@mixin tablet {
-  @media (max-width: 1024px) {
-    @content;
-  }
-}
-
-// Wide enough for two columns side by side (About cockpit, LOT 3); the
-// breakpoints are unified in LOT 6
-@mixin wide {
-  @media (min-width: 1024px) {
-    @content;
-  }
-}
-// Large screen (About cockpit spacing, review of 2026-10-08): room to spread
-// the two columns apart without shrinking them
-@mixin large {
-  @media (min-width: 1280px) {
-    @content;
-  }
 }
 
 // A block of a page (review of 2026-10-09): one solid dark panel (the old translucent glass

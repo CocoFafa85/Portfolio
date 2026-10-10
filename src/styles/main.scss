@@ -212,7 +212,7 @@ a {
     animation: glitch-anim2 5s infinite linear alternate-reverse;
   }
 
-  @media (max-width: 768px) {
+  @include narrow {
     font-size: 2rem;
   }
 }
