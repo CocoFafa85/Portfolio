@@ -75,7 +75,7 @@ $ember: #ffd29a;
 // The year: beside the dot, away from the card (from 1024 px), above the card on a narrow screen
 .display {
     position: absolute;
-    top: -18px;
+    top: var(--display-y, -18px);
     left: var(--display-x, 18px);
     right: var(--display-right, auto);
     padding: 4px 6px;
