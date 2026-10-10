@@ -4,9 +4,10 @@
 // SKILLS TEXT (review of 2026-10-09): the lead, then one paragraph per
 // family of technologies, in the first block of the page
 // ═══════════════════════════════════════════════
+// ~68 characters a line ($measure, LOT 6): 72ch let ~100 through on an upright tablet
 .lead,
 .paragraph {
-    max-width: 72ch;
+    max-width: $measure;
     line-height: 1.7;
     color: var(--text-primary);
 }

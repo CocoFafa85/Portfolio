@@ -28,7 +28,7 @@
     // Fixed line height: no shift when Orbitron replaces the fallback font (CLS)
     :global(.glitch-title) {
         margin-bottom: 0;
-        font-size: 3.5rem;
+        font-size: $glitch-title-size-large;
         line-height: 1.2;
         letter-spacing: 4px;
 
@@ -37,8 +37,5 @@
             background: $block-bg;
         }
 
-        @include narrow {
-            font-size: 2.5rem;
-        }
     }
 }
