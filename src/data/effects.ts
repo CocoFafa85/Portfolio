@@ -1,4 +1,5 @@
 import type { Transition } from 'motion/react';
+import type { BudgetSettings } from '../utils/budget';
 import type { PixelRatioCaps } from '../utils/canvas';
 import type { BoardConfig } from '../utils/circuit/board';
 import type { DecodeSettings } from '../utils/decode';
@@ -11,11 +12,30 @@ import type { HoverSettings } from '../utils/circuit/hover';
 import type { BoltSettings } from '../utils/timeCircuits/bolts';
 import type { JumpTimeline } from '../utils/timeCircuits/jump';
 import type { RadialSettings, SpeedSettings } from '../utils/travelFx';
+import { breakpoints } from './breakpoints';
 
 /**
  * Tuning constants of the visual effects (durations, springs, densities).
  * Kept apart from the components so a feel change never touches their logic.
  */
+
+/**
+ * Render budget per class of device (LOT 6, B1): the canvas pixel ratio cap and the share of the full
+ * density drawn (stars, circuit traces, gate particles). Measured on 2026-10-10 (1024 × 1366 touch,
+ * CPU ×4): 60 fps on every page with the caps of LOT 1–5, so each class keeps them; a slow device
+ * (4 cores or fewer) draws less.
+ */
+export const deviceBudget = {
+    tabletFrom: breakpoints.tablet,
+    touchMax: breakpoints.touchMax,
+    classes: {
+        mobile: { pixelRatio: 1.5, density: 1 },
+        tablet: { pixelRatio: 1.5, density: 1 },
+        desktop: { pixelRatio: 2, density: 1 },
+    },
+    fewCores: 4,
+    slow: { pixelRatio: 1.25, density: 0.7 },
+} satisfies BudgetSettings;
 
 /** Home title and subtitle (LOT 2, H1 and H2) */
 export const heroEffects = {
