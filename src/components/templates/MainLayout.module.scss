@@ -1,9 +1,12 @@
 @use '../../styles/variables' as *;
 
+// The visible screen, never more: 100vh is the screen without the browser's toolbars, so the bottom of
+// every page (and a bar docked there) went under them on a tablet (LOT 6, A2). 100vh stays for old browsers.
 .container {
     position: relative;
-    width: 100vw;
+    width: 100%;
     height: 100vh;
+    height: 100dvh;
     overflow: hidden;
     background-color: $bg-deep;
     color: #fff;
@@ -24,6 +27,10 @@
     flex-direction: column;
     overflow-y: auto;
     overflow-x: hidden;
+    // Its scroll never chains to the document (no pull-to-refresh, no rubber band: the toolbars stay put)
+    overscroll-behavior: contain;
+    // Clear of a notch on the sides and of the home indicator at the bottom (viewport-fit=cover)
+    padding: 0 env(safe-area-inset-right, 0px) env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
 }
 
 // Page wrapper animated during a trip (PageTravel)
@@ -64,4 +71,5 @@
 .homeContent {
     top: 0;
     overflow: hidden;
+    padding: 0;
 }

@@ -94,12 +94,19 @@
   size-adjust: 110.25%;
 }
 
+// The document itself never scrolls (the pages scroll in the layout's <main>): no rubber band nor pull-to-refresh
+html,
+body {
+  overscroll-behavior: none;
+}
+
 body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
   font-family: var(--font-montserrat);
   overflow-x: hidden;
   min-height: 100vh;
+  min-height: 100dvh;
 
   // Firefox scrollbar
   scrollbar-width: thin;
