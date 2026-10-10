@@ -1,5 +1,6 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { animate, stagger } from 'motion/react';
+import { eraTexts } from '../../../data/aboutTexts';
 import { convectorEffects as fx } from '../../../data/effects';
 import type { TimelineStep, TimeState } from '../../../types/models';
 import { parseInlineLinks, splitParagraphs } from '../../../utils/story';
@@ -23,7 +24,7 @@ export interface EpochStoryProps {
 const EraText: React.FC<{ step: TimelineStep }> = React.memo(({ step }) => (
     <>
         <h1 className={styles.title} data-line="">{step.title}</h1>
-        {splitParagraphs(step.content).map((paragraph, index) => (
+        {splitParagraphs(eraTexts[step.id]).map((paragraph, index) => (
             <p key={index} className={styles.paragraph} data-line="">
                 {parseInlineLinks(paragraph).map((segment, part) => (segment.kind === 'link'
                     ? <a key={part} href={segment.href} target="_blank" rel="noopener noreferrer">{segment.text}</a>
