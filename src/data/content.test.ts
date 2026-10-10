@@ -107,12 +107,15 @@ describe('projects (F4, F5, LOT 5)', () => {
         expect(detailed).toEqual(ids);
     });
 
-    it('marks SoulSweeper alone in progress, released in 2026, in C# and Unity', () => {
+    it('marks SoulSweeper (release 2026, C# and Unity) and PouceStop (no date yet, Kotlin) in progress', () => {
         // Arrange / Act
         const inProgress = content.projects.list.filter(isInProgress);
 
         // Assert
-        expect(inProgress.map((project) => [project.title, project.year, project.tags])).toEqual([['SoulSweeper', '2026', ['C#', 'Unity']]]);
+        expect(inProgress.map((project) => [project.title, project.year, project.tags])).toEqual([
+            ['SoulSweeper', '2026', ['C#', 'Unity']],
+            ['PouceStop', undefined, ['Kotlin', 'Android Studio']],
+        ]);
     });
 
     it('links a demo and a repository for the finished web projects only (F5: none for SoulSweeper)', () => {
@@ -126,16 +129,17 @@ describe('projects (F4, F5, LOT 5)', () => {
         expect(linked).toEqual(['memory', 'first-portfolio', 'solar']);
     });
 
-    it('keeps the validated polish: one pitch and at least one goal per project, pitches as sentences', () => {
+    it('keeps the validated polish: one pitch and at least one goal per project, pitches as sentences, nothing left to provide', () => {
         // Arrange
         const cards = withDetails(content.projects.list, projectDetails);
 
         // Act
-        const written = cards.filter((card) => !card.pitch.startsWith('['));
+        const texts = cards.flatMap((card) => [card.pitch, card.team, ...card.goals, card.year ?? '']);
 
         // Assert
         expect(cards.every((card) => card.goals.length > 0 && card.team.length > 0)).toBe(true);
-        expect(written.every((card) => card.pitch.endsWith('.'))).toBe(true);
+        expect(cards.every((card) => card.pitch.endsWith('.'))).toBe(true);
+        expect(texts.filter((text) => text.includes('À FOURNIR'))).toEqual([]);
     });
 });
 

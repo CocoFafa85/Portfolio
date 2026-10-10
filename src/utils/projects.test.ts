@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isInProgress, withDetails, yearLabel } from './projects';
+import { isInProgress, ribbonLabel, withDetails, yearLabel } from './projects';
 
 type Id = 'a' | 'b';
 const list = [
@@ -7,6 +7,8 @@ const list = [
     { id: 'a' as Id, title: 'A', status: 'in-progress' as const, year: '2026' },
 ];
 const details: Record<Id, { pitch: string }> = { a: { pitch: 'Pitch A' }, b: { pitch: 'Pitch B' } };
+const labels = { plannedYear: 'Sortie prévue en {year}', inProgress: 'En développement — sortie prévue en {year}', undated: 'En développement' };
+const undated = { status: 'in-progress' as const };
 
 describe('withDetails', () => {
     it('gives each entry its details, in the order of the list', () => {
@@ -46,7 +48,7 @@ describe('yearLabel', () => {
         const done = list[0];
 
         // Act
-        const label = yearLabel(done, 'Sortie prévue en {year}');
+        const label = yearLabel(done, labels);
 
         // Assert
         expect(label).toBe('2025');
@@ -57,9 +59,49 @@ describe('yearLabel', () => {
         const inProgress = list[1];
 
         // Act
-        const label = yearLabel(inProgress, 'Sortie prévue en {year}');
+        const label = yearLabel(inProgress, labels);
 
         // Assert
         expect(label).toBe('Sortie prévue en 2026');
+    });
+
+    it('says "in development" for a project in progress without a release date', () => {
+        // Arrange / Act
+        const label = yearLabel(undated, labels);
+
+        // Assert
+        expect(label).toBe('En développement');
+    });
+
+    it('leaves the year out of a finished project without one', () => {
+        // Arrange
+        const finished = { status: 'done' as const };
+
+        // Act
+        const label = yearLabel(finished, labels);
+
+        // Assert
+        expect(label).toBe('');
+    });
+});
+
+describe('ribbonLabel', () => {
+    it('announces the planned release on the tape when there is one', () => {
+        // Arrange
+        const inProgress = list[1];
+
+        // Act
+        const label = ribbonLabel(inProgress, labels);
+
+        // Assert
+        expect(label).toBe('En développement — sortie prévue en 2026');
+    });
+
+    it('keeps "in development" alone without a date', () => {
+        // Arrange / Act
+        const label = ribbonLabel(undated, labels);
+
+        // Assert
+        expect(label).toBe('En développement');
     });
 });

@@ -44,7 +44,8 @@
     color: var(--accent);
 }
 
-.team::before {
+// The separator only follows a year (a finished project without a year shows its team alone)
+.year ~ .team::before {
     content: '·';
     margin-right: 8px;
 }

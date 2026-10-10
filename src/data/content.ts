@@ -208,17 +208,18 @@ Mon objectif à long terme est de gérer un SI complet ou d'être responsable de
             team: "Équipe",
             goals: "Objectifs",
             online: "En ligne",
-            inProgress: "En développement — sortie prévue en {year}"
+            inProgress: "En développement — sortie prévue en {year}",
+            undated: "En développement"
         },
         // The single list of the projects (F4, LOT 5), in the validated order: read by the Projects page
         // (with its details, src/data/projectDetails.ts) and by the skills (rail and badges of Skills).
-        // PouceStop: data asked on 2026-10-09, not provided yet
+        // PouceStop: data of 2026-10-10 (in development, no release date)
         list: [
             { id: "memory", title: "MemoryGame", tags: ["JavaScript", "CSS", "DOM"], status: "done", year: "2024" },
             { id: "first-portfolio", title: "First Portfolio", tags: ["CSS", "JavaScript", "Legacy"], status: "done", year: "2025" },
             { id: "solar", title: "SolarSystem", tags: ["JavaScript", "Three.js", "CSS"], status: "done", year: "2025" },
             { id: "soulsweeper", title: "SoulSweeper", tags: ["C#", "Unity"], status: "in-progress", year: "2026" },
-            { id: "poucestop", title: "PouceStop", tags: ["Kotlin", "Android Studio"], status: "done", year: "[À FOURNIR : année]" }
+            { id: "poucestop", title: "PouceStop", tags: ["Kotlin", "Android Studio"], status: "in-progress" }
         ]
     },
     notFound: {
