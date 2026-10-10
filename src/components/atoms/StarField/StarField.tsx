@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { starEffects as fx } from '../../../data/effects';
 import { useAnimationLoop } from '../../../hooks/useAnimationLoop';
-import { readDeviceTraits, readRenderBudget } from '../../../hooks/useDevice';
+import { readRenderBudget, readTouch } from '../../../hooks/useDevice';
 import { capPixelRatio } from '../../../utils/canvas';
 import { createRandom, inRange, type Random } from '../../../utils/random';
 import { createStarLayer, driftStars, type StarLayer } from '../../../utils/starfield/layers';
@@ -113,7 +113,7 @@ const StarField: React.FC<StarFieldProps> = ({ occluder }) => {
         };
         window.addEventListener('resize', onResize);
         // A finger never moves the parallax: no pointer listener on a touch screen
-        const mouse = !readDeviceTraits().coarse;
+        const mouse = !readTouch();
         if (mouse) window.addEventListener('pointermove', onPointerMove, { passive: true });
         return () => {
             window.clearTimeout(resizeTimer);

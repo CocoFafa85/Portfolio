@@ -261,6 +261,10 @@ export const holoEffects = {
     /** QR canvas density: sharp on every screen (up to ratio 2, whatever the class), small anyway (~170 CSS px) */
     qrPixelRatio: 2,
     qrMaxPixels: 400_000,
+    /** The QR (on the back) is drawn at the first idle moment after qrAfterMs since the page started, at
+     *  the latest qrTimeoutMs later: a canvas's first write waits for the first frames (LOT 6, C2) */
+    qrAfterMs: 700,
+    qrTimeoutMs: 1200,
 };
 
 /** Skill badges and the projects rail (Skills, LOT 4, S3): CSS variables of the sections */

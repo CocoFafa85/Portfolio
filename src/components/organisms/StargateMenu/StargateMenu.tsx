@@ -2,7 +2,7 @@ import React, { useRef, useState, type CSSProperties } from 'react';
 import { Link } from 'react-router-dom';
 import { content } from '../../../data/content';
 import { gateEffects as fx } from '../../../data/effects';
-import { useDevice } from '../../../hooks/useDevice';
+import { useDevice, useDeviceClass } from '../../../hooks/useDevice';
 import { formatNavIndex } from '../../../utils/format';
 import type { GateOccluder } from '../../../utils/stargate/occluder';
 import { useDialNavigation } from './useDialNavigation';
@@ -35,8 +35,9 @@ const StargateMenu: React.FC<StargateMenuProps> = ({ occluder }) => {
     const linksRef = useRef<(HTMLElement | null)[]>([]);
     const [shown, setShown] = useState<number | null>(null);
     // An upright tablet: the gate in majesty, filling the height (LOT 6, D1)
-    const { portrait, deviceClass } = useDevice();
-    const gate = useGateScene(canvasRef, cellRef, linksRef, occluder, deviceClass === 'tablet' && portrait);
+    const { portrait } = useDevice();
+    const upright = useDeviceClass() === 'tablet' && portrait;
+    const gate = useGateScene(canvasRef, cellRef, linksRef, occluder, upright);
     const { dialing, activate } = useDialNavigation(gate);
 
     const show = (index: number | null) => {

@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef } from 'react';
 import { content } from '../../../data/content';
 import { circuitEffects as fx } from '../../../data/effects';
 import { useAnimationLoop } from '../../../hooks/useAnimationLoop';
-import { readDeviceTraits, readRenderBudget } from '../../../hooks/useDevice';
+import { readRenderBudget, readTouch } from '../../../hooks/useDevice';
 import { onIdleAfter } from '../../../hooks/useIdleReady';
 import { capPixelRatio } from '../../../utils/canvas';
 import { boardAtDensity, generateBoard, type Board } from '../../../utils/circuit/board';
@@ -109,7 +109,7 @@ const CircuitBackground: React.FC = () => {
         };
         window.addEventListener('resize', onResize);
         // The traces light up near a mouse only: no pointer listener on a touch screen
-        const mouse = !readDeviceTraits().coarse;
+        const mouse = !readTouch();
         if (mouse) {
             window.addEventListener('pointermove', onPointerMove, { passive: true });
             window.addEventListener('pointerout', onPointerOut);

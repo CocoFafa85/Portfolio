@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { holoEffects as fx } from '../../../data/effects';
+import { onIdleAfter } from '../../../hooks/useIdleReady';
 import { linkedinQr } from '../../../data/generated/linkedinQr';
 import { capPixelRatio } from '../../../utils/canvas';
 import styles from './CardBack.module.scss';
@@ -16,12 +17,14 @@ export interface QrCanvasProps {
  * was rasterised the first time the back turned into view, a 50–67 ms frame
  * on a slow phone (the LOT 3 lesson: no SVG path in a moving layer). Whole
  * device pixels per module, the 4-module quiet zone included; colours from
- * the design tokens (the canvas CSS colour and background).
+ * the design tokens (the canvas CSS colour and background). Drawn at the first
+ * idle moment once the first frames are through (LOT 6, C2): on the back, it
+ * is never seen before.
  */
 const QrCanvas: React.FC<QrCanvasProps> = ({ label }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
-    useEffect(() => {
+    useEffect(() => onIdleAfter(fx.qrAfterMs, fx.qrTimeoutMs, () => {
         const canvas = canvasRef.current;
         const ctx = canvas?.getContext('2d');
         if (!canvas || !ctx) return;
@@ -41,7 +44,7 @@ const QrCanvas: React.FC<QrCanvasProps> = ({ label }) => {
                 if (row[x] === '1') ctx.fillRect((x + QUIET) * unit, (y + QUIET) * unit, unit, unit);
             }
         });
-    }, []);
+    }), []);
 
     return <canvas ref={canvasRef} className={styles.qr} role="img" aria-label={label} />;
 };
