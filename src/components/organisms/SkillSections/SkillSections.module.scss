@@ -46,4 +46,15 @@
     flex-wrap: wrap;
     gap: 0.6rem;
     list-style: none;
+
+    // A tablet (LOT 6, D5): an even grid, wide targets for the finger
+    @include tablet-portrait {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    @include tablet-landscape {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
 }

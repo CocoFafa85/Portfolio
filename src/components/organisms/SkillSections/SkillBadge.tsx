@@ -34,7 +34,8 @@ const SkillBadge: React.FC<SkillBadgeProps> = React.memo(({ skill, light, pinned
             aria-describedby={describedId}
             onPointerEnter={(event) => { if (event.pointerType !== 'touch') onPoint(skill.key); }}
             onPointerLeave={(event) => { if (event.pointerType !== 'touch') onPoint(null); }}
-            onFocus={() => onPoint(skill.key)}
+            // Keyboard focus only (LOT 6): a tapped badge keeps the focus, which held its light after a second tap unpinned it
+            onFocus={(event) => { if (event.currentTarget.matches(':focus-visible')) onPoint(skill.key); }}
             onBlur={() => onPoint(null)}
             onClick={() => onPin(skill.key)}
         >

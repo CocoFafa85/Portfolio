@@ -106,6 +106,8 @@ export interface SkillLabels {
     railTitle: string;
     /** Invites to point at a technology (shown while nothing is lit) */
     railHint: string;
+    /** The same at the finger, where nothing hovers (LOT 6, D5) */
+    railHintTouch: string;
     /** Before the projects of a badge (its description for screen readers too) */
     usedIn: string;
     noProject: string;

@@ -12,6 +12,8 @@
 
 .badge {
     position: relative;
+    // Fills its cell in a grid (tablet), its own width in a wrapping row
+    flex: 1 1 auto;
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;

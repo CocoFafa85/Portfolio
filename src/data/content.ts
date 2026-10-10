@@ -85,6 +85,7 @@ export const content: PortfolioContent = {
         labels: {
             railTitle: "Projets",
             railHint: "Survolez une technologie\u00a0: ses projets s'allument.",
+            railHintTouch: "Touchez une technologie ou un projet\u00a0: ses liens s'allument.",
             usedIn: "Utilisé dans\u00a0:",
             noProject: "Pas encore de projet public",
             professional: "Professionnel"
