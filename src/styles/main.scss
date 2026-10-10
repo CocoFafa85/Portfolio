@@ -71,9 +71,19 @@
   --block-bg: #{$block-bg};
 
   --hud-height: #{$hud-height};
+  // Room the navigation bar takes above and below the pages (MainLayout)
+  --hud-top: var(--hud-height);
+  --hud-bottom: 0px;
 
   @include mobile {
     --hud-height: #{$hud-height-mobile};
+  }
+
+  // An upright tablet under a finger: the bar is at the bottom, at the thumb (LOT 6, D2)
+  @include tablet-upright {
+    --hud-height: #{$hud-height-thumb};
+    --hud-top: 0px;
+    --hud-bottom: calc(var(--hud-height) + env(safe-area-inset-bottom, 0px));
   }
 }
 

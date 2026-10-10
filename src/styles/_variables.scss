@@ -102,6 +102,8 @@ $section-title-size: clamp(1.2rem, 1.05rem + 0.6vw, 1.5rem);
 // Navigation bar height, the <main> area starts right below it
 $hud-height: 56px;
 $hud-height-mobile: 52px;
+// At the bottom of an upright tablet (LOT 6, D2): the number above the name, a thumb-sized segment
+$hud-height-thumb: 64px;
 
 // Typography Key
 $font-orbitron: 'Orbitron', sans-serif;
