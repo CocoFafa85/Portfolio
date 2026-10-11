@@ -2,8 +2,10 @@ import React, { useCallback, useEffect, useRef } from 'react';
 import { content } from '../../../data/content';
 import { circuitEffects as fx } from '../../../data/effects';
 import { useAnimationLoop } from '../../../hooks/useAnimationLoop';
+import { readRenderBudget, readTouch } from '../../../hooks/useDevice';
+import { onIdleAfter } from '../../../hooks/useIdleReady';
 import { capPixelRatio } from '../../../utils/canvas';
-import { generateBoard, type Board } from '../../../utils/circuit/board';
+import { boardAtDensity, generateBoard, type Board } from '../../../utils/circuit/board';
 import {
     createGlowState, createHoverIndex, updateGlow, type GlowState, type HoverIndex, type Pointer,
 } from '../../../utils/circuit/hover';
@@ -39,7 +41,9 @@ function fitCanvas(canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D, wid
  * Inner pages background (LOT 1, C3): a realistic printed circuit board drawn
  * once per screen size on a static canvas; a second canvas only carries the
  * rare data pulses and the discreet glow of the traces near the cursor.
- * Reduced motion: the static board alone (the loop never starts).
+ * The solder mask is a CSS background, there from the first paint; on a page load
+ * the board is drawn at the first idle moment once the first frames are through
+ * (LOT 6, C1). Reduced motion: the static board alone (the loop never starts).
  */
 const CircuitBackground: React.FC = () => {
     const boardRef = useRef<HTMLCanvasElement>(null);
@@ -53,19 +57,23 @@ const CircuitBackground: React.FC = () => {
         const liveCtx = liveCanvas?.getContext('2d');
         if (!boardCanvas || !liveCanvas || !boardCtx || !liveCtx) return;
 
-        const palette = readPalette();
-        const grain = boardCtx.createPattern(createGrainTile(fx.style.grainSize, createRandom(fx.seed)), 'repeat');
         const pointer: Pointer = { x: 0, y: 0, active: false };
-        const coarsePointer = window.matchMedia('(pointer: coarse)').matches;
+        let palette: CircuitPalette | undefined;
+        let grain: CanvasPattern | null = null;
 
         const build = () => {
+            palette ??= readPalette();
+            grain ??= boardCtx.createPattern(createGrainTile(fx.style.grainSize, createRandom(fx.seed)), 'repeat');
             const width = window.innerWidth;
             const height = window.innerHeight;
-            const ratio = capPixelRatio(window.devicePixelRatio, width, height, coarsePointer, fx.pixelRatio);
+            // The device's render budget (LOT 6): its pixel ratio cap and its share of the traces
+            const budget = readRenderBudget();
+            const ratio = capPixelRatio(budget.pixelRatio, width, height, fx.maxPixels);
             fitCanvas(boardCanvas, boardCtx, width, height, ratio);
             fitCanvas(liveCanvas, liveCtx, width, height, ratio);
-            const board = generateBoard(width, height, fx.board, content.decor.circuit, createRandom(fx.seed));
+            const board = generateBoard(width, height, boardAtDensity(fx.board, budget.density), content.decor.circuit, createRandom(fx.seed));
             drawBoard(boardCtx, board, palette, grain, fx.style);
+            boardCanvas.dataset.drawn = '';
             sceneRef.current = {
                 board,
                 index: createHoverIndex(board, fx.hoverCell),
@@ -79,7 +87,12 @@ const CircuitBackground: React.FC = () => {
                 drawn: false,
             };
         };
-        build();
+        // During the first frames the GPU is still drawing the page: the canvas's first write then
+        // waited for it, up to 120 ms on a tablet (Lighthouse, LOT 6 C1). Later (a trip from another
+        // page), the board is drawn at once, under the trip's cover
+        let cancelDraw = () => {};
+        if (performance.now() < fx.drawAfterMs) cancelDraw = onIdleAfter(fx.drawAfterMs, fx.drawTimeoutMs, build);
+        else build();
 
         let resizeTimer = 0;
         const onResize = () => {
@@ -95,9 +108,14 @@ const CircuitBackground: React.FC = () => {
             if (!event.relatedTarget) pointer.active = false;
         };
         window.addEventListener('resize', onResize);
-        window.addEventListener('pointermove', onPointerMove, { passive: true });
-        window.addEventListener('pointerout', onPointerOut);
+        // The traces light up near a mouse only: no pointer listener on a touch screen
+        const mouse = !readTouch();
+        if (mouse) {
+            window.addEventListener('pointermove', onPointerMove, { passive: true });
+            window.addEventListener('pointerout', onPointerOut);
+        }
         return () => {
+            cancelDraw();
             window.clearTimeout(resizeTimer);
             window.removeEventListener('resize', onResize);
             window.removeEventListener('pointermove', onPointerMove);
@@ -138,7 +156,7 @@ const CircuitBackground: React.FC = () => {
 
     return (
         <div className={styles.circuit} aria-hidden="true">
-            <canvas ref={boardRef} className={styles.layer} />
+            <canvas ref={boardRef} className={`${styles.layer} ${styles.board}`} />
             <canvas ref={liveRef} className={styles.layer} />
         </div>
     );

@@ -3,7 +3,9 @@
 @use '../../../styles/variables' as *;
 
 // Narrow screens: the axis on the left (--axis-x), the cards in a lane after it (--lane). The node
-// and the year display of a card are placed through --node-x / --node-y / --display-x (TrajectoryNode)
+// and the year display of a card are placed through --node-x / --node-y / --display-x / --display-y
+// (TrajectoryNode). An upright tablet: a narrower column, the years in the margin; from 1024 px two
+// columns, closer together on a tablet on its side (LOT 6, decision B)
 .trajectory {
     --axis-x: 14px;
     --lane: 44px;
@@ -35,6 +37,22 @@
 
 .link {
     display: none;
+}
+
+// An upright tablet (LOT 6, D6): one narrower column (cards of 560 px at most), the axis moved in,
+// each year in the margin left of its point, level with the top of its card
+@include tablet-portrait {
+    .trajectory {
+        --axis-x: 112px;
+        --lane: 136px;
+        max-width: calc(var(--lane) + 560px);
+    }
+
+    .item {
+        --node-y: 26px;
+        --display-x: -110px;
+        padding-top: 0;
+    }
 }
 
 // From 1024 px: two columns around the central axis, each card half a card below the previous one
@@ -99,5 +117,28 @@
 
     @media (prefers-reduced-motion: reduce) {
         .item[data-ignited] .link { transition: none; }
+    }
+}
+
+// A tablet on its side (LOT 6, D6): the two columns closer (wider cards), each year above its card
+// on the axis side, the point and its link beside the card's top
+@include tablet-landscape {
+    .trajectory {
+        --gap: 80px;
+    }
+
+    .item {
+        --node-y: 74px;
+        --display-y: -70px;
+        padding-top: 50px;
+    }
+
+    .item[data-side='left'] {
+        --display-x: -110px;
+    }
+
+    .item[data-side='right'] {
+        --display-x: 18px;
+        --display-right: auto;
     }
 }

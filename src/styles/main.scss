@@ -71,9 +71,19 @@
   --block-bg: #{$block-bg};
 
   --hud-height: #{$hud-height};
+  // Room the navigation bar takes above and below the pages (MainLayout)
+  --hud-top: var(--hud-height);
+  --hud-bottom: 0px;
 
   @include mobile {
     --hud-height: #{$hud-height-mobile};
+  }
+
+  // An upright tablet under a finger: the bar is at the bottom, at the thumb (LOT 6, D2)
+  @include tablet-upright {
+    --hud-height: #{$hud-height-thumb};
+    --hud-top: 0px;
+    --hud-bottom: calc(var(--hud-height) + env(safe-area-inset-bottom, 0px));
   }
 }
 
@@ -94,12 +104,19 @@
   size-adjust: 110.25%;
 }
 
+// The document itself never scrolls (the pages scroll in the layout's <main>): no rubber band nor pull-to-refresh
+html,
+body {
+  overscroll-behavior: none;
+}
+
 body {
   background-color: var(--bg-primary);
   color: var(--text-primary);
   font-family: var(--font-montserrat);
   overflow-x: hidden;
   min-height: 100vh;
+  min-height: 100dvh;
 
   // Firefox scrollbar
   scrollbar-width: thin;
@@ -173,7 +190,8 @@ a {
 // GLOBAL GLITCH TITLE
 .glitch-title {
   font-family: $font-orbitron;
-  font-size: 3rem;
+  // Fluid (LOT 6, D7): 2rem on a phone, 3rem from a wide screen, no step in between
+  font-size: $glitch-title-size;
   color: $neon-cyan;
   text-transform: uppercase;
   text-shadow: 0 0 10px rgba($neon-cyan, 0.8), 2px 2px 0px rgba(0, 0, 0, 0.5);
@@ -212,9 +230,6 @@ a {
     animation: glitch-anim2 5s infinite linear alternate-reverse;
   }
 
-  @media (max-width: 768px) {
-    font-size: 2rem;
-  }
 }
 
 @keyframes glitch-anim {

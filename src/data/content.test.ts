@@ -4,7 +4,9 @@ import { content } from './content';
 import { skillIcons } from './generated/skillIcons';
 import { linkSkills, normalizeTag, withProfessional } from '../utils/skills';
 import { isInProgress, withDetails } from '../utils/projects';
+import { eraTexts } from './aboutTexts';
 import { projectDetails } from './projectDetails';
+import { parseInlineLinks, splitParagraphs } from '../utils/story';
 import visuals from './projectVisuals.json';
 
 // The visual files on disk (paths only, nothing loaded)
@@ -37,6 +39,19 @@ describe('content.about (LOT 3, data F1)', () => {
         expect(future?.getFullYear()).toBe(2035);
         expect(dates.present).toBeNull();
         expect(fallback?.getFullYear()).toBe(2026);
+    });
+
+    it('gives each era its text, in paragraphs, the present ending on the LinkedIn link (texts in the About chunk, LOT 6)', () => {
+        // Arrange
+        const eras = content.about.timeline.map((step) => step.id);
+
+        // Act
+        const paragraphs = eras.map((era) => splitParagraphs(eraTexts[era]));
+        const presentLinks = splitParagraphs(eraTexts.present).flatMap(parseInlineLinks).filter((segment) => segment.kind === 'link');
+
+        // Assert
+        expect(paragraphs.map((list) => list.length)).toEqual([3, 1, 2]);
+        expect(presentLinks.map((link) => link.href)).toEqual([content.profiles.linkedin]);
     });
 
     it('names the twelve months for the month display, three letters each', () => {

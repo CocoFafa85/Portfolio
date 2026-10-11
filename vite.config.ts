@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
@@ -13,6 +14,8 @@ export default defineConfig({
         // (Skills FCP +150 ms, 2026-10-09)
         rollupOptions: { output: { experimentalMinChunkSize: 4096 } },
     },
+    // Unit tests stub CSS; the breakpoint tokens are read as text by their sync test (LOT 6, A1)
+    test: { css: { include: [/_breakpoints.scss/] } },
     base: '/', // Site servi à la racine du domaine personnalisé corentinfanic.dev
     resolve: {
         alias: {

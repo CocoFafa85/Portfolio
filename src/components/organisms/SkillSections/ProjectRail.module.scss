@@ -4,7 +4,7 @@
 
 // ═══════════════════════════════════════════════
 // PROJECTS RAIL (LOT 4, S3) — sticks under the top of the page while the
-// groups scroll (≥ 768 px), so a lit project stays in view
+// groups scroll (from a tablet), so a lit project stays in view
 // ═══════════════════════════════════════════════
 .rail {
     position: relative;
@@ -14,7 +14,7 @@
     border: 1px solid color.change($neon-violet, $alpha: 0.45);
     border-radius: 10px;
 
-    @media (min-width: 768px) {
+    @include from-tablet {
         position: sticky;
         top: 0.75rem;
     }
@@ -50,7 +50,7 @@
     list-style: none;
 
     // Six entries (review of 2026-10-09): three a row on a tablet, all in one row on a large screen
-    @media (min-width: 768px) {
+    @include from-tablet {
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
@@ -59,8 +59,15 @@
     }
 }
 
+// Each entry fills its cell
+.cards > li {
+    display: flex;
+}
+
+// A button (LOT 6, D5): pointed, focused or pressed, it lights its badges
 .card {
     position: relative;
+    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -75,6 +82,7 @@
     background: $bg-secondary;
     border: 1px solid color.change($neon-pink, $alpha: 0.55);
     border-radius: 8px;
+    cursor: pointer;
     transition: transform var(--skill-ms, 180ms) ease-out, opacity var(--skill-ms, 180ms) ease-out;
 
     // Neon glow of a lit project, painted once and faded in
@@ -91,6 +99,7 @@
     }
 
     &:hover,
+    &:focus-visible,
     &[data-light='lit'] {
         transform: translateY(calc(var(--skill-lift, 2px) * -1));
 

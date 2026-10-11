@@ -6,7 +6,6 @@
 import React, { useCallback, useEffect, useRef } from 'react';
 import { nebulaEffects as fx } from '../../../data/effects';
 import { useAnimationLoop } from '../../../hooks/useAnimationLoop';
-import { capPixelRatio } from '../../../utils/canvas';
 import { finishNebula, startNebulaProgram, type NebulaRenderer } from './nebulaProgram';
 import styles from './NebulaBackground.module.scss';
 
@@ -32,10 +31,8 @@ const NebulaShader: React.FC = () => {
         const gl = canvas?.getContext('webgl2', { alpha: false, antialias: false, depth: false, stencil: false });
         const pending = gl ? startNebulaProgram(gl) : null;
         if (!canvas || !gl || !pending) return;
-        const coarse = window.matchMedia('(pointer: coarse)').matches;
-        const caps = { fine: fx.minPixelRatio, coarse: fx.minPixelRatio, maxPixels: coarse ? fx.maxPixelCount.coarse : fx.maxPixelCount.fine };
         const fit = () => {
-            const ratio = capPixelRatio(window.devicePixelRatio, canvas.clientWidth, canvas.clientHeight, coarse, caps);
+            const ratio = fx.pixelRatio;
             canvas.width = Math.round(canvas.clientWidth * ratio);
             canvas.height = Math.round(canvas.clientHeight * ratio);
             rendererRef.current?.draw(timeRef.current);

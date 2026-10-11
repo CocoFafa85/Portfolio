@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { holoEffects as fx } from '../../../data/effects';
+import { onIdleAfter } from '../../../hooks/useIdleReady';
 import { linkedinQr } from '../../../data/generated/linkedinQr';
 import { capPixelRatio } from '../../../utils/canvas';
 import styles from './CardBack.module.scss';
@@ -16,12 +17,14 @@ export interface QrCanvasProps {
  * was rasterised the first time the back turned into view, a 50–67 ms frame
  * on a slow phone (the LOT 3 lesson: no SVG path in a moving layer). Whole
  * device pixels per module, the 4-module quiet zone included; colours from
- * the design tokens (the canvas CSS colour and background).
+ * the design tokens (the canvas CSS colour and background). Drawn at the first
+ * idle moment once the first frames are through (LOT 6, C2): on the back, it
+ * is never seen before.
  */
 const QrCanvas: React.FC<QrCanvasProps> = ({ label }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
-    useEffect(() => {
+    useEffect(() => onIdleAfter(fx.qrAfterMs, fx.qrTimeoutMs, () => {
         const canvas = canvasRef.current;
         const ctx = canvas?.getContext('2d');
         if (!canvas || !ctx) return;
@@ -29,8 +32,7 @@ const QrCanvas: React.FC<QrCanvasProps> = ({ label }) => {
         const modules = rows.length + QUIET * 2;
         // Layout width: the face is turned and tilted in 3D, its bounding box is not the canvas size
         const css = canvas.offsetWidth;
-        const coarse = window.matchMedia('(pointer: coarse)').matches;
-        const ratio = capPixelRatio(window.devicePixelRatio, css, css, coarse, fx.qrPixelRatio);
+        const ratio = capPixelRatio(Math.min(window.devicePixelRatio || 1, fx.qrPixelRatio), css, css, fx.qrMaxPixels);
         const unit = Math.max(1, Math.floor((css * ratio) / modules));
         canvas.width = canvas.height = unit * modules;
         const style = getComputedStyle(canvas);
@@ -42,7 +44,7 @@ const QrCanvas: React.FC<QrCanvasProps> = ({ label }) => {
                 if (row[x] === '1') ctx.fillRect((x + QUIET) * unit, (y + QUIET) * unit, unit, unit);
             }
         });
-    }, []);
+    }), []);
 
     return <canvas ref={canvasRef} className={styles.qr} role="img" aria-label={label} />;
 };

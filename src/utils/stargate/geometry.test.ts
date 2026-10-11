@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createRandom } from '../random';
-import { buildGateGeometry, gateGeometrySteps, gateParticleCount, type GateConfig } from './geometry';
+import { buildGateGeometry, gateAtDensity, gateGeometrySteps, gateParticleCount, type GateConfig } from './geometry';
 import { GROUP, TONE } from './writer';
 
 const CONFIG: GateConfig = {
@@ -20,6 +20,29 @@ const CONFIG: GateConfig = {
 };
 
 const radiusOf = (to: Float32Array, i: number) => Math.hypot(to[3 * i], to[3 * i + 1]);
+
+describe('gateAtDensity', () => {
+    it('keeps the same settings at full density, so the same gate', () => {
+        // Arrange / Act
+        const cfg = gateAtDensity(CONFIG, 1);
+
+        // Assert
+        expect(cfg).toBe(CONFIG);
+    });
+
+    it('builds about its share of the particles, every part kept', () => {
+        // Arrange
+        const full = gateParticleCount(CONFIG);
+
+        // Act
+        const sparse = gateAtDensity(CONFIG, 0.7);
+
+        // Assert
+        expect(gateParticleCount(sparse) / full).toBeCloseTo(0.7, 1);
+        expect(sparse.chevrons.corePoints).toBeGreaterThan(0);
+        expect(buildGateGeometry(sparse, createRandom(3)).count).toBe(gateParticleCount(sparse));
+    });
+});
 
 describe('buildGateGeometry', () => {
     it('fills exactly the expected number of particles', () => {

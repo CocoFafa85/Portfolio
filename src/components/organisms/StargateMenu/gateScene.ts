@@ -1,7 +1,7 @@
 import { gateEffects as fx } from '../../../data/effects';
 import { assembleProgress, createDialState, dialState, type DialState } from '../../../utils/stargate/dial';
 import type { GateOccluder } from '../../../utils/stargate/occluder';
-import { fitGate, gateDisc, projectGatePoint, type GateView, type Rect } from '../../../utils/stargate/view';
+import { fitGate, gateDisc, projectGatePoint, type FitSettings, type GateView, type Rect } from '../../../utils/stargate/view';
 import { onGate } from '../../../utils/stargate/writer';
 import type { GateFrame, GateRenderer } from './gateRenderer';
 
@@ -11,6 +11,8 @@ export interface GateScene {
     /** Null until the program is ready (gateBoot.ts), or without WebGL: the links are placed anyway */
     renderer: GateRenderer | null;
     view: GateView;
+    /** How the gate fits its cell: the default, or an upright tablet's (fills the height) */
+    fit: FitSettings;
     frame: GateFrame;
     dial: DialState;
     cell: Rect;
@@ -38,6 +40,7 @@ export function createGateScene(canvas: HTMLCanvasElement, links: (HTMLElement |
     return {
         canvas, renderer: null, links, occluder,
         view: { focal: 0, aspect: 1, offsetX: 0, offsetY: 0 },
+        fit: fx.fit,
         frame: { time: 0, assemble: 0, spin: 0, vortex: 0, dive: 0, horizon: 0, tiltX: 0, tiltY: 0, pointScale: 1, lit: new Float32Array(9) },
         dial: createDialState(fx.shape.chevrons.count),
         cell: { x: 0, y: 0, width: 0, height: 0 },
@@ -48,15 +51,16 @@ export function createGateScene(canvas: HTMLCanvasElement, links: (HTMLElement |
     };
 }
 
-/** Resizes the canvas and fits the gate to its cell (the gate never leaves it). */
-export function layoutGateScene(scene: GateScene, cell: Rect, width: number, height: number, ratio: number): void {
+/** Resizes the canvas and fits the gate to its cell (`fit`: never over the content above it). */
+export function layoutGateScene(scene: GateScene, cell: Rect, width: number, height: number, ratio: number, fit: FitSettings = fx.fit): void {
     scene.canvas.width = Math.round(width * ratio);
     scene.canvas.height = Math.round(height * ratio);
     scene.cell = cell;
     scene.width = width;
     scene.height = height;
-    fitGate(cell, width, height, fx.fit, scene.view);
-    const ringRadius = (scene.view.focal / fx.fit.camera) * (height / 2);
+    scene.fit = fit;
+    fitGate(cell, width, height, fit, scene.view);
+    const ringRadius = (scene.view.focal / fit.camera) * (height / 2);
     scene.frame.pointScale = ratio * fx.pointSize.scale * Math.max(fx.pointSize.min, ringRadius / fx.pointSize.referenceRadius);
     scene.placed[0] = NaN;
 }
@@ -75,7 +79,7 @@ function placeLinks(scene: GateScene): void {
     for (let i = 0; i < scene.links.length; i++) {
         const link = scene.links[i];
         if (!link || !projectGatePoint(anchors[2 * i], anchors[2 * i + 1], 0, 0, 0, frame.dive,
-            scene.view, fx.fit, scene.width, scene.height, scratch)) continue;
+            scene.view, scene.fit, scene.width, scene.height, scratch)) continue;
         link.style.transform = `translate3d(${scratch[0] - scene.cell.x}px, ${scratch[1] - scene.cell.y}px, 0) translate(-50%, -50%)`;
     }
 }
@@ -105,6 +109,6 @@ export function stepGateScene(scene: GateScene, now: number, still: boolean): vo
     scene.renderer?.draw(frame, scene.view);
     placeLinks(scene);
     // The sky behind the gate fades out as the gate assembles, and follows the dive
-    gateDisc(scene.view, fx.fit, scene.width, scene.height, frame.dive, scene.occluder.disc);
+    gateDisc(scene.view, scene.fit, scene.width, scene.height, frame.dive, scene.occluder.disc);
     scene.occluder.disc[3] = scene.renderer ? frame.assemble : 0;
 }

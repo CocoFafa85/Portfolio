@@ -5,13 +5,14 @@ export interface TimelineStep {
     /** Tab label (Passé / Présent / Futur) */
     label: string;
     title: string;
-    /** One paragraph per line; links written [label](https://…) */
-    content: string;
     /** CSS color (design token) of the period title */
     accent: string;
     /** Date and time on the displays, local `YYYY-MM-DDTHH:mm`; null: the visitor's clock (the present) */
     date: string | null;
 }
+
+/** The text of each era (data/aboutTexts.ts, About chunk only): one paragraph per line, links [label](https://…) */
+export type EraTexts = Record<TimeState, string>;
 
 /** Decorative texts of the DeLorean time circuits (About, LOT 3), as in the film */
 export interface TimeCircuitLabels {
@@ -105,6 +106,8 @@ export interface SkillLabels {
     railTitle: string;
     /** Invites to point at a technology (shown while nothing is lit) */
     railHint: string;
+    /** The same at the finger, where nothing hovers (LOT 6, D5) */
+    railHintTouch: string;
     /** Before the projects of a badge (its description for screen readers too) */
     usedIn: string;
     noProject: string;

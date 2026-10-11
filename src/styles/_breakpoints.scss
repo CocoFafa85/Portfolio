@@ -1,0 +1,102 @@
+// ═══════════════════════════════════════════════
+// DEVICE CLASSES (LOT 6, A1): the only place where a width or a pointer query
+// is written. Mirrored for the scripts (the `sizes` of the project visuals, the
+// device hook) by src/data/breakpoints.ts, kept equal by its test.
+//   mobile            < 600 px
+//   tablet-portrait   600–1023 px, and 1024–1366 px held upright under a finger (iPad Pro 12.9")
+//   tablet-landscape  1024–1366 px on its side, under a finger
+//   desktop           the rest: a mouse or a trackpad from 1024 px, any screen above 1366 px
+// ═══════════════════════════════════════════════
+$bp-tablet: 600px;
+$bp-wide: 1024px;
+$bp-large: 1280px;
+$bp-touch-max: 1366px;
+
+// A finger, no hover: a phone or a tablet (a laptop with a touch screen keeps its mouse)
+$q-touch: '(hover: none) and (pointer: coarse)';
+// Nothing can hover (a finger, some styluses): what only shows on hover must show anyway
+$q-no-hover: '(hover: none)';
+
+$-below-tablet: '(max-width: #{$bp-tablet - 0.02px})';
+$-below-wide: '(max-width: #{$bp-wide - 0.02px})';
+$-touch-span: '(min-width: #{$bp-wide}) and (max-width: #{$bp-touch-max})';
+$-upright-tablet: '#{$-touch-span} and (orientation: portrait) and #{$q-touch}';
+
+$q-mobile: $-below-tablet;
+$q-from-tablet: '(min-width: #{$bp-tablet})';
+$q-tablet-portrait: '(min-width: #{$bp-tablet}) and #{$-below-wide}, #{$-upright-tablet}';
+$q-tablet-landscape: '#{$-touch-span} and (orientation: landscape) and #{$q-touch}';
+$q-desktop: '(min-width: #{$bp-touch-max + 1px}), (min-width: #{$bp-wide}) and (hover: hover), (min-width: #{$bp-wide}) and (pointer: fine)';
+// Two columns side by side: a tablet on its side or a desktop
+$q-wide: '(min-width: #{$bp-wide}) and (orientation: landscape), #{$q-desktop}';
+// One column: a phone or an upright tablet
+$q-narrow: '#{$-below-wide}, #{$-upright-tablet}';
+$q-large: '(min-width: #{$bp-large})';
+// An upright tablet under a finger (not a phone on its side): the thumb zone is at the bottom
+$q-tablet-upright: '(min-width: #{$bp-tablet}) and (max-width: #{$bp-touch-max}) and (orientation: portrait) and #{$q-touch}';
+
+@mixin mobile {
+    @media #{$q-mobile} {
+        @content;
+    }
+}
+
+@mixin from-tablet {
+    @media #{$q-from-tablet} {
+        @content;
+    }
+}
+
+@mixin tablet-portrait {
+    @media #{$q-tablet-portrait} {
+        @content;
+    }
+}
+
+@mixin tablet-landscape {
+    @media #{$q-tablet-landscape} {
+        @content;
+    }
+}
+
+@mixin desktop {
+    @media #{$q-desktop} {
+        @content;
+    }
+}
+
+@mixin wide {
+    @media #{$q-wide} {
+        @content;
+    }
+}
+
+@mixin narrow {
+    @media #{$q-narrow} {
+        @content;
+    }
+}
+
+@mixin large {
+    @media #{$q-large} {
+        @content;
+    }
+}
+
+@mixin tablet-upright {
+    @media #{$q-tablet-upright} {
+        @content;
+    }
+}
+
+@mixin no-hover {
+    @media #{$q-no-hover} {
+        @content;
+    }
+}
+
+@mixin touch {
+    @media #{$q-touch} {
+        @content;
+    }
+}

@@ -3,7 +3,6 @@ import type { Random } from '../../../utils/random';
 import type { CircuitPalette } from './palette';
 
 export interface BoardStyle {
-    maskAlpha: number;
     traceWidth: number;
     traceAlpha: number;
     sheenWidth: number;
@@ -113,7 +112,7 @@ function drawVias(ctx: CanvasRenderingContext2D, board: Board, palette: CircuitP
     }
 }
 
-/** Draws the whole static board (mask, grain, copper, components, silkscreen). Once per resize. */
+/** Draws the whole static board (grain, copper, components, silkscreen) over the mask, a CSS background. Once per resize. */
 export function drawBoard(
     ctx: CanvasRenderingContext2D,
     board: Board,
@@ -123,10 +122,6 @@ export function drawBoard(
 ): void {
     const { width, height } = board;
     ctx.clearRect(0, 0, width, height);
-    // Slightly translucent mask: the layout's violet glow still breathes through
-    ctx.globalAlpha = style.maskAlpha;
-    ctx.fillStyle = palette.mask;
-    ctx.fillRect(0, 0, width, height);
     if (grain) {
         ctx.globalAlpha = style.grainAlpha;
         ctx.fillStyle = grain;

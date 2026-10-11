@@ -1,7 +1,8 @@
 import type { Transition } from 'motion/react';
-import type { PixelRatioCaps } from '../utils/canvas';
+import type { BudgetSettings } from '../utils/budget';
 import type { BoardConfig } from '../utils/circuit/board';
 import type { DecodeSettings } from '../utils/decode';
+import type { DeviceTiltSettings } from '../utils/deviceTilt';
 import type { StarLayerSpec } from '../utils/starfield/layers';
 import type { MeteorSettings } from '../utils/starfield/meteors';
 import type { DialTimeline } from '../utils/stargate/dial';
@@ -11,11 +12,30 @@ import type { HoverSettings } from '../utils/circuit/hover';
 import type { BoltSettings } from '../utils/timeCircuits/bolts';
 import type { JumpTimeline } from '../utils/timeCircuits/jump';
 import type { RadialSettings, SpeedSettings } from '../utils/travelFx';
+import { breakpoints } from './breakpoints';
 
 /**
  * Tuning constants of the visual effects (durations, springs, densities).
  * Kept apart from the components so a feel change never touches their logic.
  */
+
+/**
+ * Render budget per class of device (LOT 6, B1): the canvas pixel ratio cap and the share of the full
+ * density drawn (stars, circuit traces, gate particles). Measured on 2026-10-10 (1024 × 1366 touch,
+ * CPU ×4): 60 fps on every page with the caps of LOT 1–5, so each class keeps them; a slow device
+ * (4 cores or fewer) draws less.
+ */
+export const deviceBudget = {
+    tabletFrom: breakpoints.tablet,
+    touchMax: breakpoints.touchMax,
+    classes: {
+        mobile: { pixelRatio: 1.5, density: 1 },
+        tablet: { pixelRatio: 1.5, density: 1 },
+        desktop: { pixelRatio: 2, density: 1 },
+    },
+    fewCores: 4,
+    slow: { pixelRatio: 1.25, density: 0.7 },
+} satisfies BudgetSettings;
 
 /** Home title and subtitle (LOT 2, H1 and H2) */
 export const heroEffects = {
@@ -40,9 +60,8 @@ export const nebulaEffects = {
     /** No grain: its still grey specks broke the even background (review of 2026-10-08, was 0.08 / 0.1) */
     grainMixer: 0,
     grainOverlay: 0,
-    /** A soft nebula needs few pixels: never above the device ratio 1, capped in device pixels */
-    minPixelRatio: 1,
-    maxPixelCount: { fine: 1_500_000, coarse: 600_000 },
+    /** A soft nebula needs few pixels: one canvas pixel per CSS pixel on every screen */
+    pixelRatio: 1,
     /** The shader fades in over the CSS gradient once its chunk is loaded */
     fadeInMs: 900,
     /** The shader chunk loads at the first idle moment after bootAfterMs (see gateEffects), at the latest idleTimeoutMs later */
@@ -88,7 +107,8 @@ export const starEffects = {
     /** The gate stands in front of the sky (review of 2026-10-09, whole gate): erased up to the ring
      *  (gate radius 1), fading out to the chevron tips; sprite size of the erasing disc */
     occlusion: { solid: 1, fade: 1.12, size: 128 },
-    pixelRatio: { fine: 2, coarse: 1.5, maxPixels: 8_000_000 } satisfies PixelRatioCaps,
+    /** Backing store cap in device pixels; the pixel ratio comes from the render budget (deviceBudget) */
+    maxPixels: 8_000_000,
     resizeDebounceMs: 150,
 };
 
@@ -128,6 +148,10 @@ export const gateEffects = {
     /** Height: aura 1.19 + room for the tilt (clear of the title); width: chevron tips 1.08.
      *  Dive: the camera stops just short of the horizon, still full of its dust when the cover lands */
     fit: { extent: 1.26, sideExtent: 1.12, margin: 8, camera: 2.6, diveDepth: 2.5 } satisfies FitSettings,
+    /** Upright tablet (LOT 6, decision A "gate in majesty"): the gate fills the height under the title
+     *  (aura 1.19 + a hair of tilt, still clear of the title); across, only its ring body must fit,
+     *  the side chevrons may leave the screen */
+    fitUpright: { extent: 1.2, sideExtent: 0.92, margin: 8, camera: 2.6, diveDepth: 2.5 } satisfies FitSettings,
     /** Idle camera sway (radians, ms); the pointer tilt was removed after review (2026-10-07) */
     sway: { x: 0.02, y: 0.03, periodX: 2300, periodY: 3100 },
     /** Share of the remaining light a hovered chevron gains each frame */
@@ -143,7 +167,8 @@ export const gateEffects = {
         chevronStepMs: 38, flare: 1.6, flareMs: 180, spin: 3.8, spinMs: 460,
         horizonAtMs: 320, vortexMs: 320, brightenMs: 220, diveAtMs: 520, diveMs: 420, navigateAtMs: 760,
     } satisfies DialTimeline,
-    pixelRatio: { fine: 2, coarse: 1.5, maxPixels: 8_000_000 } satisfies PixelRatioCaps,
+    /** Backing store cap in device pixels; the pixel ratio comes from the render budget (deviceBudget) */
+    maxPixels: 8_000_000,
     resizeDebounceMs: 150,
 };
 
@@ -172,7 +197,8 @@ export const convectorEffects = {
     boltSeed: 1955,
     /** Bolts are drawn once per console size on two canvases: halo and core widths (CSS px) */
     boltStroke: { halo: 5, core: 1.4 },
-    pixelRatio: { fine: 2, coarse: 1.5, maxPixels: 8_000_000 } satisfies PixelRatioCaps,
+    /** Backing store cap in device pixels; the pixel ratio comes from the render budget (deviceBudget) */
+    maxPixels: 8_000_000,
     /** The flux capacitor powers on at the first idle moment after powerOnAfterMs (its glows are
      *  the costliest part of the console to paint: never in the first frames), at the latest powerOnTimeoutMs later */
     powerOnAfterMs: 700,
@@ -206,6 +232,12 @@ export const holoEffects = {
     perspective: 1200,
     /** Tilt at the card edge (degrees) and its spring: the original card's */
     tilt: { max: 15, spring: { stiffness: 200, damping: 20 } },
+    /** At the finger (LOT 6, D4, decision A): a sideways drag past `slop` px tilts the card, fully
+     *  once the finger crossed half the card / `reach`; the finger's height pitches it `pitch` degrees */
+    touch: { slop: 6, reach: 1.2, pitch: 5 },
+    /** Device tilt (Android, LOT 6, D4): card degrees per device degree, limit, how fast a new hold
+     *  becomes the rest (share per reading, ~60 a second) */
+    gyro: { gain: 0.5, max: 8, recenter: 0.015 } satisfies DeviceTiltSettings,
     /** Idle sway while nobody points at the card (degrees, one elliptic loop in ms), in CSS */
     sway: { x: 3, y: 5, periodMs: 8000 },
     /** Film shift for a full tilt (share of the card), glare travel (share of the card) */
@@ -226,8 +258,13 @@ export const holoEffects = {
     mountTimeoutMs: 400,
     /** Rotating neon border, one turn (ms): the original card's */
     borderTurnMs: 4000,
-    /** QR canvas density: sharp on every screen, small anyway (~170 CSS px) */
-    qrPixelRatio: { fine: 2, coarse: 2, maxPixels: 400_000 } satisfies PixelRatioCaps,
+    /** QR canvas density: sharp on every screen (up to ratio 2, whatever the class), small anyway (~170 CSS px) */
+    qrPixelRatio: 2,
+    qrMaxPixels: 400_000,
+    /** The QR (on the back) is drawn at the first idle moment after qrAfterMs since the page started, at
+     *  the latest qrTimeoutMs later: a canvas's first write waits for the first frames (LOT 6, C2) */
+    qrAfterMs: 700,
+    qrTimeoutMs: 1200,
 };
 
 /** Skill badges and the projects rail (Skills, LOT 4, S3): CSS variables of the sections */
@@ -306,9 +343,9 @@ export const circuitEffects = {
         busTraces: [3, 6],
         busReach: [60, 240],
     } satisfies BoardConfig,
-    /** Static drawing (once per resize); darker, more even black after the reviews of 2026-10-03 and 2026-10-04 */
+    /** Static drawing (once per resize), over the solder mask (a CSS background, CircuitBackground.module.scss);
+     *  darker, more even black after the reviews of 2026-10-03 and 2026-10-04 */
     style: {
-        maskAlpha: 0.98,
         traceWidth: 2.2,
         traceAlpha: 0.16,
         sheenWidth: 0.8,
@@ -342,8 +379,13 @@ export const circuitEffects = {
     hover: { radius: 80, rise: 0.2, decay: 0.92 } satisfies HoverSettings,
     hoverCell: 96,
     glow: { width: 2.4, alpha: 0.55 },
-    pixelRatio: { fine: 2, coarse: 1.5, maxPixels: 8_000_000 } satisfies PixelRatioCaps,
+    /** Backing store cap in device pixels; the pixel ratio comes from the render budget (deviceBudget) */
+    maxPixels: 8_000_000,
     resizeDebounceMs: 150,
+    /** On a page load, the board is drawn at the first idle moment after drawAfterMs since the page started
+     *  (at the latest drawTimeoutMs later): its first write to the GPU waits for the first frames (LOT 6, C1) */
+    drawAfterMs: 700,
+    drawTimeoutMs: 1200,
 } as const;
 
 /** "Voyage" transitions between pages (LOT 1, C2) */

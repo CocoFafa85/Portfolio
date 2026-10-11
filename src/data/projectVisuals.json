@@ -1,8 +1,17 @@
 {
     "dir": "src/assets/projects",
-    "widths": [640, 960],
+    "widths": [
+        640,
+        960
+    ],
     "width": 960,
     "height": 600,
     "quality": 72,
-    "sizes": "(min-width: 1324px) 488px, (min-width: 1024px) calc(50vw - 174px), (max-width: 480px) calc(100vw - 100px), calc(100vw - 132px)"
+    "layout": {
+        "widest": 488,
+        "widestFrom": 1324,
+        "columnChrome": 174,
+        "mobileChrome": 100,
+        "narrowChrome": 132
+    }
 }

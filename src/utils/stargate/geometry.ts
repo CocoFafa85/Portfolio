@@ -25,6 +25,23 @@ export interface GateConfig {
     scatter: ScatterSettings;
 }
 
+/**
+ * The gate at a share of its particles (render budget, LOT 6): every part keeps its shape with fewer
+ * particles; the same object at full density (the same gate).
+ */
+export function gateAtDensity(cfg: GateConfig, density: number): GateConfig {
+    if (density >= 1) return cfg;
+    const scale = (points: number) => Math.max(1, Math.round(points * density));
+    return {
+        ...cfg,
+        ring: { ...cfg.ring, points: scale(cfg.ring.points) },
+        aura: { ...cfg.aura, points: scale(cfg.aura.points) },
+        glyphs: { ...cfg.glyphs, rimPoints: scale(cfg.glyphs.rimPoints), pointsPerGlyph: scale(cfg.glyphs.pointsPerGlyph) },
+        chevrons: { ...cfg.chevrons, bodyPoints: scale(cfg.chevrons.bodyPoints), corePoints: scale(cfg.chevrons.corePoints) },
+        horizon: { ...cfg.horizon, points: scale(cfg.horizon.points) },
+    };
+}
+
 export function gateParticleCount(cfg: GateConfig): number {
     return cfg.aura.points + cfg.ring.points + glyphBandCount(cfg.glyphs) + chevronCount(cfg.chevrons) + cfg.horizon.points;
 }

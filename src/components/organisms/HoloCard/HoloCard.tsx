@@ -2,11 +2,13 @@ import React, { useCallback, useEffect, useRef, useState, type CSSProperties, ty
 import { motion, useReducedMotion } from 'motion/react';
 import { content } from '../../../data/content';
 import { holoEffects as fx } from '../../../data/effects';
+import { useDevice } from '../../../hooks/useDevice';
 import { useIdleReady } from '../../../hooks/useIdleReady';
 import CardBack from './CardBack';
 import CardFront from './CardFront';
 import { useCardTilt } from './useCardTilt';
 import { useCvDownload } from './useCvDownload';
+import { useDeviceTilt } from './useDeviceTilt';
 import styles from './HoloCard.module.scss';
 
 const { depth } = fx;
@@ -25,7 +27,8 @@ const SLICE_Z = Array.from({ length: fx.slices }, (_, i) => (depth.half - 1) * (
 
 /**
  * HoloCard v2 (LOT 4, S2, direction A "access badge"): a thick holographic ID
- * card. A fine pointer tilts it (the original spring) and shows its depth;
+ * card. A fine pointer tilts it (the original spring) and shows its depth; a
+ * finger drags it sideways (LOT 6, D4) and, on Android, the device tilt sways its rest;
  * a click or a tap anywhere on it flips it, both ways (back: QR code to
  * LinkedIn; review of 2026-10-09: no visible flip button). The download
  * button downloads the CV; from the keyboard, a flip button shows only while
@@ -37,15 +40,21 @@ const SLICE_Z = Array.from({ length: fx.slices }, (_, i) => (depth.half - 1) * (
 const Card: React.FC = () => {
     const sceneRef = useRef<HTMLDivElement>(null);
     const reducedMotion = Boolean(useReducedMotion());
-    const tilt = useCardTilt(sceneRef);
-    const download = useCvDownload(sceneRef);
     const [flipped, setFlipped] = useState(false);
     const [active, setActive] = useState(false);
+    // A finger drag decodes the name, as the mouse hover does
+    const tilt = useCardTilt(sceneRef, setActive);
+    const download = useCvDownload(sceneRef);
+    // CÂBLAGE (LOT 6, A3 3/3): a touch screen lets the device tilt sway the card (Android only)
+    const { touch } = useDevice();
+    useDeviceTilt(touch && !reducedMotion, sceneRef, tilt.rest);
     const toBack = useRef<HTMLButtonElement>(null);
     const toFront = useRef<HTMLButtonElement>(null);
     const moveFocus = useRef(false);
     // The press started on a control: its click, even released beside it, never flips the card
     const downOnControl = useRef(false);
+    // The finger dragged the card: the click that may follow is not a tap, it never flips it
+    const dragged = useRef(false);
 
     const flip = useCallback(() => {
         // The focus was on the face that turns away (soon inert): take it to the other face
@@ -59,14 +68,19 @@ const Card: React.FC = () => {
     }, [flipped]);
 
     const onCardClick = (event: MouseEvent<HTMLDivElement>) => {
-        if (isControl(event.target) || downOnControl.current) return;
+        if (isControl(event.target) || downOnControl.current || dragged.current) return;
         flip();
     };
     const onPointerDown = (event: PointerEvent<HTMLDivElement>) => {
         downOnControl.current = isControl(event.target);
+        dragged.current = false;
         tilt.hold(downOnControl.current);
+        if (!downOnControl.current) tilt.press(event);
     };
-    const onPointerUp = () => tilt.hold(false);
+    const onPointerUp = (event: PointerEvent<HTMLDivElement>) => {
+        dragged.current = tilt.release(event);
+        tilt.hold(false);
+    };
 
     return (
         <div
@@ -80,7 +94,7 @@ const Card: React.FC = () => {
             onPointerLeave={(event) => { tilt.onPointerLeave(event); setActive(false); }}
             onPointerDown={onPointerDown}
             onPointerUp={onPointerUp}
-            onPointerCancel={onPointerUp}
+            onPointerCancel={(event) => { tilt.release(event); tilt.hold(false); }}
             onFocus={() => setActive(true)}
             onBlur={(event) => { if (!event.currentTarget.contains(event.relatedTarget)) setActive(false); }}
         >

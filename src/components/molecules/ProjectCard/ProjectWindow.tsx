@@ -1,7 +1,12 @@
 import React from 'react';
+import { breakpoints } from '../../../data/breakpoints';
 import visuals from '../../../data/projectVisuals.json';
 import type { Project, ProjectLabels } from '../../../types/models';
+import { visualSizes } from '../../../utils/visualSizes';
 import styles from './ProjectWindow.module.scss';
+
+// Written once from the breakpoints and the trajectory's widths (no width query written by hand)
+const SIZES = visualSizes(breakpoints, visuals.layout);
 
 export interface ProjectWindowProps {
     project: Project;
@@ -33,7 +38,7 @@ const ProjectWindow: React.FC<ProjectWindowProps> = ({ project, labels, priority
             {load && <img
                 className={styles.picture}
                 srcSet={project.visual.sources.map((source) => `${source.src} ${source.width}w`).join(', ')}
-                sizes={visuals.sizes}
+                sizes={SIZES}
                 src={project.visual.sources[project.visual.sources.length - 1].src}
                 width={project.visual.width}
                 height={project.visual.height}

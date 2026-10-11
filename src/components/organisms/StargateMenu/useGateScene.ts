@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, type RefObject } from 'react';
 import { gateEffects as fx } from '../../../data/effects';
 import { useAnimationLoop } from '../../../hooks/useAnimationLoop';
+import { readRenderBudget } from '../../../hooks/useDevice';
 import { capPixelRatio } from '../../../utils/canvas';
 import { releaseGateOccluder, type GateOccluder } from '../../../utils/stargate/occluder';
 import { startGateBoot } from './gateBoot';
@@ -29,9 +30,13 @@ export function useGateScene(
     canvasRef: RefObject<HTMLCanvasElement | null>,
     cellRef: RefObject<HTMLElement | null>,
     linksRef: RefObject<(HTMLElement | null)[]>,
-    occluder: GateOccluder
+    occluder: GateOccluder,
+    /** An upright tablet: the gate fills the height under the title (LOT 6, D1) */
+    upright: boolean
 ): GateControls {
     const sceneRef = useRef<GateScene | null>(null);
+    const uprightRef = useRef(upright);
+    const relayout = useRef(() => {});
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -40,19 +45,19 @@ export function useGateScene(
         if (!canvas || !cell || !root) return;
         const scene = createGateScene(canvas, linksRef.current, occluder);
         sceneRef.current = scene;
-        const coarse = window.matchMedia('(pointer: coarse)').matches;
 
         const layout = () => {
             const width = root.clientWidth;
             const height = root.clientHeight;
-            const ratio = capPixelRatio(window.devicePixelRatio, width, height, coarse, fx.pixelRatio);
+            const ratio = capPixelRatio(readRenderBudget().pixelRatio, width, height, fx.maxPixels);
             const rect = { x: cell.offsetLeft, y: cell.offsetTop, width: cell.offsetWidth, height: cell.offsetHeight };
-            layoutGateScene(scene, rect, width, height, ratio);
+            layoutGateScene(scene, rect, width, height, ratio, uprightRef.current ? fx.fitUpright : fx.fit);
             stepGateScene(scene, performance.now(), reducedMotion());
             cell.dataset.placed = 'true';
             occluder.onChange?.();
         };
         layout();
+        relayout.current = layout;
 
         let cancelBoot = () => {};
         const boot = () => {
@@ -95,6 +100,13 @@ export function useGateScene(
             releaseGateOccluder(occluder);
         };
     }, [canvasRef, cellRef, linksRef, occluder]);
+
+    // A rotation turns an upright tablet into a tablet on its side: the gate refits at once
+    useEffect(() => {
+        if (uprightRef.current === upright) return;
+        uprightRef.current = upright;
+        relayout.current();
+    }, [upright]);
 
     const onFrame = useCallback((_delta: number, time: number) => {
         const scene = sceneRef.current;

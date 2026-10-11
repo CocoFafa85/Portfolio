@@ -23,16 +23,17 @@ export function useMousePosition(): void {
             rootStyle.setProperty('--mouse-y', String(position.y));
         };
 
-        const handleMouseMove = (event: MouseEvent) => {
-            if (reducedMotion.matches) return;
+        // A mouse only: a tap on a touch screen also sends a move, which made the title jump towards it
+        const handleMouseMove = (event: PointerEvent) => {
+            if (reducedMotion.matches || event.pointerType === 'touch') return;
             clientX = event.clientX;
             clientY = event.clientY;
             if (frame === 0) frame = requestAnimationFrame(write);
         };
 
-        window.addEventListener('mousemove', handleMouseMove, { passive: true });
+        window.addEventListener('pointermove', handleMouseMove, { passive: true });
         return () => {
-            window.removeEventListener('mousemove', handleMouseMove);
+            window.removeEventListener('pointermove', handleMouseMove);
             cancelAnimationFrame(frame);
             rootStyle.removeProperty('--mouse-x');
             rootStyle.removeProperty('--mouse-y');
