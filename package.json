@@ -10,7 +10,8 @@
     "test": "vitest run",
     "preview": "vite preview",
     "gen:assets": "node scripts/gen-icons.mjs && node scripts/gen-qr.mjs",
-    "gen:visuals": "node scripts/capture-demos.mjs"
+    "gen:visuals": "node scripts/capture-demos.mjs",
+    "gen:og": "node scripts/capture-og.mjs"
   },
   "dependencies": {
     "@fontsource/montserrat-alternates": "^5.1.1",
