@@ -120,12 +120,13 @@ const Card: React.FC = () => {
 };
 
 /**
- * The card mounts at the first idle moment after the page paints: its 3D
- * layers are not in the same task as the page text (the LCP). Until then a
- * slot of the same size and background holds its place (no layout shift).
+ * The card mounts at the first idle moment 700 ms after the page started:
+ * its 3D layers and its fonts stay off the path of the page text (the LCP).
+ * Until then a slot of the same size and background holds its place (no
+ * layout shift).
  */
 const HoloCard: React.FC = () => {
-    const ready = useIdleReady(fx.mountTimeoutMs);
+    const ready = useIdleReady(fx.mountTimeoutMs, fx.afterMs);
     return ready ? <Card /> : <div className={`${styles.scene} ${styles.slot}`} style={SCENE_VARS} aria-hidden="true" />;
 };
 

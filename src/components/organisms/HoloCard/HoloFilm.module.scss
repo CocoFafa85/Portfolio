@@ -24,6 +24,13 @@
 .film {
     transform: translateZ(var(--d-film));
     mix-blend-mode: screen;
+
+    // Firefox (158) does not draw a face of the card at all when this blended layer sits in its 3D
+    // context: the face, its buttons and its link vanish and a click falls through to the scene
+    // (LOT 7, C2). Firefox lays the film over normally; the glare keeps its blend (harmless there)
+    @supports (-moz-appearance: none) or (-moz-orient: inline) {
+        mix-blend-mode: normal;
+    }
 }
 
 // Security print of the front: hexagons, only where the film shows
