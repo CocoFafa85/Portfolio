@@ -254,16 +254,18 @@ export const holoEffects = {
     download: { scanMs: 620, gaugeMs: 760, stampAtMs: 640, stampMs: 180, downloadAtMs: 800, restAtMs: 1700 },
     /** Name and role decode under the pointer or the focus, then rest before decoding again */
     decode: { seed: 2049, steps: 16, spread: 0.3, durationMs: 640, pauseMs: 1500 } satisfies DecodeSettings & Record<'durationMs' | 'pauseMs', number>,
-    /** The card mounts at the first idle moment after the page paints (at the latest this late) */
+    /** The card mounts, and its QR is drawn, at the first idle moment once afterMs have passed since the page
+     *  started (after a trip: at once). Mounted earlier, the card asked for Orbitron 900 just before the text
+     *  (the LCP) was painted, and Lighthouse counted that font on the LCP's path (LOT 7, C1); drawn earlier,
+     *  the QR's first canvas write waited for the GPU's first frames (LOT 6, C2) */
+    afterMs: 700,
+    /** The card: at the latest this much later than afterMs (its QR: qrTimeoutMs) */
     mountTimeoutMs: 400,
     /** Rotating neon border, one turn (ms): the original card's */
     borderTurnMs: 4000,
     /** QR canvas density: sharp on every screen (up to ratio 2, whatever the class), small anyway (~170 CSS px) */
     qrPixelRatio: 2,
     qrMaxPixels: 400_000,
-    /** The QR (on the back) is drawn at the first idle moment after qrAfterMs since the page started, at
-     *  the latest qrTimeoutMs later: a canvas's first write waits for the first frames (LOT 6, C2) */
-    qrAfterMs: 700,
     qrTimeoutMs: 1200,
 };
 
